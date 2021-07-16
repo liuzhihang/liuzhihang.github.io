@@ -6,7 +6,7 @@
   <link href="https://liuzhihang.com/atom.xml" rel="self"/>
   
   <link href="https://liuzhihang.com/"/>
-  <updated>2021-07-10T02:46:03.500Z</updated>
+  <updated>2021-07-16T10:34:53.590Z</updated>
   <id>https://liuzhihang.com/</id>
   
   <author>
@@ -15,6 +15,131 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 05：分布式读写锁和联锁</title>
+    <link href="https://liuzhihang.com/2021/07/16/curator-5.html"/>
+    <id>https://liuzhihang.com/2021/07/16/curator-5.html</id>
+    <published>2021-07-16T13:30:30.000Z</published>
+    <updated>2021-07-16T10:34:53.590Z</updated>
+    
+    
+    <summary type="html">Curator 同样支持分布式读写锁 和联锁，只需要使用 InterProcessReadWriteLock 即可，来一起看看它的源码以及实现方式。</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 04：分布式信号量和互斥锁</title>
+    <link href="https://liuzhihang.com/2021/07/15/curator-4.html"/>
+    <id>https://liuzhihang.com/2021/07/15/curator-4.html</id>
+    <published>2021-07-15T13:30:30.000Z</published>
+    <updated>2021-07-16T10:33:57.660Z</updated>
+    
+    
+    <summary type="html">分布式信号量，之前在 Redisson 中也介绍过，Redisson 的信号量是将计数维护在 Redis 中的，那现在来看一下 Curator 是如何基于 ZooKeeper 实现信号量的。</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 03：可重入锁并发加锁</title>
+    <link href="https://liuzhihang.com/2021/07/14/curator-3.html"/>
+    <id>https://liuzhihang.com/2021/07/14/curator-3.html</id>
+    <published>2021-07-14T13:30:30.000Z</published>
+    <updated>2021-07-16T10:35:14.403Z</updated>
+    
+    
+    <summary type="html">在了解了加锁和锁重入之后，最需要了解的还是在分布式场景下或者多线程并发加锁是如何处理的？</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 02：可重入锁重复加锁和锁释放</title>
+    <link href="https://liuzhihang.com/2021/07/12/curator-2.html"/>
+    <id>https://liuzhihang.com/2021/07/12/curator-2.html</id>
+    <published>2021-07-12T13:30:30.000Z</published>
+    <updated>2021-07-16T10:31:57.319Z</updated>
+    
+    
+    <summary type="html">加锁逻辑已经介绍完毕，那当一个线程重复加锁是如何处理的呢？</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 01：可重入锁</title>
+    <link href="https://liuzhihang.com/2021/07/10/curator-1.html"/>
+    <id>https://liuzhihang.com/2021/07/10/curator-1.html</id>
+    <published>2021-07-10T13:30:30.000Z</published>
+    <updated>2021-07-16T10:31:12.704Z</updated>
+    
+    
+    <summary type="html">一般工作中常用的分布式锁，就是基于 Redis 和 ZooKeeper，前面已经介绍完了 Redisson 锁相关的源码，下面一起看看基于 ZooKeeper 的锁。也就是 Curator 这个框架。</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+  </entry>
   
   <entry>
     <title>Redisson 分布式锁源码 11：Semaphore 和 CountDownLatch</title>
@@ -33,11 +158,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -58,11 +183,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -83,11 +208,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -108,11 +233,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -133,11 +258,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -158,11 +283,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -183,11 +308,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -208,11 +333,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -233,11 +358,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -258,11 +383,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -283,11 +408,11 @@
     <category term="redisson" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/redisson/"/>
     
     
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
     <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
     
     <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
-    
-    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
     
   </entry>
   
@@ -370,109 +495,6 @@
     <category term="mysql" scheme="https://liuzhihang.com/tags/mysql/"/>
     
     <category term="next-key" scheme="https://liuzhihang.com/tags/next-key/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用 Docker 安装并连接 MySQL</title>
-    <link href="https://liuzhihang.com/2021/06/06/docker-mysql.html"/>
-    <id>https://liuzhihang.com/2021/06/06/docker-mysql.html</id>
-    <published>2021-06-06T11:30:30.000Z</published>
-    <updated>2021-06-08T03:00:46.888Z</updated>
-    
-    
-    <summary type="html">作为开发，在本机捣鼓一下 Docker 还是很有必要的，本篇文章介绍如何使用 Docker 安装 MySQL，并在终端（iTerm2）使用命令连接 MySQL。</summary>
-    
-    
-    
-    <category term="docker" scheme="https://liuzhihang.com/categories/docker/"/>
-    
-    
-    <category term="mysql" scheme="https://liuzhihang.com/tags/mysql/"/>
-    
-    <category term="docker" scheme="https://liuzhihang.com/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MySQL next-key lock 加锁范围是什么？</title>
-    <link href="https://liuzhihang.com/2021/06/06/mysql-next-key-1.html"/>
-    <id>https://liuzhihang.com/2021/06/06/mysql-next-key-1.html</id>
-    <published>2021-06-06T11:30:30.000Z</published>
-    <updated>2021-06-08T02:47:18.914Z</updated>
-    
-    
-    <summary type="html">主键索引的锁范围是什么？</summary>
-    
-    
-    
-    <category term="mysql" scheme="https://liuzhihang.com/categories/mysql/"/>
-    
-    
-    <category term="mysql" scheme="https://liuzhihang.com/tags/mysql/"/>
-    
-    <category term="next-key" scheme="https://liuzhihang.com/tags/next-key/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Mac 常用软件推荐 —— Java 开发工程师</title>
-    <link href="https://liuzhihang.com/2021/05/25/mac-common-software-java.html"/>
-    <id>https://liuzhihang.com/2021/05/25/mac-common-software-java.html</id>
-    <published>2021-05-25T10:30:30.000Z</published>
-    <updated>2021-05-25T02:15:57.335Z</updated>
-    
-    
-    <summary type="html">记录一下自己用的 Mac 软件，如果小伙伴需要，可以下载体验一下。</summary>
-    
-    
-    
-    <category term="mac" scheme="https://liuzhihang.com/categories/mac/"/>
-    
-    
-    <category term="software" scheme="https://liuzhihang.com/tags/software/"/>
-    
-    <category term="mac" scheme="https://liuzhihang.com/tags/mac/"/>
-    
-    <category term="工具册" scheme="https://liuzhihang.com/tags/%E5%B7%A5%E5%85%B7%E5%86%8C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Toolkit 大更新：UI 更美观，用起来更方便！</title>
-    <link href="https://liuzhihang.com/2021/04/17/idea-plugin-toolkit-0417.html"/>
-    <id>https://liuzhihang.com/2021/04/17/idea-plugin-toolkit-0417.html</id>
-    <published>2021-04-17T12:00:00.000Z</published>
-    <updated>2021-04-18T07:19:00.698Z</updated>
-    
-    
-    <summary type="html">一个 IDEA 插件，支持 Json 格式化、Json 转实体、实体转 Json、Base64 等操作！</summary>
-    
-    
-    
-    <category term="IDEA" scheme="https://liuzhihang.com/categories/IDEA/"/>
-    
-    
-    <category term="plugin" scheme="https://liuzhihang.com/tags/plugin/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>工作中的设计模式 ——  建造者模式</title>
-    <link href="https://liuzhihang.com/2021/04/15/design-patterns-builder.html"/>
-    <id>https://liuzhihang.com/2021/04/15/design-patterns-builder.html</id>
-    <published>2021-04-15T12:00:00.000Z</published>
-    <updated>2021-04-18T07:17:52.665Z</updated>
-    
-    
-    <summary type="html">建造者模式是一种创建型设计模式，使你能够分步骤创建复杂对象。该模式允许你使用相同的创建代码生成不同类型和形式的对象。</summary>
-    
-    
-    
-    <category term="设计模式" scheme="https://liuzhihang.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-    <category term="设计模式" scheme="https://liuzhihang.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
   </entry>
   

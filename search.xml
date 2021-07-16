@@ -4,6 +4,161 @@
   
     
     <entry>
+      <title>ZooKeeper 分布式锁 Curator 源码 05：分布式读写锁和联锁</title>
+      <link href="2021/07/16/curator-5.html"/>
+      <url>2021/07/16/curator-5.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Curator 同样支持<a href="https://curator.apache.org/curator-recipes/shared-reentrant-read-write-lock.html" title="Shared Reentrant Read Write Lock">分布式读写锁</a> 和<a href="https://curator.apache.org/curator-recipes/multi-shared-lock.html" title="Multi Shared Lock">联锁</a>，只需要使用 InterProcessReadWriteLock 即可，来一起看看它的源码以及实现方式。</p><h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><pre><code class="java">public class CuratorDemo &#123;    public static void main(String[] args) throws Exception &#123;        String connectString = &quot;127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183&quot;;        RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);        CuratorFramework client = CuratorFrameworkFactory                .builder()                .connectString(connectString)                .retryPolicy(retryPolicy)                .build();        client.start();        InterProcessReadWriteLock lock = new InterProcessReadWriteLock(client, &quot;/locks/lock_01&quot;);        lock.readLock().acquire();        lock.readLock().release();        lock.writeLock().acquire();        lock.writeLock().release();    &#125;&#125;</code></pre><h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/FBz5X4-dltTtj.png"></p><p>读锁写锁都是基于 <code>InterProcessMutex</code> 实现的，所以基本都和 <code>InterProcessMutex</code> 没有区别。不过这里生成的锁名字不再是 <code>-lock-</code> 而是换成了 <code>__WRIT__</code> 和 <code>__READ__</code>。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/mWG1vn-Ygs8rP.png"></p><p>读锁加锁节点名为 <code>/locks/lock_01/_c_44a8eaf8-f177-403a-92bf-9119591b54d5-__READ__0000000000</code>，写锁解锁节点名为 <code>_c_2e5dde98-c548-4f8b-a798-821ee8330eb6-__WRIT__0000000001</code>。</p><p>其中创建节点时和可重入锁 <code>InterProcessMutex</code> 没有区别，唯一的区别就是在 <code>internalLockLoop</code> 方法中，判断锁获取结果时有区别。</p><p>当可重入锁时是在 <code>StandardLockInternalsDriver#getsTheLock</code> 判断当前节点是否为最小节点。</p><p>而读写锁是在 <code>InterProcessReadWriteLock#InterProcessReadWriteLock</code> 中重写了 <code>getsTheLock</code> 方法。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/u6I4T6-NuQdtU.png"></p><h4 id="读锁加锁"><a href="#读锁加锁" class="headerlink" title="读锁加锁"></a>读锁加锁</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/pVvf7u-lxJhkh.png"></p><p>读锁加锁，当前线程直接返回成功，也就是说<strong>当前线程读写不互斥的</strong>。</p><p>如果是其他线程，则遍历所有子节点。</p><ol><li>子节点包含写锁，当前节点在子节点有序集合的索引小于写锁的索引则直接获得锁，否则获取失败；</li><li>子节点不包含写锁，则当前节点在子节点的有序集合的 index &lt; Integer.MAX_VALUE (2147483647) 即可。</li></ol><p>就是说读锁最多支持 2147483647 个。</p><h4 id="写锁加锁"><a href="#写锁加锁" class="headerlink" title="写锁加锁"></a>写锁加锁</h4><p>写锁加锁直接复用的可重入锁 <code>InterProcessMutex</code> 的逻辑，所以这里写锁和写锁，以及读锁和写锁都是互斥的。</p><h3 id="联锁"><a href="#联锁" class="headerlink" title="联锁"></a>联锁</h3><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/gpOPUE-fRQ5kH.png"></p><p>联锁的使用，就是将 <code>InterProcessLock</code> 放到集合中，然后进行统一加锁。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/3xjIkl-CWr7Eo.png"></p><p>加锁就遍历集合，依次进行加锁。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文介绍了读写锁和联锁，其实都是基于最基础的可重入锁进行封装，理解了可重入锁的概念，后面的简单看下思想即可。</p><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/zJ1k0AzgQ8CWyLszbFjTJQ">ZooKeeper 分布式锁 Curator 源码 04：分布式信号量和互斥锁</a></li><li><a href="https://mp.weixin.qq.com/s/611CcXidVOktqIEUHpEPyQ">ZooKeeper 分布式锁 Curator 源码 03：可重入锁并发加锁</a></li><li><a href="https://mp.weixin.qq.com/s/Rtxn63Q4yjUyYJzogBnCGg">ZooKeeper 分布式锁 Curator 源码 02：可重入锁重复加锁和锁释放</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 分布式锁 </category>
+          
+          <category> Curator </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Curator </tag>
+            
+            <tag> ZooKeeper </tag>
+            
+            <tag> 分布式锁 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ZooKeeper 分布式锁 Curator 源码 04：分布式信号量和互斥锁</title>
+      <link href="2021/07/15/curator-4.html"/>
+      <url>2021/07/15/curator-4.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>分布式信号量，之前在 Redisson 中也介绍过，Redisson 的信号量是将计数维护在 Redis 中的，那现在来看一下 Curator 是如何基于 ZooKeeper 实现信号量的。</p><h3 id="使用-Demo"><a href="#使用-Demo" class="headerlink" title="使用 Demo"></a>使用 Demo</h3><pre><code class="java">public class CuratorDemo &#123;    public static void main(String[] args) throws Exception &#123;        String connectString = &quot;127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183&quot;;        RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);        CuratorFramework client = CuratorFrameworkFactory                .builder()                .connectString(connectString)                .retryPolicy(retryPolicy)                .build();        client.start();        InterProcessSemaphoreV2 semaphore = new InterProcessSemaphoreV2(client, &quot;/semaphores/semaphore_01&quot;, 3);        for (int i = 0; i &lt; 10; i++) &#123;            new Thread(() -&gt; &#123;                try &#123;                    System.out.println(Thread.currentThread() + &quot; 线程 start - &quot; + LocalTime.now());                    Lease lease = semaphore.acquire();                    System.out.println(Thread.currentThread() + &quot; 线程 execute - &quot; + LocalTime.now());                    Thread.sleep(3000);                    System.out.println(Thread.currentThread() + &quot; 线程 over -&quot; + LocalTime.now());                    semaphore.returnLease(lease);                &#125; catch (Exception e) &#123;                &#125;            &#125;).start();        &#125;        Thread.sleep(1000000);    &#125;&#125;</code></pre><p>控制台输出数据如下：</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/Owcgx2-guwlfb.png"></p><h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><h4 id="获取凭证"><a href="#获取凭证" class="headerlink" title="获取凭证"></a>获取凭证</h4><p>核心源码：<code>InterProcessSemaphoreV2#internalAcquire1Lease</code></p><p>这里仅介绍大概逻辑，有兴趣的小伙伴可以自行阅读源码。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/MGPOsJ-mhnZ51.png"></p><p>lock 是 <code>InterProcessMutex</code>，<code>InterProcessSemaphoreV2</code> 信号量，也是借助于最基础的加锁。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/HFwFVC-rJAYrV.png"></p><p>通过图也可以看出，使用 <code>InterProcessSemaphoreV2</code> 时，会先创建 <code>/semaphores/semaphore_01</code> 路径，并在路径下创建 <code>locks</code> 节点。也就是 <code>/semaphores/semaphore_01/locks</code> 路径下，有 10 个临时顺序节点。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/MMyuz2-oBEJQU.png"></p><p>紧接着会在 <code>/semaphores/semaphore_01</code> 路径下创建 <code>leases</code> 节点，所以创建锁的临时顺序节点之后，会紧接着在 <code>/semaphores/semaphore_01/leases</code> 下创建临时顺序节点。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/Jl7V0W-qKOLPQ.png"></p><p>对 <code>/semaphores/semaphore_01/leases</code> 节点进行监听，同时获取 <code>/semaphores/semaphore_01/leases</code> 下面的子节点数量。</p><ol><li>如果子节点数量小于等于信号量计数，则直接结束循环；</li><li>如果大于，则会进入 wait 等待唤醒。</li></ol><h4 id="释放凭证"><a href="#释放凭证" class="headerlink" title="释放凭证"></a>释放凭证</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/DV5QlD-dgXDM5.png"></p><p>释放凭证就是调用 Lease 的 close 方法，删除节点，这样 <code>/semaphores/semaphore_01/leases</code> 上的监听器就会触发，然后其他线程获取凭证。</p><h3 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h3><p>互斥锁 InterProcessSemaphoreMutex，不支持重入，其他的和可重入锁并没有什么区别。就是基于 InterProcessSemaphoreV2 实现的。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ns2GJG-Ab2xvC.png"></p><p>就是把计数的值 maxLeases 设置为了 1。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>信号量 InterProcessSemaphoreV2 其实是通过判断节点下的子节点数量来实现控制信号量，同时内部加锁是基于可重入锁 InterProcessMutex 实现的。</p><p>互斥锁 InterProcessSemaphoreMutex 则是将信号量的技术设置为 1 来实现互斥功能。</p><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/611CcXidVOktqIEUHpEPyQ">ZooKeeper 分布式锁 Curator 源码 03：可重入锁并发加锁</a></li><li><a href="https://mp.weixin.qq.com/s/Rtxn63Q4yjUyYJzogBnCGg">ZooKeeper 分布式锁 Curator 源码 02：可重入锁重复加锁和锁释放</a></li><li><a href="https://mp.weixin.qq.com/s/33CUudLhbCI9mV5g9Qut8Q">ZooKeeper 分布式锁 Curator 源码 01：可重入锁</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 分布式锁 </category>
+          
+          <category> Curator </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Curator </tag>
+            
+            <tag> ZooKeeper </tag>
+            
+            <tag> 分布式锁 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ZooKeeper 分布式锁 Curator 源码 03：可重入锁并发加锁</title>
+      <link href="2021/07/14/curator-3.html"/>
+      <url>2021/07/14/curator-3.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>在了解了加锁和锁重入之后，最需要了解的还是在分布式场景下或者多线程并发加锁是如何处理的？</p><h3 id="并发加锁"><a href="#并发加锁" class="headerlink" title="并发加锁"></a>并发加锁</h3><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/twk6wK-swALS8.png"></p><p>先来看结果，在多线程对 <code>/locks/lock_01</code> 加锁时，是在后面又创建了新的临时节点。</p><p>这块在加锁方法 <code>CreateBuilderImpl#pathInForeground</code> 中已经介绍过</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/RRTqV0-0sIRXk.png"></p><p>这里判断 <code>/locks/lock_01</code> 路径已经存在，会直接创建新的临时顺序节点。</p><p>真正判断锁是否获取成功，其实是在 <code>LockInternals#attemptLock</code> 方法中的 <code>internalLockLoop</code> 方法中。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/uD32W8-sgQWVS.png"></p><h4 id="加锁结果及监听"><a href="#加锁结果及监听" class="headerlink" title="加锁结果及监听"></a>加锁结果及监听</h4><p><code>internalLockLoop</code> 方法的主要作用是判断加锁结果，以及获取锁失败时，对其他节点的监听。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/Y0AQTf-eP1u5G.png"></p><ol><li>获取父节点 <code>/locks/lock_01</code> 下的所有子节点，按照从小到大排序，判断自己是不是获取到锁，没有获取到就监听自己前一个节点；</li><li>支持设置超时时间，超时直接返回失败；</li><li>不支持设置超时时间或者还没有超时，则直接 wait 等待。</li></ol><p>是否获取锁的代码在 <code>StandardLockInternalsDriver#getsTheLock</code></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/Bq2gQJ-qATQ97.png"></p><p>这块就是判断是否为最小节点，因为在 <code>getSortedChildren</code> 中已经对所有节点排序，所以方法中的 <code>List&lt;String&gt; children</code> 是有序的。</p><p><code>maxLeases</code> 是在 <code>InterProcessMutex</code> 初始化的时候，指定的值为 1。</p><p>最终这里的结果是，<strong>判断自己是不是最小，不是最小，就将 pathToWatch 设置为前一个节点</strong>。</p><blockquote><p>只监听自己的前一个节点，可以避免羊群效应！</p></blockquote><p><strong>为什么要进行等待呢？</strong></p><p>因为是为了防止无效自旋，因为这里有监听机制，会监听上一个节点是否释放。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/wR8r4o-B5J4BG.png"></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/qx5HBH-sBPWgv.png"></p><p>这块是 ZooKeeper 的 Watcher 监听机制，在节点释放的时候，会进行回调，然后使用 Java 的 notifyAll 方法通知所有的 wait 线程。然后这里的 while trye 会继续执行，重新检查是否获得锁等。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文主要介绍了基于 ZooKeeper 的分布式锁框架 Curator 在并发场景下的锁竞争问题。</p><p>重点需要了解的是：</p><ol><li>为了避免羊群效应，临时顺序节点，加锁失败后监听的是<strong>前一个节点</strong>；</li><li>为了避免无效自旋，这里使用了 Java 的 wait/notifyAll 机制；</li><li>可以看出，默认加锁就是<strong>公平锁</strong>。</li></ol><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/Rtxn63Q4yjUyYJzogBnCGg">ZooKeeper 分布式锁 Curator 源码 02：可重入锁重复加锁和锁释放</a></li><li><a href="https://mp.weixin.qq.com/s/33CUudLhbCI9mV5g9Qut8Q">ZooKeeper 分布式锁 Curator 源码 01：可重入锁</a></li><li><a href="https://mp.weixin.qq.com/s/RY_bGMJ24dE2t04EKgIciA">Redisson 分布式锁源码 11：Semaphore 和 CountDownLatch</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 分布式锁 </category>
+          
+          <category> Curator </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Curator </tag>
+            
+            <tag> ZooKeeper </tag>
+            
+            <tag> 分布式锁 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ZooKeeper 分布式锁 Curator 源码 02：可重入锁重复加锁和锁释放</title>
+      <link href="2021/07/12/curator-2.html"/>
+      <url>2021/07/12/curator-2.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>加锁逻辑已经介绍完毕，那当一个线程重复加锁是如何处理的呢？</p><h3 id="锁重入"><a href="#锁重入" class="headerlink" title="锁重入"></a>锁重入</h3><p>在上一小节中，可以看到加锁的过程，再回头看 <code>internalLock</code> 这个方法。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/da0UQo-LQpgg4.png"></p><p>加锁成功之后，将当前线程放到 <code>threadData</code> 中，threadData 是 <code>ConcurrentMap&lt;Thread, LockData&gt;</code> 类型的，不用担心并发问题。</p><p>假如锁重入了，直接就会在上一部分 <code>lockData != null</code> 被拦下，然后执行 <code>lockData.lockCount.incrementAndGet();</code>。</p><p>对 lockCount 自增，代表了锁重入。</p><p>这里发现了吧！<strong>Curator 的锁重入是在 Java 代码中实现的</strong>。</p><h3 id="锁释放"><a href="#锁释放" class="headerlink" title="锁释放"></a>锁释放</h3><p>当锁需要释放的时候，只需要调用 lock.release() 进行释放即可，具体是如何释放的呢？</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/wbYcfq-gm7uBN.png"></p><p>主要分为两部分：</p><ol><li>递减 threadData 中当前线程的加锁次数；</li><li>加锁次数大于 0，说明还剩余重入次数，直接返回；</li><li>加锁次数等于 0，则 releaseLock 释放锁，并删除 threadData 中当前线程 key。</li></ol><p>releaseLock 方法中就没有多少复杂逻辑了，就是移除监听器，删除临时顺序节点。 也就是 <code>/locks/lock_01/_c_e855d232-c636-4241-bf8e-f047939a5833-lock-0000000001</code>。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>ZooKeeper 的 InterProcessMutex 锁是通过 Java 代码中维护了一个 lockCount 来判断是否重入的。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/EO0tci-8Ju4bN.png"></p><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/33CUudLhbCI9mV5g9Qut8Q">ZooKeeper 分布式锁 Curator 源码 01：可重入锁</a></li><li><a href="https://mp.weixin.qq.com/s/RY_bGMJ24dE2t04EKgIciA">Redisson 分布式锁源码 11：Semaphore 和 CountDownLatch</a></li><li><a href="https://mp.weixin.qq.com/s/c6_9Ip3py4SMZyIOuIXlGg">Redisson 分布式锁源码 10：读写锁</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 分布式锁 </category>
+          
+          <category> Curator </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Curator </tag>
+            
+            <tag> ZooKeeper </tag>
+            
+            <tag> 分布式锁 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ZooKeeper 分布式锁 Curator 源码 01：可重入锁</title>
+      <link href="2021/07/10/curator-1.html"/>
+      <url>2021/07/10/curator-1.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>一般工作中常用的分布式锁，就是基于 Redis 和 ZooKeeper，前面已经介绍完了 Redisson 锁相关的源码，下面一起看看基于 ZooKeeper 的锁。也就是 Curator 这个框架。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ZTqpLd-XNGkyv.png"></p><p>Curator 的锁也分为很多种，本文分析共享可重入锁。</p><blockquote><p>考虑到如果文章篇幅较长，不太适合阅读，所以对文章做了适当的拆分。</p></blockquote><h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/1IKYOT-4Z1dui.png"></p><p>本机三个节点</p><p>版本：3.7.0<br>系统：macOS<br>安装方式：brew install zookeeper<br>Curator Maven 依赖版本：5.1.0</p><pre><code class="xml">&lt;dependency&gt;    &lt;groupId&gt;org.apache.curator&lt;/groupId&gt;    &lt;artifactId&gt;curator-recipes&lt;/artifactId&gt;    &lt;version&gt;5.1.0&lt;/version&gt;&lt;/dependency&gt;</code></pre><h3 id="加锁示例"><a href="#加锁示例" class="headerlink" title="加锁示例"></a>加锁示例</h3><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/Lg3daF-MbFuR4.jpg"></p><p>详细信息可参考<a href="https://curator.apache.org/curator-recipes/shared-reentrant-lock.html" title="ZooKeeper Shared Reentrant Lock">官方文档</a>。</p><h4 id="加锁前"><a href="#加锁前" class="headerlink" title="加锁前"></a>加锁前</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/vCOtnm-ClDY0i.png"></p><p>在加锁之前，ZooKeeper 仅有一个节点 <code>/zookeeper</code>。</p><h4 id="加锁中"><a href="#加锁中" class="headerlink" title="加锁中"></a>加锁中</h4><p>在 <code>/locks/lock_01</code> 路径上加锁。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/qI6WyG-0fZ02i.png"></p><p>加锁之后：</p><ol><li>创建了一个 <code>/locks/lock_01</code> 的持久节点，节点下有一个子节点 <code>_c_cc4fc045-5a1e-4378-b3c7-8a8d3fb9a37c-lock-0000000000</code></li><li>节点 <code>/locks/lock_01/_c_cc4fc045-5a1e-4378-b3c7-8a8d3fb9a37c-lock-0000000000</code> 是临时节点</li><li>节点 <code>/locks/lock_01/_c_cc4fc045-5a1e-4378-b3c7-8a8d3fb9a37c-lock-0000000000</code> 的数据是机器 IP 地址</li></ol><h3 id="加锁源码"><a href="#加锁源码" class="headerlink" title="加锁源码"></a>加锁源码</h3><blockquote><p>PS：下面代码截图中的代码风格就是 Curator 源码的代码风格。</p></blockquote><h4 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h4><p><code>InterProcessMutex#internalLock</code></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/cbkHvI-owmfvR.png"></p><p>开始先从 threadData 中获取当前线程，这里肯定是没有的，所以进入 attemptLock 方法。</p><p>本方法中还包含了锁重入的逻辑，后面也会介绍。</p><h4 id="加锁"><a href="#加锁" class="headerlink" title="加锁"></a>加锁</h4><p><code>LockInternals#attemptLock</code></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/uD32W8-sgQWVS.png"></p><p>核心部分就是这两行：</p><ol><li>createsTheLock 创建临时顺序节点</li><li>internalLockLoop 判断是否创建成功</li></ol><h4 id="创建临时顺序节点"><a href="#创建临时顺序节点" class="headerlink" title="创建临时顺序节点"></a>创建临时顺序节点</h4><p><code>StandardLockInternalsDriver#createsTheLock</code></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/IJUG7A-eJG2ul.png"></p><p>可以看出节点的 mode 是 <code>CreateMode.EPHEMERAL_SEQUENTIAL</code>，表示这是一个<strong>临时顺序节点</strong>！</p><p>进入 <code>CreateBuilderImpl#forPath(java.lang.String, byte[])</code></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/GFBfOS-SWFyIo.png"></p><p><code>client.getDefaultData()</code> 就是本机 IP 地址。</p><p>这个 adjustPath 方法看名字就是在调整路径之类的。会生成一个 UUID 拼接到 <code>/locks/lock_01</code> 中，变成 <code>/locks/lock_01/_c_UUID-lock-</code>。</p><p>因为创建的是临时顺序节点，所以会自动在后面添加顺序，最终变为 <code>/locks/lock_01/_c_UUID-lock-0000000000</code>。</p><p>具体创建节点是在 <code>CreateBuilderImpl#pathInForeground</code> 中。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/RRTqV0-0sIRXk.png"></p><ol><li>创建临时节点，如果路径存在，会创建成功，如果路径不存在会创建失败；</li><li>创建失败后，先创建路径，再创建节点。</li></ol><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本篇文章主要介绍了基于 ZooKeeper 的分布式锁框架 Curator 的使用，以及加锁流程，源码分析。</p><p>下面对内容做下总结：</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/8FvkXS-qnEZu7.png"></p><p>重点需要关注的是：</p><ol><li>基于 ZooKeeper 的分布式锁，是使用的临时顺序节点，父节点是持久节点；</li><li>创建临时节点时，父节点不存在，会先创建父节点（路径）；</li><li>锁的组成结构为：对 <code>/locks/lock_01</code> 加锁，实际锁住的是 <code>/locks/lock_01/_c_UUID-lock-序号</code>，举例为 <code>/locks/lock_01/_c_cc4fc045-5a1e-4378-b3c7-8a8d3fb9a37c-lock-0000000000</code></li></ol><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/RY_bGMJ24dE2t04EKgIciA">Redisson 分布式锁源码 11：Semaphore 和 CountDownLatch</a></li><li><a href="https://mp.weixin.qq.com/s/c6_9Ip3py4SMZyIOuIXlGg">Redisson 分布式锁源码 10：读写锁</a></li><li><a href="https://mp.weixin.qq.com/s/2MsjFXCkSPY0e6Ax0jE3kw">Redisson 分布式锁源码 09：RedLock 红锁的故事</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 分布式锁 </category>
+          
+          <category> Curator </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Curator </tag>
+            
+            <tag> ZooKeeper </tag>
+            
+            <tag> 分布式锁 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Redisson 分布式锁源码 11：Semaphore 和 CountDownLatch</title>
       <link href="2021/07/08/redisson-11.html"/>
       <url>2021/07/08/redisson-11.html</url>
@@ -22,11 +177,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -53,11 +208,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -84,11 +239,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -115,11 +270,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -146,11 +301,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -177,11 +332,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -208,11 +363,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -239,11 +394,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -270,11 +425,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -301,11 +456,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -332,11 +487,11 @@
       
         <tags>
             
+            <tag> 分布式锁 </tag>
+            
             <tag> redisson </tag>
             
             <tag> redis </tag>
-            
-            <tag> 分布式锁 </tag>
             
         </tags>
       
@@ -1346,9 +1501,9 @@
       
         <tags>
             
-            <tag> issue </tag>
-            
             <tag> mac </tag>
+            
+            <tag> issue </tag>
             
             <tag> brew </tag>
             
@@ -2420,9 +2575,9 @@
       
         <tags>
             
-            <tag> issue </tag>
-            
             <tag> mac </tag>
+            
+            <tag> issue </tag>
             
         </tags>
       
