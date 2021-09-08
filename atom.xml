@@ -452,23 +452,21 @@
   </entry>
   
   <entry>
-    <title>MySQL next-key lock 加锁范围总结</title>
-    <link href="https://liuzhihang.com/2021/06/07/mysql-next-key-4.html"/>
-    <id>https://liuzhihang.com/2021/06/07/mysql-next-key-4.html</id>
+    <title>Toolkit Json 转实体也可以支持 lombok 了！</title>
+    <link href="https://liuzhihang.com/2021/06/07/ides-plugin-toolkit-lombok.html"/>
+    <id>https://liuzhihang.com/2021/06/07/ides-plugin-toolkit-lombok.html</id>
     <published>2021-06-07T11:30:30.000Z</published>
-    <updated>2021-06-08T03:06:12.243Z</updated>
+    <updated>2021-06-08T03:00:08.738Z</updated>
     
     
-    <summary type="html">总结主键、非主键唯一索引、普通索引、普通字段四个方面的加锁范围。</summary>
+    <summary type="html">Toolkit Json 转实体也可以支持 lombok 了！</summary>
     
     
     
-    <category term="mysql" scheme="https://liuzhihang.com/categories/mysql/"/>
+    <category term="IDEA" scheme="https://liuzhihang.com/categories/IDEA/"/>
     
     
-    <category term="mysql" scheme="https://liuzhihang.com/tags/mysql/"/>
-    
-    <category term="next-key" scheme="https://liuzhihang.com/tags/next-key/"/>
+    <category term="plugin" scheme="https://liuzhihang.com/tags/plugin/"/>
     
   </entry>
   
