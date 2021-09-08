@@ -4,6 +4,81 @@
   
     
     <entry>
+      <title>使用 SpringBoot 转换器将前端参数转换为枚举</title>
+      <link href="2021/09/04/the_converter_converts_front_end_parameters_to_enumerations.html"/>
+      <url>2021/09/04/the_converter_converts_front_end_parameters_to_enumerations.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>最近遇到一个小伙伴问前端枚举转换问题，才意识到可以通过转换器（Converter）自动将前端传入的字段值使用枚举接收。</p><p>我自己捣鼓了一番，现在记录笔记分享一下！有兴趣的小伙伴可以自己尝试一下！</p><p>这里使用的是 MyBatis-Plus 和 SpringBoot 2.3.4.RELEASE</p><h3 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h3><h4 id="配置转换器"><a href="#配置转换器" class="headerlink" title="配置转换器"></a>配置转换器</h4><pre><code class="java">/** * @author liuzhihang * @date 2021/8/31 16:29 */@Configurationpublic class WebConfig implements WebMvcConfigurer &#123;    @Override    public void addFormatters(FormatterRegistry registry) &#123;        registry.addConverterFactory(new ConverterFactory&lt;Object, BaseEnum&gt;() &#123;            @Override            public &lt;T extends BaseEnum&gt; Converter&lt;Object, T&gt; getConverter(Class&lt;T&gt; targetType) &#123;                T[] enums = targetType.getEnumConstants();                return source -&gt; &#123;                    for (T e : enums) &#123;                        if (e.getCode().equals(source)) &#123;                            return e;                        &#125;                    &#125;                    throw new IllegalArgumentException(&quot;枚举 Code 不正确&quot;);                &#125;;            &#125;        &#125;);    &#125;&#125;</code></pre><p>直接在 WebMvcConfigurer 里实现 addFormatters 方法即可，然后 new 一个 ConverterFactory。</p><p>WebMvcConfigurer 相信大家都不陌生，一般添加一些拦截器，通用校验 token、日志等等都会用到。具体可以参考这篇文章：<a href="https://mp.weixin.qq.com/s/Q8yZgw1JwnGH8JHuQKyHYA">几行代码轻松实现跨系统传递 traceId，再也不用担心对不上日志了！</a>，里面有一些其他的应用。</p><p>就这些，很简单的实现。下面介绍下项目的内容和代码，方便理解。</p><h4 id="项目代码"><a href="#项目代码" class="headerlink" title="项目代码"></a>项目代码</h4><ul><li>请求参数：</li></ul><pre><code class="http">POST http://localhost:8818/user/listByStatusContent-Type: application/json&#123;  &quot;orderStatus&quot;: 1&#125;</code></pre><ul><li>Controller</li></ul><pre><code class="java">/** * @author liuzhihang * @date 2021/8/30 11:08 */@Slf4j@RestController@RequestMapping(&quot;/user&quot;)public class UserController &#123;    @Autowired    private OrderService orderService;    @PostMapping(value = &quot;/listByStatus&quot;)    public ResultVO&lt;UserResponse&gt; listByStatus(@Validated @RequestBody UserRequest request)  &#123;        log.info(&quot;请求参数:&#123;&#125;&quot;, request);        List&lt;TransOrder&gt; orderList = orderService.getByOrderStatus(request.getOrderStatus());        UserResponse response = new UserResponse();        response.setRecords(orderList);        log.info(&quot;返回参数:&#123;&#125;&quot;, response);        return ResultVO.success(response);    &#125;&#125;</code></pre><ul><li>Entity</li></ul><pre><code class="java">@Datapublic class UserRequest &#123;    private OrderStatusEnum orderStatus;    private ViewStatusEnum viewStatus;&#125;@Datapublic class UserResponse &#123;    private List&lt;TransOrder&gt; records;&#125;</code></pre><p>Web 传入 orderStatus 为 1，而后端接收对象是 UserRequest 的 orderStatus 字段是个 OrderStatusEnum 类型的枚举。</p><p>这里就需要自动将<strong>数字</strong>类型的字段转换为<strong>枚举</strong>字段。这个枚举会直接通过 MyBatis-Plus 查询。</p><blockquote><p>为什么要这么用呢?</p><p>其实原因很简单，使用枚举限制数据库字段的类型，比如数据库状态只有 0、1、2，那就和代码里的枚举对应起来。防止传入其他值。</p></blockquote><ul><li>枚举</li></ul><pre><code class="java">public interface BaseEnum &#123;    Object getCode();&#125;</code></pre><pre><code class="java">public enum OrderStatusEnum implements BaseEnum &#123;    INIT(0, &quot;初始状态&quot;),    SUCCESS(1, &quot;成功&quot;),    FAIL(2, &quot;失败&quot;);    @EnumValue    @JsonValue    private final int code;    private final String desc;    OrderStatusEnum(int code, String desc) &#123;        this.code = code;        this.desc = desc;    &#125;    @Override    public Integer getCode() &#123;        return code;    &#125;    public String getDesc() &#123;        return desc;    &#125;&#125;</code></pre><p>这里先声明接口 BaseEnum，所有的枚举都继承这个接口，并实现 getCode 方法。</p><p><code>@EnumValue</code>：MyBatis-Plus 的枚举，和数据库字段映射用的</p><p><code>@JsonValue</code>：返回给前端时，这个枚举字段序列化时，返回参数只显示 code。</p><p>这样就可以实现效果，请求参数为数字，接收对象字段为枚举，返回字段也是 code。</p><h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/Ajzttu-FbMslk.png" alt="测试结果"></p><p>测试结果经过验证，是可以胜任传入数值和字符串的。</p><p>也可以结合异常处理器，返回通用异常。具体怎么用查一查 <code>@ExceptionHandler</code> 就知道了。</p><h4 id="具体说明"><a href="#具体说明" class="headerlink" title="具体说明"></a>具体说明</h4><p>在 addFormatters 方法中可以看到 registry.addConverterFactory() 接收的是一个 ConverterFactory 对象。</p><pre><code class="java">public interface ConverterFactory&lt;S, R&gt; &#123;    &lt;T extends R&gt; Converter&lt;S, T&gt; getConverter(Class&lt;T&gt; targetType);&#125;</code></pre><ol><li>S 就是传入的字段类型（数字，字符串）</li><li>R 是要转换为的类型（枚举）</li><li>T 继承了 R，其实就是参数对象中字段的类型</li></ol><p>在 ConverterFactory 的 getConverter 方法则需要返回一个实际的转换器 Converter</p><pre><code class="java">@FunctionalInterfacepublic interface Converter&lt;S, T&gt; &#123;    @Nullable    T convert(S source);&#125;</code></pre><p>convert 方法的入参是一个 source，就是要转换为什么类型的，这里就是数字/字符串，然后返回一个枚举即可。</p><p>注意这里加了 <code>@FunctionalInterface</code> 就意味着这里是可以用 lambda 表达式的。</p><h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>一般 WebConfig 中除了实现 addFormatters 方法外，还会实现 addInterceptors 等等，这样写难免会很长，所以可以改为下面这种。</p><pre><code class="java">@Configurationpublic class WebConfig implements WebMvcConfigurer &#123;    @Autowired    private LogInterceptor logInterceptor;    @Autowired    private AppTokenInterceptor appTokenInterceptor;    @Autowired    private EnumConverterFactory enumConverterFactory;    @Override    public void addInterceptors(InterceptorRegistry registry) &#123;        // 日志        registry.addInterceptor(logInterceptor)                .addPathPatterns(&quot;/**&quot;);        // app token校验        registry.addInterceptor(appTokenInterceptor)                .addPathPatterns(&quot;/app/**&quot;);    &#125;    @Override    public void addFormatters(FormatterRegistry registry) &#123;        // 枚举转换        registry.addConverterFactory(enumConverterFactory);    &#125;&#125;</code></pre><p>这种就需要咱们创建 EnumConverterFactory 类并实现 ConverterFactory 接口了，还得注入到 Spring 容器中</p><pre><code class="java">@Componentpublic class EnumConverterFactory implements ConverterFactory&lt;Object, BaseEnum&gt; &#123;    @Override    public &lt;T extends BaseEnum&gt; Converter&lt;Object, T&gt; getConverter(Class&lt;T&gt; targetType) &#123;        T[] enums = targetType.getEnumConstants();        return source -&gt; &#123;            for (T e : enums) &#123;                if (e.getCode().equals(source)) &#123;                    return e;                &#125;            &#125;            throw new IllegalArgumentException(&quot;枚举 Code 不正确&quot;);        &#125;;    &#125;&#125;</code></pre><p>要是实在觉得 lambda 看不惯，并且也不够优雅，那可以使用下面的方式。</p><pre><code class="java">@Componentpublic class EnumConverterFactory implements ConverterFactory&lt;Object, BaseEnum&gt; &#123;    @Override    public &lt;T extends BaseEnum&gt; Converter&lt;Object, T&gt; getConverter(Class&lt;T&gt; targetType) &#123;        return new EnumConverter&lt;&gt;(targetType);    &#125;&#125;public class EnumConverter&lt;T extends BaseEnum&gt; implements Converter&lt;Object, T&gt; &#123;    private final Class&lt;T&gt; targetType;    public EnumConverter(Class&lt;T&gt; targetType) &#123;        this.targetType = targetType;    &#125;    @Override    public T convert(Object source) &#123;        for (T e : targetType.getEnumConstants()) &#123;            if (e.getCode().equals(source)) &#123;                return e;            &#125;        &#125;        throw new IllegalArgumentException(&quot;枚举 Code 不正确&quot;);    &#125;&#125;</code></pre><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>当然这里也有一些其他的优化点，比如可以使用缓存将 Convert 缓存起来。</p><p>不过我也遇到一个其他的问题，就是我 debug 断点竟然一直没有断到转换器中，不知道有没有小伙伴尝试过？</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工作笔记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 工作笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>MyBatis-Plus 中 Mapper 重载踩坑指南</title>
+      <link href="2021/08/22/guide_to_mapper_overloading_crater_in_mybatis_plus.html"/>
+      <url>2021/08/22/guide_to_mapper_overloading_crater_in_mybatis_plus.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>近期在 Mapper 中写了个方法重载，然后死活查不到正确结果，最终灵机一动，想到是不是因为重载，然后我 <code>Shift + F6</code> 把重载方法名字改了一下！结果，显而易见，重载的那个方法也一块改了。再次躺坑！</p><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><blockquote><p>以下为模式测试数据</p></blockquote><ul><li>MySQL 表</li></ul><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/os84hi-5ep5bs.png"></p><ul><li>Mapper</li></ul><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/jlO4Qv-sF5vyA.png"></p><p>如果看到这里，已经发现了问题，并知道原因，那可以直接跳过，进行三连即可。</p><p>当然，在 Mapper.xml 这么写，会提示错误（插件功能）</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/SmE0bh-ftqLdB.png"></p><ul><li>Junit </li></ul><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/F78omq-kG2zcS.png"></p><p>执行结果是：</p><p>sum=1500 sumWithTime=1500</p><p>这就神奇了，<code>没有报错，结果竟然是相同的</code>。</p><h4 id="版本依赖"><a href="#版本依赖" class="headerlink" title="版本依赖"></a>版本依赖</h4><pre><code class="xml">&lt;dependency&gt;    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;    &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;    &lt;version&gt;3.1.2&lt;/version&gt;&lt;/dependency&gt;</code></pre><blockquote><p>mybatis-plus-boot-starter 3.1.2 对应的是 mybatis:3.5.1 和 mybatis-spring:2.0.1</p></blockquote><h3 id="深入排查"><a href="#深入排查" class="headerlink" title="深入排查"></a>深入排查</h3><h4 id="MyBatis-Plus"><a href="#MyBatis-Plus" class="headerlink" title="MyBatis-Plus"></a>MyBatis-Plus</h4><p>两个结果相同，那就断点断到第二个上面，debug 进去，看看执行过程。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/wxN1z1-wnhvHR.png"></p><p>F7 进入！这里直接进到 <code>com.baomidou.mybatisplus.core.override.MybatisMapperProxy#invoke</code></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/8rahsJ-E6tXZa.png"></p><p>这里都是 mybatis-plus 的代理。</p><p>进入跟进，进入到 <code>com.baomidou.mybatisplus.core.override.MybatisMapperMethod#execute</code></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/XTg6IL-7LVbHC.png"></p><p>这里相当于执行</p><pre><code class="java">Object result = sqlSession.selectOne(&quot;com.liuzhihang.demo.mapper.TransOrderMapper.sumOrderAmount&quot;, param);</code></pre><p>后面就是进入 Mybatis 的环节了。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/oLQ9Sz-lQ1A9P.png"></p><p>在这里会进入 Mybatis 的 slectList 方法（<code>org.apache.ibatis.session.defaults.DefaultSqlSession#selectList</code>）。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/E7BOKK-GAqn7S.png"></p><p>从 <code>configuration</code> 中生成所有的 mappedStatements，然后从 statements 中获取根据 id，也就是方法的全路径，获取当前的 statements。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/kVK9ll-izZdX8.png"></p><p>先看看 mappedStatements 里面都有啥？</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/tHS4mq-dnAldZ.png"></p><ol><li>mappedStatements 是一个 Map 结构！</li><li>其中 key 是方法名，value 是一个 MappedStatement</li></ol><p>所以这里的意思是根据方法的全路径名称，获取一个 MappedStatement， 而 <code>com.liuzhihang.demo.mapper.TransOrderMapper.sumOrderAmount</code> 在这里面只有一个。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/EhV0To-azcKRH.png"></p><p>所以最终执行的 sql 是 <code>select ifnull(sum(order_amount),0) from trans_order where user_id = ? ;</code>。这也是为什么两个方法执行的结果是相同的了。</p><p>究其原因，则是因为 configuration 中就没有重载方法的 MappedStatement</p><p>而根本原因则是在 <code>com.baomidou.mybatisplus.core.MybatisConfiguration#addMappedStatement</code> 中写了一段代码！</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/1kNNNP-FBhPcE.png"></p><p>如果已经存在，则直接忽略，同时会打印日志。</p><blockquote><p>mapper[xxx] is ignored, because it exists, maybe from xml file</p></blockquote><h4 id="MyBatis"><a href="#MyBatis" class="headerlink" title="MyBatis"></a>MyBatis</h4><p>那如果使用原生 MyBatis 呢？</p><p>其实会在启动阶段就报错，服务直接启动失败。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/VWECPi-qlKG3r.png"></p><p>其中异常是：</p><p><code>java.lang.IllegalArgumentException: Mapped Statements collection already contains value for com.liuzhihang.demo.mapper.TransOrderMapper.sumOrderAmount. please check com/liuzhihang/demo/mapper/TransOrderMapper.java (best guess) and com/liuzhihang/demo/mapper/TransOrderMapper.java (best guess)</code></p><p>进入源码，<code>org.apache.ibatis.session.Configuration#addMappedStatement</code></p><p>在这里会创建 mappedStatements，调用的是 Map 的 put 方法。</p><blockquote><p><code>Configuration.StrictMap#put</code> 继承了 <code>HashMap</code> 具体内容不细看。</p></blockquote><p>其中 key 的结构是方法的<code>方法全路径</code>。比如 <code>com.liuzhihang.demo.mapper.TransOrderMapper.sumOrderAmount</code></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/4WIkZD-f7imVF.png"></p><p>而第二次重载方法，来的时候就会抛出异常。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol><li>在 MyBatis-Plus 中 Mapper 重载并不会出现异常，但是查询结果都是相同的。因为 MyBatis-Plus 的 MybatisConfiguration 继承重写了 MyBatis Configuration 的 addMappedStatement 方法。</li><li>在 MyBatis-Plus 中发现该 MappedStatement 已经存在，则不进行添加。</li><li>而在 MyBatis 中如果 MappedStatement 如果 key 存在，则直接抛出异常，服务启动失败。</li></ol><p>以上就是我经历的一个小坑，也是因为个人图省事，写了个重载。虽然记得不能重载，但是看启动没问题，就觉得 ok。</p><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/ij4rRc8VotkONOEu4iPFzA">使用 Maven Archetype 创建项目模版</a></li><li><a href="https://mp.weixin.qq.com/s/Hn3C5a_hNPcscB93XlFO8Q">Spring 自调用事务失效，你是怎么解决的？</a></li><li><a href="https://mp.weixin.qq.com/s/js3criicld9KrIROU0kIwg">并发场景加锁优化小技巧</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工作笔记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 工作笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>并发场景加锁优化小技巧</title>
+      <link href="2021/07/25/tips_for_locking_and_optimizing_concurrent_scenes.html"/>
+      <url>2021/07/25/tips_for_locking_and_optimizing_concurrent_scenes.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>在 JDK 中有很多锁，包括 synchronized、ReentrantLock、ReentrantReadWriteLock、锁的使用场景也分很多种，下面看一下对加锁优化的小技巧。</p><blockquote><p>以下内容为个人学习笔记。</p></blockquote><h4 id="并发修改标志位"><a href="#并发修改标志位" class="headerlink" title="并发修改标志位"></a>并发修改标志位</h4><p>优先使用 volatile；</p><p>比如分布式服务注册中心的优雅停机，因为 volatile 就可以保证可见性。而不必使用 synchronized</p><h4 id="数值递增"><a href="#数值递增" class="headerlink" title="数值递增"></a>数值递增</h4><p>优先使用 Atomic 原子类；</p><p>CAS 无锁化操作，比如分布式服务注册中心的心跳次数维护；</p><h4 id="维护线程副本"><a href="#维护线程副本" class="headerlink" title="维护线程副本"></a>维护线程副本</h4><p>使用 ThreadLocal </p><p>在分布式存储系统使用 ThreadLocal 维护每个线程自己的 txid。</p><h4 id="读多写少"><a href="#读多写少" class="headerlink" title="读多写少"></a>读多写少</h4><p>使用读写锁 ReentrantReadWriteLock。</p><p>比如分布式服务注册中心的服务注册表注册和读取。</p><h4 id="尽量减少锁占用时间"><a href="#尽量减少锁占用时间" class="headerlink" title="尽量减少锁占用时间"></a>尽量减少锁占用时间</h4><p>加锁范围尽量小，加锁时只操作内存数据，对数据库、磁盘 IO 操作最好不要使用锁。</p><p>比如分布式存储是通 edits log 的分段加锁机制。</p><h4 id="尽可能减少对数据加锁的力度，分段锁"><a href="#尽可能减少对数据加锁的力度，分段锁" class="headerlink" title="尽可能减少对数据加锁的力度，分段锁"></a>尽可能减少对数据加锁的力度，分段锁</h4><p>一份数据包含多个子数据时，对子数据分开加锁，用来替换对整个大的数据进行加锁。</p><p>比如库存可以创建多个子库存，对子库存进行加锁，总库存=各个子库存的总和，可以参考 LongAdder。</p><h4 id="对不同的功能分开加锁"><a href="#对不同的功能分开加锁" class="headerlink" title="对不同的功能分开加锁"></a>对不同的功能分开加锁</h4><p>比如同步队列 LinkedBlockingQueue。</p><p>入队出队分开加锁</p><h4 id="避免在循环中使用锁"><a href="#避免在循环中使用锁" class="headerlink" title="避免在循环中使用锁"></a>避免在循环中使用锁</h4><p>在循环中使用锁，会导致锁竞争频繁，避免自旋。</p><p>如果在循环中使用，可以参考 AQS，使用 LockSupport park 阻塞，释放资源，然后上一个节点 unpark 下一个节点，这种机制。</p><h4 id="减少高并发场景对锁的争用，使用多级缓存"><a href="#减少高并发场景对锁的争用，使用多级缓存" class="headerlink" title="减少高并发场景对锁的争用，使用多级缓存"></a>减少高并发场景对锁的争用，使用多级缓存</h4><p>比如服务注册表的多级缓存。readOnlyMap readWriteMap</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工作笔记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 工作笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>ZooKeeper 分布式锁 Curator 源码 05：分布式读写锁和联锁</title>
       <link href="2021/07/16/curator-5.html"/>
       <url>2021/07/16/curator-5.html</url>
@@ -159,16 +234,14 @@
     
     
     <entry>
-      <title>Redisson 分布式锁源码 11：Semaphore 和 CountDownLatch</title>
-      <link href="2021/07/08/redisson-11.html"/>
-      <url>2021/07/08/redisson-11.html</url>
+      <title>Redisson 分布式锁源码 10：读写锁</title>
+      <link href="2021/07/07/redisson-10.html"/>
+      <url>2021/07/07/redisson-10.html</url>
       
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Redisson 除了提供了分布式锁之外，还额外提供了同步组件，Semaphore 和 CountDownLatch。</p><h3 id="Semaphore"><a href="#Semaphore" class="headerlink" title="Semaphore"></a>Semaphore</h3><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/1LOGT4-xNw3Rw.jpg"></p><p>意思就是在分布式场景下，只有 3 个凭证，也就意味着同时只会有三个线程执行业务。</p><h4 id="设置凭证"><a href="#设置凭证" class="headerlink" title="设置凭证"></a>设置凭证</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/7ADtBU-yOtMR3.png"></p><p>参数列表：</p><ol><li>KEYS[1]：指定的 key 这里叫 semaphore</li><li>KEYS[2]：redisson_sc:{semaphore}</li><li>ARGV[1]：凭证数 3</li></ol><p>这块 lua 脚本相对简单，直接设置一个 key 的 value 为 3。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/v1kNPu-PjD1Ap.png"></p><h4 id="获取凭证"><a href="#获取凭证" class="headerlink" title="获取凭证"></a>获取凭证</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/nvzukA-apTIs6.png"></p><p>参数列表：</p><ol><li>KEYS[1]：指定的 key 这里叫 semaphore</li><li>ARGV[1]：要获取的凭证数，默认 1</li></ol><p>这段 lua 脚本就是：</p><ol><li>获取 key semaphore 的值</li><li>如果值大于等于 1（要获取的凭证数），对值进行递减</li><li>成功返回 1，失败返回 0</li></ol><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/O5yTbh-aCpbv9.png"></p><p>如果成功获取凭证，直接返回，没有获取到凭证，则自旋等待。</p><h4 id="释放凭证"><a href="#释放凭证" class="headerlink" title="释放凭证"></a>释放凭证</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ytlA3e-Wh1t66.png"></p><p>释放凭证直接对 Redis key 的值进行自增即可。</p><h3 id="CountDownLatch"><a href="#CountDownLatch" class="headerlink" title="CountDownLatch"></a>CountDownLatch</h3><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/0kkQcu-8Jbrdf.jpg"></p><p>输出内容如下：</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/vszX6P-WAZtHj.png"></p><h4 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h4><p>设置门闩数量</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/EmNpQd-z1ryrg.png"></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/VhSKWG-VZD500.png"></p><p>这块都大同小异。</p><p>减少门闩数量</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/9LYtOI-HdpoEO.png"></p><p>就是对这个值进行递减。</p><p>而 <code>latch.await()</code> 就是自旋获取门闩的值，直到为 0 了，然后继续往下执行。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Redisson 实现分布式的 Semaphore 和 CountDownLatch 基本内容就是如此，仅仅通过在 Redis 维护一个公共的变量，然后进行原子更新即可。</p><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/c6_9Ip3py4SMZyIOuIXlGg">Redisson 分布式锁源码 10：读写锁</a></li><li><a href="https://mp.weixin.qq.com/s/2MsjFXCkSPY0e6Ax0jE3kw">Redisson 分布式锁源码 09：RedLock 红锁的故事</a></li><li><a href="https://mp.weixin.qq.com/s/mlEvFX8nVMNPz5FmuX73WQ">Redisson 分布式锁源码 08：MultiLock 加锁与锁释放</a></li></ul>]]></content>
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Redisson 还支持可重入读写锁，允许在分布式场景下，同时有多个读锁和一个写锁处于加锁状态。</p><h3 id="使用读写锁"><a href="#使用读写锁" class="headerlink" title="使用读写锁"></a>使用读写锁</h3><p>Redisson 读写锁实现了 JUC 下的 <code>ReadWriteLock</code>，使用方式基本相同。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/90epaA-GhkijF.jpg"></p><h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p>加锁源码基本和之前的可重入锁加锁无区别，唯一的差异就是在 Lua 脚本这里。</p><p>所以下面着重分析 Lua 脚本。</p><h4 id="读锁源码"><a href="#读锁源码" class="headerlink" title="读锁源码"></a>读锁源码</h4><p>源码地址：<code>org.redisson.RedissonReadLock#tryLockInnerAsync</code></p><p>参数列表：</p><ol><li>KEYS[1]：锁名字 anyRWLock</li><li>KEYS[2]：锁超时 key <code>&#123;锁名字&#125;:UUID:ThreadId:rwlock_timeout</code> 组成的字符串，{anyRWLock}:e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1:rwlock_timeout</li><li>ARGV[1]：锁时间，默认 30s</li><li>ARGV[2]：当前线程，<code>UUID:ThreadId</code> 组成的字符串，e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1</li><li>ARGV[3]：写锁名字，<code>getWriteLockName(threadId)</code> 写锁名字，<code>UUID:ThreadId:write</code> 组成的字符串， e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1:write</li></ol><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/6P7sgr-FWvHj8.jpg"></p><h5 id="首次加读锁"><a href="#首次加读锁" class="headerlink" title="首次加读锁"></a>首次加读锁</h5><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/c6JudI-lwO8EK.png"></p><ol><li>锁不存在，直接走第一部分</li><li>设置锁 anyRWLock 的 mode 是 read，表示这是个读锁</li><li>设置锁 anyRWLock 的 e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1（当前线程）值为 1</li><li>设置锁 {anyRWLock}:e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1:rwlock_timeout:1 的值是 1，表示当前线程，当前重入的超时时间</li><li>设置两个 RedisKey 的过期时间</li></ol><h5 id="读锁重入"><a href="#读锁重入" class="headerlink" title="读锁重入"></a>读锁重入</h5><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/g2yz1O-8tdW7L.png"></p><p>如果是重入的情况下：</p><ol><li>锁存在，且是读锁，直接进入第二部分</li><li>对锁 anyRWLock 的 e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1（当前线程）值自增 1 表是重入</li><li>再创建 {anyRWLock}:e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1:rwlock_timeout:2 表示第二次加锁的超时时间</li></ol><h5 id="读读支持"><a href="#读读支持" class="headerlink" title="读读支持"></a>读读支持</h5><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/lndOZd-rHsuat.png"></p><ol><li>锁存在，进入第二部分</li><li>对当前线程的值自增 1，这里已经是第二个线程了</li><li>设置第二个线程 {anyRWLock}:7c390320-78e3-497f-a3d8-ac34a44d0464:48:rwlock_timeout:1 的超时时间</li></ol><h5 id="写读互斥"><a href="#写读互斥" class="headerlink" title="写读互斥"></a>写读互斥</h5><p>已经加了读锁了，此时写锁进来，不满足第一部分，也不满足第二部分，所以直接返回当前锁的剩余时间。</p><p>然后再 Java 代码中进行 <code>while (true)</code> 自旋等待。</p><p>通过上面可以看出，在读锁的时候：</p><ol><li>锁 anyRWLock 是哈希表结构的</li><li>加锁时，会对哈希表设置 mode 字段来表示这个锁是读锁还是写锁，<code>mode = read</code> 表示读锁</li><li>加锁时，会对哈希表设置当前线程 anyRWLock 的 <code>UUID:ThreadId</code> 字段，值表示重入次数</li><li>每次加锁，会额外维护一个 key 表示这次锁的超时时间，这个 key 的结构是 <code>&#123;锁名字&#125;:UUID:ThreadId:rwlock_timeout:重入次数</code></li></ol><h4 id="写锁源码"><a href="#写锁源码" class="headerlink" title="写锁源码"></a>写锁源码</h4><p>源码地址：<code>org.redisson.RedissonWriteLock#tryLockInnerAsync</code></p><p>参数列表：</p><ol><li>KEYS[1]：当前锁 anyRWLock</li><li>ARGV[1]：锁时间，默认 30s</li><li>ARGV[2]：写锁名字，<code>UUID:ThreadId:write</code> 组成的字符串，c69a9ed4-5c30-4952-814e-c0b94ad03a7f:1:write</li></ol><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/0JDEZM-ZWNh3Y.jpg"></p><p>写锁源码相对比较好理解：</p><ol><li>判断锁的模式，是写锁</li><li>锁不存在直接创建</li><li>锁存在，再判断是不是自己，是自己则重入</li></ol><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/lhU5N7-uvlZ99.png"></p><p>这么下来，可以看出直接满足，写写互斥，读写互斥，当前线程又可以重入。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>到这里基本上读写锁就看完了，读锁实现的稍微复杂一些，写锁简单明了。</p><p>在读锁的时候：</p><ol><li>锁 anyRWLock 是哈希表结构</li><li>加锁时，会对哈希表设置 mode 字段来表示这个锁是读锁还是写锁，<code>mode = read</code> 表示读锁</li><li>加锁时，会对哈希表设置当前线程 anyRWLock 的 <code>UUID:ThreadId</code> 字段，值表示重入次数</li><li>每次加锁，会额外维护一个 key 表示这次锁的超时时间，这个 key 的结构是 <code>&#123;锁名字&#125;:UUID:ThreadId:rwlock_timeout:重入次数</code></li></ol><p>在写锁的时候：</p><ol><li>锁 anyRWLock 是哈希表结构 </li><li>加锁时，会对哈希表设置 mode 字段来表示这个锁是读锁还是写锁，<code>mode = write</code> 表示写锁</li><li>在 anyRWLock 中再额外维护一个字段 <code>UUID:ThreadId:write</code> 表示重入次数</li></ol><p>至于看门狗，这些都和之前的一样，就不额外介绍了。</p><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/2MsjFXCkSPY0e6Ax0jE3kw">Redisson 分布式锁源码 09：RedLock 红锁的故事</a></li><li><a href="https://mp.weixin.qq.com/s/mlEvFX8nVMNPz5FmuX73WQ">Redisson 分布式锁源码 08：MultiLock 加锁与锁释放</a></li><li><a href="https://mp.weixin.qq.com/s/GXYE8-eXcVDRrnU0CimtYg">Redisson 分布式锁源码 07：公平锁释放</a></li></ul>]]></content>
       
       
       <categories>
-          
-          <category> 分布式锁 </category>
           
           <category> redisson </category>
           
@@ -190,16 +263,14 @@
     
     
     <entry>
-      <title>Redisson 分布式锁源码 10：读写锁</title>
-      <link href="2021/07/07/redisson-10.html"/>
-      <url>2021/07/07/redisson-10.html</url>
+      <title>Redisson 分布式锁源码 11：Semaphore 和 CountDownLatch</title>
+      <link href="2021/07/07/redisson-11.html"/>
+      <url>2021/07/07/redisson-11.html</url>
       
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Redisson 还支持可重入读写锁，允许在分布式场景下，同时有多个读锁和一个写锁处于加锁状态。</p><h3 id="使用读写锁"><a href="#使用读写锁" class="headerlink" title="使用读写锁"></a>使用读写锁</h3><p>Redisson 读写锁实现了 JUC 下的 <code>ReadWriteLock</code>，使用方式基本相同。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/90epaA-GhkijF.jpg"></p><h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p>加锁源码基本和之前的可重入锁加锁无区别，唯一的差异就是在 Lua 脚本这里。</p><p>所以下面着重分析 Lua 脚本。</p><h4 id="读锁源码"><a href="#读锁源码" class="headerlink" title="读锁源码"></a>读锁源码</h4><p>源码地址：<code>org.redisson.RedissonReadLock#tryLockInnerAsync</code></p><p>参数列表：</p><ol><li>KEYS[1]：锁名字 anyRWLock</li><li>KEYS[2]：锁超时 key <code>&#123;锁名字&#125;:UUID:ThreadId:rwlock_timeout</code> 组成的字符串，{anyRWLock}:e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1:rwlock_timeout</li><li>ARGV[1]：锁时间，默认 30s</li><li>ARGV[2]：当前线程，<code>UUID:ThreadId</code> 组成的字符串，e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1</li><li>ARGV[3]：写锁名字，<code>getWriteLockName(threadId)</code> 写锁名字，<code>UUID:ThreadId:write</code> 组成的字符串， e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1:write</li></ol><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/6P7sgr-FWvHj8.jpg"></p><h5 id="首次加读锁"><a href="#首次加读锁" class="headerlink" title="首次加读锁"></a>首次加读锁</h5><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/c6JudI-lwO8EK.png"></p><ol><li>锁不存在，直接走第一部分</li><li>设置锁 anyRWLock 的 mode 是 read，表示这是个读锁</li><li>设置锁 anyRWLock 的 e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1（当前线程）值为 1</li><li>设置锁 {anyRWLock}:e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1:rwlock_timeout:1 的值是 1，表示当前线程，当前重入的超时时间</li><li>设置两个 RedisKey 的过期时间</li></ol><h5 id="读锁重入"><a href="#读锁重入" class="headerlink" title="读锁重入"></a>读锁重入</h5><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/g2yz1O-8tdW7L.png"></p><p>如果是重入的情况下：</p><ol><li>锁存在，且是读锁，直接进入第二部分</li><li>对锁 anyRWLock 的 e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1（当前线程）值自增 1 表是重入</li><li>再创建 {anyRWLock}:e70b1307-9ddd-43de-ac9d-9c42b5c99a0d:1:rwlock_timeout:2 表示第二次加锁的超时时间</li></ol><h5 id="读读支持"><a href="#读读支持" class="headerlink" title="读读支持"></a>读读支持</h5><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/lndOZd-rHsuat.png"></p><ol><li>锁存在，进入第二部分</li><li>对当前线程的值自增 1，这里已经是第二个线程了</li><li>设置第二个线程 {anyRWLock}:7c390320-78e3-497f-a3d8-ac34a44d0464:48:rwlock_timeout:1 的超时时间</li></ol><h5 id="写读互斥"><a href="#写读互斥" class="headerlink" title="写读互斥"></a>写读互斥</h5><p>已经加了读锁了，此时写锁进来，不满足第一部分，也不满足第二部分，所以直接返回当前锁的剩余时间。</p><p>然后再 Java 代码中进行 <code>while (true)</code> 自旋等待。</p><p>通过上面可以看出，在读锁的时候：</p><ol><li>锁 anyRWLock 是哈希表结构的</li><li>加锁时，会对哈希表设置 mode 字段来表示这个锁是读锁还是写锁，<code>mode = read</code> 表示读锁</li><li>加锁时，会对哈希表设置当前线程 anyRWLock 的 <code>UUID:ThreadId</code> 字段，值表示重入次数</li><li>每次加锁，会额外维护一个 key 表示这次锁的超时时间，这个 key 的结构是 <code>&#123;锁名字&#125;:UUID:ThreadId:rwlock_timeout:重入次数</code></li></ol><h4 id="写锁源码"><a href="#写锁源码" class="headerlink" title="写锁源码"></a>写锁源码</h4><p>源码地址：<code>org.redisson.RedissonWriteLock#tryLockInnerAsync</code></p><p>参数列表：</p><ol><li>KEYS[1]：当前锁 anyRWLock</li><li>ARGV[1]：锁时间，默认 30s</li><li>ARGV[2]：写锁名字，<code>UUID:ThreadId:write</code> 组成的字符串，c69a9ed4-5c30-4952-814e-c0b94ad03a7f:1:write</li></ol><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/0JDEZM-ZWNh3Y.jpg"></p><p>写锁源码相对比较好理解：</p><ol><li>判断锁的模式，是写锁</li><li>锁不存在直接创建</li><li>锁存在，再判断是不是自己，是自己则重入</li></ol><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/lhU5N7-uvlZ99.png"></p><p>这么下来，可以看出直接满足，写写互斥，读写互斥，当前线程又可以重入。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>到这里基本上读写锁就看完了，读锁实现的稍微复杂一些，写锁简单明了。</p><p>在读锁的时候：</p><ol><li>锁 anyRWLock 是哈希表结构</li><li>加锁时，会对哈希表设置 mode 字段来表示这个锁是读锁还是写锁，<code>mode = read</code> 表示读锁</li><li>加锁时，会对哈希表设置当前线程 anyRWLock 的 <code>UUID:ThreadId</code> 字段，值表示重入次数</li><li>每次加锁，会额外维护一个 key 表示这次锁的超时时间，这个 key 的结构是 <code>&#123;锁名字&#125;:UUID:ThreadId:rwlock_timeout:重入次数</code></li></ol><p>在写锁的时候：</p><ol><li>锁 anyRWLock 是哈希表结构 </li><li>加锁时，会对哈希表设置 mode 字段来表示这个锁是读锁还是写锁，<code>mode = write</code> 表示写锁</li><li>在 anyRWLock 中再额外维护一个字段 <code>UUID:ThreadId:write</code> 表示重入次数</li></ol><p>至于看门狗，这些都和之前的一样，就不额外介绍了。</p><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/2MsjFXCkSPY0e6Ax0jE3kw">Redisson 分布式锁源码 09：RedLock 红锁的故事</a></li><li><a href="https://mp.weixin.qq.com/s/mlEvFX8nVMNPz5FmuX73WQ">Redisson 分布式锁源码 08：MultiLock 加锁与锁释放</a></li><li><a href="https://mp.weixin.qq.com/s/GXYE8-eXcVDRrnU0CimtYg">Redisson 分布式锁源码 07：公平锁释放</a></li></ul>]]></content>
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Redisson 除了提供了分布式锁之外，还额外提供了同步组件，Semaphore 和 CountDownLatch。</p><h3 id="Semaphore"><a href="#Semaphore" class="headerlink" title="Semaphore"></a>Semaphore</h3><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/1LOGT4-xNw3Rw.jpg"></p><p>意思就是在分布式场景下，只有 3 个凭证，也就意味着同时只会有三个线程执行业务。</p><h4 id="设置凭证"><a href="#设置凭证" class="headerlink" title="设置凭证"></a>设置凭证</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/7ADtBU-yOtMR3.png"></p><p>参数列表：</p><ol><li>KEYS[1]：指定的 key 这里叫 semaphore</li><li>KEYS[2]：redisson_sc:{semaphore}</li><li>ARGV[1]：凭证数 3</li></ol><p>这块 lua 脚本相对简单，直接设置一个 key 的 value 为 3。</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/v1kNPu-PjD1Ap.png"></p><h4 id="获取凭证"><a href="#获取凭证" class="headerlink" title="获取凭证"></a>获取凭证</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/nvzukA-apTIs6.png"></p><p>参数列表：</p><ol><li>KEYS[1]：指定的 key 这里叫 semaphore</li><li>ARGV[1]：要获取的凭证数，默认 1</li></ol><p>这段 lua 脚本就是：</p><ol><li>获取 key semaphore 的值</li><li>如果值大于等于 1（要获取的凭证数），对值进行递减</li><li>成功返回 1，失败返回 0</li></ol><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/O5yTbh-aCpbv9.png"></p><p>如果成功获取凭证，直接返回，没有获取到凭证，则自旋等待。</p><h4 id="释放凭证"><a href="#释放凭证" class="headerlink" title="释放凭证"></a>释放凭证</h4><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ytlA3e-Wh1t66.png"></p><p>释放凭证直接对 Redis key 的值进行自增即可。</p><h3 id="CountDownLatch"><a href="#CountDownLatch" class="headerlink" title="CountDownLatch"></a>CountDownLatch</h3><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/0kkQcu-8Jbrdf.jpg"></p><p>输出内容如下：</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/vszX6P-WAZtHj.png"></p><h4 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h4><p>设置门闩数量</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/EmNpQd-z1ryrg.png"></p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/VhSKWG-VZD500.png"></p><p>这块都大同小异。</p><p>减少门闩数量</p><p><img src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/9LYtOI-HdpoEO.png"></p><p>就是对这个值进行递减。</p><p>而 <code>latch.await()</code> 就是自旋获取门闩的值，直到为 0 了，然后继续往下执行。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Redisson 实现分布式的 Semaphore 和 CountDownLatch 基本内容就是如此，仅仅通过在 Redis 维护一个公共的变量，然后进行原子更新即可。</p><h4 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h4><ul><li><a href="https://mp.weixin.qq.com/s/c6_9Ip3py4SMZyIOuIXlGg">Redisson 分布式锁源码 10：读写锁</a></li><li><a href="https://mp.weixin.qq.com/s/2MsjFXCkSPY0e6Ax0jE3kw">Redisson 分布式锁源码 09：RedLock 红锁的故事</a></li><li><a href="https://mp.weixin.qq.com/s/mlEvFX8nVMNPz5FmuX73WQ">Redisson 分布式锁源码 08：MultiLock 加锁与锁释放</a></li></ul>]]></content>
       
       
       <categories>
-          
-          <category> 分布式锁 </category>
           
           <category> redisson </category>
           
@@ -230,8 +301,6 @@
       
       <categories>
           
-          <category> 分布式锁 </category>
-          
           <category> redisson </category>
           
       </categories>
@@ -260,8 +329,6 @@
       
       
       <categories>
-          
-          <category> 分布式锁 </category>
           
           <category> redisson </category>
           
@@ -292,8 +359,6 @@
       
       <categories>
           
-          <category> 分布式锁 </category>
-          
           <category> redisson </category>
           
       </categories>
@@ -322,8 +387,6 @@
       
       
       <categories>
-          
-          <category> 分布式锁 </category>
           
           <category> redisson </category>
           
@@ -354,8 +417,6 @@
       
       <categories>
           
-          <category> 分布式锁 </category>
-          
           <category> redisson </category>
           
       </categories>
@@ -384,8 +445,6 @@
       
       
       <categories>
-          
-          <category> 分布式锁 </category>
           
           <category> redisson </category>
           
@@ -416,8 +475,6 @@
       
       <categories>
           
-          <category> 分布式锁 </category>
-          
           <category> redisson </category>
           
       </categories>
@@ -447,8 +504,6 @@
       
       <categories>
           
-          <category> 分布式锁 </category>
-          
           <category> redisson </category>
           
       </categories>
@@ -477,8 +532,6 @@
       
       
       <categories>
-          
-          <category> 分布式锁 </category>
           
           <category> redisson </category>
           
@@ -676,9 +729,9 @@
       
         <tags>
             
-            <tag> software </tag>
-            
             <tag> mac </tag>
+            
+            <tag> software </tag>
             
             <tag> 工具册 </tag>
             
@@ -1501,9 +1554,9 @@
       
         <tags>
             
-            <tag> mac </tag>
-            
             <tag> issue </tag>
+            
+            <tag> mac </tag>
             
             <tag> brew </tag>
             
@@ -1947,9 +2000,9 @@
       
         <tags>
             
-            <tag> 工作笔记 </tag>
-            
             <tag> ELK </tag>
+            
+            <tag> 工作笔记 </tag>
             
         </tags>
       
@@ -1976,9 +2029,9 @@
       
         <tags>
             
-            <tag> 工作笔记 </tag>
-            
             <tag> ELK </tag>
+            
+            <tag> 工作笔记 </tag>
             
         </tags>
       
@@ -2005,9 +2058,9 @@
       
         <tags>
             
-            <tag> 工作笔记 </tag>
-            
             <tag> ELK </tag>
+            
+            <tag> 工作笔记 </tag>
             
         </tags>
       
@@ -2034,9 +2087,9 @@
       
         <tags>
             
-            <tag> 工作笔记 </tag>
-            
             <tag> ELK </tag>
+            
+            <tag> 工作笔记 </tag>
             
         </tags>
       
@@ -2063,9 +2116,9 @@
       
         <tags>
             
-            <tag> 工作笔记 </tag>
-            
             <tag> ELK </tag>
+            
+            <tag> 工作笔记 </tag>
             
         </tags>
       
@@ -2148,9 +2201,9 @@
             
             <tag> 工具册 </tag>
             
-            <tag> IDEA </tag>
-            
             <tag> plugin </tag>
+            
+            <tag> IDEA </tag>
             
         </tags>
       
@@ -2575,9 +2628,9 @@
       
         <tags>
             
-            <tag> mac </tag>
-            
             <tag> issue </tag>
+            
+            <tag> mac </tag>
             
         </tags>
       
@@ -3178,16 +3231,16 @@
       
       <categories>
           
-          <category> 源码笔记 </category>
+          <category> 源码学习 </category>
           
-          <category> JDK </category>
+          <category> java </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> final </tag>
+            <tag> 源码学习 </tag>
             
         </tags>
       
@@ -3255,12 +3308,14 @@
       
       <categories>
           
-          <category> 源码笔记 </category>
+          <category> 源码学习 </category>
           
       </categories>
       
       
         <tags>
+            
+            <tag> 源码学习 </tag>
             
             <tag> 反射 </tag>
             
@@ -3305,14 +3360,16 @@
       
       <categories>
           
-          <category> 源码笔记 </category>
+          <category> 源码学习 </category>
           
-          <category> JDK </category>
+          <category> java </category>
           
       </categories>
       
       
         <tags>
+            
+            <tag> 源码学习 </tag>
             
             <tag> LinkList </tag>
             
@@ -3332,16 +3389,16 @@
       
       <categories>
           
-          <category> 源码笔记 </category>
+          <category> 源码学习 </category>
           
-          <category> JDK </category>
+          <category> java </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 源码笔记 </tag>
+            <tag> 源码学习 </tag>
             
         </tags>
       
@@ -3800,16 +3857,16 @@
       
       <categories>
           
-          <category> 源码笔记 </category>
+          <category> 源码学习 </category>
           
-          <category> JDK </category>
+          <category> java </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 源码笔记 </tag>
+            <tag> 源码学习 </tag>
             
         </tags>
       
