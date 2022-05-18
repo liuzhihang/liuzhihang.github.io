@@ -1,0 +1,7 @@
+User-agent: *
+
+Disallow: /project/
+
+
+Sitemap: https://liuzhihang.com/sitemap.xml
+Sitemap: https://liuzhihang.com/baidusitemap.xml
