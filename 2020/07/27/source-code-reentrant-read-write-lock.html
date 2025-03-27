@@ -1,0 +1,735 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！ | 程序员小航</title><meta name="keywords" content="JDK,源码笔记"><meta name="author" content="liuzhihang"><meta name="copyright" content="liuzhihang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！"><meta name="application-name" content="【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！"><meta property="og:url" content="https://liuzhihang.com/2020/07/27/source-code-reentrant-read-write-lock.html"><meta property="og:site_name" content="程序员小航"><meta property="og:description" content="在看完 ReentrantLock 之后，在高并发场景下 ReentrantLock 已经足够使用，但是因为 ReentrantLock 是独占锁，同时只有一个线程可以获取该锁，而很多应用场景都是读多写少，这时候使用 ReentrantLock 就不太合适了。读多写少的场景该如何使用？在 JUC 包"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantReadWriteLock-1ZuPsX.png"><meta property="article:author" content="liuzhihang"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantReadWriteLock-1ZuPsX.png"><meta name="description" content="在看完 ReentrantLock 之后，在高并发场景下 ReentrantLock 已经足够使用，但是因为 ReentrantLock 是独占锁，同时只有一个线程可以获取该锁，而很多应用场景都是读多写少，这时候使用 ReentrantLock 就不太合适了。读多写少的场景该如何使用？在 JUC 包"><link rel="shortcut icon" href="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg"><link rel="canonical" href="https://liuzhihang.com/2020/07/27/source-code-reentrant-read-write-lock.html"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="GZshAnnrC-4eCrl5h-e_5Rdk4lOUhRK7ShULoRi2q0E"/><meta name="baidu-site-verification" content="code-acvmSXHRKh"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@1.0.17/lib/assets/font-awesome-animation.min.css"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d9fdd597c560d9d9abc284df00839485";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-126394362-1"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-126394362-1');
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: {"enable":true,"title":"与数百名博主无限进步","addFriendPlaceholder":"昵称（请勿包含博客等字样）：\n网站地址（要求博客地址，请勿提交个人主页）：\n头像图片url（请提供尽可能清晰的图片，我会上传到我自己的图床）：\n描述：\n站点截图（可选）：\n"},
+  peoplecanvas: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"DeepSeek","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: undefined,
+  LA51: undefined,
+  greetingBox: undefined,
+  twikooEnvId: 'https://twikoo-fbi8ol32a-liuzhihangs-projects.vercel.app',
+  commentBarrageConfig:undefined,
+  music_page_default: "nav_music",
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: {"apiurl":null},
+  navMusic: true,
+  mainTone: undefined,
+  authorStatus: {"skills":["🎮 联盟手游金铲铲","🔨 全干开发工程师","🤖️ 数码科技爱好者","🔍 分享与热心帮助","🏠 智能家居小能手","🏃 脚踏实地行动派"]},
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: liuzhihang","link":"链接: ","source":"来源: 程序员小航","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: {"enable":true,"delay":100,"shiftDelay":200},
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '程序员小航',
+  title: '【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！',
+  postAI: '本文深入分析了ReentrantReadWriteLock读写锁的实现机制，重点探讨了其在高并发读多写少场景下的应用优势。文章首先介绍了读写锁的基本特性，包括公平与非公平模式、重入规则、锁降级机制等核心功能。随后通过源码解析详细阐述了state状态变量的设计原理，即利用32位int的高16位表示读锁状态、低16位表示写锁状态的巧妙实现。针对读锁和写锁的获取与释放流程，文章从线程竞争、锁重入、阻塞唤',
+  pageFillDescription: '介绍, 基本使用, 问题疑问, 源码分析, 代码结构, state, ReadLock.lock, ReadLock.unlock, WriteLock.lock, WriteLock.unlock, 总结, 问题, 小结, 相关资料前言在看完之后在高并发场景下已经足够使用但是因为是独占锁同时只有一个线程可以获取该锁而很多应用场景都是读多写少这时候使用就不太合适了读多写少的场景该如何使用在包下同样提供了读写锁来应对读多写少的场景介绍支持类似语义的的实现具有以下属性获取顺序此类不会将读取优先或写入优先强加给锁访问的排序但是它确实支持可选的公平策略支持公平模式和非公平模式默认为非公平模式重入允许和按照的样式重新获取读锁或写锁在写线程释放持有的所有写锁后才允许重入使用它们此外可以获取读锁但反过来则不成立锁降级重入还允许从写锁降级为读锁通过先获取写锁然后获取读锁最后释放写锁的方式降级但是从读锁升级到写锁是不可能的锁获取的中断读锁和写锁都支持锁获取期间的中断支持写锁提供了一个实现对于写锁来说该实现的方式与提供的实现对所做的行为相同当然此只能用于写锁读锁不支持监测此类支持一些确定是保持锁还是争用锁的方法这些方法设计用于监视系统状态而不是同步控制锁最多支持个递归写锁和个读锁以上为官方文档的解释总结一下内容如下支持非公平和公平模式默认为非公平模式支持重入读锁可以重入获取读锁写锁可以重入获取写锁写锁可以获取读锁读锁不可以获取写锁锁可以降级从写锁降级为读锁但是不可能从读锁升级到写锁基本使用读锁加锁获取写锁之前必须释放读锁写锁加锁重新检查状态因为另一个线程可能在执行操作之前获取了写锁定并更改了状态通过在释放写锁之前获取读锁来降级上面只是官方文档提供的一个问题疑问在中代表什么线程获取锁的流程是怎么样的读锁和写锁的可重入性是如何实现的当前线程获取锁失败被阻塞的后续操作是什么锁降级是怎么降级的源码分析代码结构提供读锁的内部类提供写锁的内部类执行所有同步机制之前在阅读源码的时候代表了锁的状态表示没有线程持有锁大于表示已经有线程持有锁及其重入的次数而在是读写锁那就需要保存读锁和写锁两种状态的那是怎么样表示的呢在中同样存在一个继承了也是的父类内部定义了的一些操作移位数单位最大数量计算独占数使用返回共享保留数返回独占保留数在中定义为类型而在中将的高位和低位拆开表示读写锁其中高位表示读锁低位表示写锁分别使用和方法获取读锁和写锁的当前状态下面分别从读锁和写锁的角度来看如何进行加锁和释放锁的获取读取锁如果写锁没有被另一个线程持有则获取读锁并立即返回如果写锁由另一个线程持有则出于线程调度目的当前线程将被禁用并处于休眠状态直到获取读锁为止调用获取共享资源获取共享资源这块使用的的逻辑其中是在中实现的并且中有规定分为三种返回值小于表示失败等于表示共享模式获取资源成功但后续的节点不能以共享模式获取成功大于表示共享模式获取资源成功后续节点在共享模式获取也可能会成功在这种情况下后续等待线程必须检查可用性获取值独占计数不为且不是当前线程说明已经有写锁获取共享计数读锁计数不需要阻塞读锁共享计数小于最大值更新成功当前读锁计数为是获得读锁的第一个线程是的保持计数读锁重入当前缓存计数当前线程没有计数或者没有创建计数器创建计数基于计数累加完整地获取共享锁方法作为方法因获取锁失败后的处理因为前面可能失败失败队列策略失败等原因先获取通过方法获取到写锁的计数值不为且不是当前线程说明已经有写锁返回失败通过获取读锁计数判断是否需要阻塞以及是否超过上限后使用更新读锁计数设置或更新最后会进行完整的获取共享锁方法作为之前获取失败的后续处理方法是获得读锁的第一个线程是的保持计数即获得读锁的第一个线程的重入次数最后一个获得读锁的线程获得读锁的重入次数无限循环是否有写锁有写锁但是不是当前线程直接返回失败需要阻塞没有写锁确保没有重新获取读锁当前线程的读锁计数中计数结束掉为直接失败到达上限抛出异常设置读锁首先会一直循环有写锁但是不是当前线程直接返回失败但是有写锁如果是当前线程是会继续执行的设置或更新当存在写锁独占锁时方法会返回失败后续会调用的方法循环获取资源方法会不断循环尝试获取读锁一旦获取到读锁当前节点会立即唤醒后续节点后续节点开始尝试获取读锁依次传播调用的释放共享资源方法其中有实现第一个线程是当前线程第一个线程不是当前线程更新自己的里面的计数循环使用更新但是如果现在读和写锁都已释放它可能允许等待的写程序继续进行如果是第一个线程直接更新技术不是则更新自己里面保存的计数循环使用更新的值如果更新后的值为说明没有线程持有读锁或者写锁了当为此时会调用的方法此时队列如果有写锁那就会被写锁获取的锁获取写入锁如果没有其他线程持有读锁或写锁会直接返回并将写锁计数设置为如果当前线程持有写锁则将写锁计数然后返回如果锁正在被其他线程持有则当前线程用于线程调度目的当前线程将被禁用并处于休眠状态直到获取读锁并将写锁计数设置为方法由自己实现方式和类似如果读锁计数为非零或写锁计数为非零并且所有者是另一个线程则失败如果计数饱和则失败只有在不为零时才可能发生这种情况否则如果该线程是可重入获取或队列策略允许的话则有资格进行锁定如果是这样请更新状态并设置所有者写锁计数说明有有线程获取锁了判断是不是自己不是自己返回判断有没有超过上限重入不需要阻塞或者更新失败获取如果不为则判断是否为当前线程重入获取为则当前线程更新获取锁更新成功之后绑定当前线程如果失败会继续调用的将当前阻塞放在队列中会不断循环等待上一个锁释放后尝试获得锁如果当前线程是此锁的持有者则保持计数递减如果保持现在的计数为零则解除锁定如果当前线程不是此锁的持有者则异常同样这块代码是使用的逻辑部分由自己实现如果是当前线程重入扣减重入次数扣减后如果为则设置锁持有线程为更新值会唤醒后续节点获取锁总结问题在中代表什么代表锁的状态为没有线程持有锁的高为代表读锁状态低为代表写锁状态通过位运算可以获取读写锁的实际值线程获取锁的流程是怎么样的可以参考上面的源码笔记以及后面的流程图读锁和写锁的可重入性是如何实现的在加锁的时候判断是否为当前线程如果是当前线程则直接累加计数值得注意的是读锁重入计数使用的在线程中缓存计数而写锁则直接用的进行累加其实和低位进行累加一样当前线程获取锁失败被阻塞的后续操作是什么获取失败会放到等待队列中在队列中不断循环监视前一个节点是否为是的话会重新尝试获取锁锁降级是怎么降级的如图在圈出部分代码中可以看出来在获取读锁的时候如果当前线程持有写锁是可以获取读锁的这块就是指锁降级比如线程获取到了写锁当线程执行完毕时它需要获取当前数据假设不支持锁降级就会导致释放写锁然后再次请求读锁而在这中间是有可能被其他阻塞的线程获取到写锁的从而导致线程在一次执行过程中数据不一致小结读写锁内部实现是读锁和写锁读锁允许共享写锁是独占锁读写锁都支持重入读锁的重入次数记录在线程维护的中写锁维护在上低位支持锁降级从写锁降级为读锁防止脏读和都是通过来实现的获取锁失败后会放到等待队列中后续不断尝试获取锁区别在读锁只有存在写锁的时候才放到等待队列而写锁是只要存在非当前线程锁无论写锁还是读锁都会放到等待队列通过源码分析可以得出读写锁适合在读多写少的场景中使用相关资料',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-28 01:13:36',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="程序员小航" type="application/atom+xml">
+</head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://npm.elemecdn.com/anzhiyu-blog-static@1.0.4/img/avatar.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://liuzhihang.com/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" alt="博客"/><span class="back-menu-item-text">博客</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://juejin.im/user/1987506650493117" title="掘金"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/static/favicons/apple-touch-icon.png" alt="掘金"/><span class="back-menu-item-text">掘金</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://www.zhihu.com/people/liuzhihang" title="知乎"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://static.zhihu.com/heifetz/favicon.ico" alt="知乎"/><span class="back-menu-item-text">知乎</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36535538" title="CSDN"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://g.csdnimg.cn/static/logo/favicon32.ico" alt="CSDN"/><span class="back-menu-item-text">CSDN</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://leetcode-cn.com/u/liuzhihang/" title="LeetCode"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://static.leetcode.cn/cn-frontendx-assets/production/_next/static/images/logo-711e116152be014f445f50aa6a369231.png" alt="LeetCode"/><span class="back-menu-item-text">LeetCode</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">开源</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://github.com/liuzhihang/doc-view" title="doc-view"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://github.com/liuzhihang/doc-view/blob/master/src/main/resources/META-INF/pluginIcon.svg" alt="doc-view"/><span class="back-menu-item-text">doc-view</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">程序员小航</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a><div id="he-plugin-simple"></div><script>var WIDGET = {
+  "CONFIG": {
+    "modules": "0124",
+    "background": "2",
+    "tmpColor": "FFFFFF",
+    "tmpSize": "16",
+    "cityColor": "FFFFFF",
+    "citySize": "16",
+    "aqiColor": "E8D87B",
+    "aqiSize": "16",
+    "weatherIconSize": "24",
+    "alertIconSize": "18",
+    "padding": "10px 10px 10px 10px",
+    "shadow": "0",
+    "language": "auto",
+    "borderRadius": "20",
+    "fixed": "true",
+    "vertical": "top",
+    "horizontal": "left",
+    "left": "20",
+    "top": "7.1",
+    "key": "df245676fb434a0691ead1c63341cd94"
+  }
+}
+</script><link rel="stylesheet" href="https://widget.qweather.net/simple/static/css/he-simple.css?v=1.4.0"/><script src="https://widget.qweather.net/simple/static/js/he-simple.js?v=1.4.0"></script></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/fcircle/"><i class="anzhiyufont anzhiyu-icon-artstation faa-tada" style="font-size: 0.9em;"></i><span> 朋友圈</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size: 0.9em;"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/bangumis/"><i class="anzhiyufont anzhiyu-icon-bilibili faa-tada" style="font-size: 0.9em;"></i><span> 追番页</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/air-conditioner/"><i class="anzhiyufont anzhiyu-icon-fan faa-tada" style="font-size: 0.9em;"></i><span> 小空调</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button only-home" id="travellings_button" title="随机前往一个开往项目网站"><a class="site-page" onclick="anzhiyu.totraveling()" title="随机前往一个开往项目网站" href="javascript:void(0);" rel="external nofollow" data-pjax-state="external"><i class="anzhiyufont anzhiyu-icon-train"></i></a></div><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Doc-View/" style="font-size: 1.05rem;">Doc View<sup>6</sup></a><a href="/tags/ELK/" style="font-size: 1.05rem;">ELK<sup>18</sup></a><a href="/tags/IDEA/" style="font-size: 1.05rem;">IDEA<sup>1</sup></a><a href="/tags/JDK/" style="font-size: 1.05rem;">JDK<sup>20</sup></a><a href="/tags/JWT/" style="font-size: 1.05rem;">JWT<sup>1</sup></a><a href="/tags/Redis/" style="font-size: 1.05rem;">Redis<sup>1</sup></a><a href="/tags/Spring/" style="font-size: 1.05rem;">Spring<sup>24</sup></a><a href="/tags/SpringSecurity/" style="font-size: 1.05rem;">SpringSecurity<sup>1</sup></a><a href="/tags/aop/" style="font-size: 1.05rem;">aop<sup>1</sup></a><a href="/tags/brew/" style="font-size: 1.05rem;">brew<sup>1</sup></a><a href="/tags/cache/" style="font-size: 1.05rem;">cache<sup>1</sup></a><a href="/tags/docker/" style="font-size: 1.05rem;">docker<sup>1</sup></a><a href="/tags/error/" style="font-size: 1.05rem;">error<sup>1</sup></a><a href="/tags/hexo/" style="font-size: 1.05rem;">hexo<sup>4</sup></a><a href="/tags/interceptor/" style="font-size: 1.05rem;">interceptor<sup>1</sup></a><a href="/tags/ip/" style="font-size: 1.05rem;">ip<sup>1</sup></a><a href="/tags/issue/" style="font-size: 1.05rem;">issue<sup>5</sup></a><a href="/tags/mac/" style="font-size: 1.05rem;">mac<sup>3</sup></a><a href="/tags/markdown/" style="font-size: 1.05rem;">markdown<sup>1</sup></a><a href="/tags/mysql/" style="font-size: 1.05rem;">mysql<sup>5</sup></a><a href="/tags/next-key/" style="font-size: 1.05rem;">next-key<sup>4</sup></a><a href="/tags/plugin/" style="font-size: 1.05rem;">plugin<sup>5</sup></a><a href="/tags/servlet/" style="font-size: 1.05rem;">servlet<sup>1</sup></a><a href="/tags/skywalking/" style="font-size: 1.05rem;">skywalking<sup>1</sup></a><a href="/tags/software/" style="font-size: 1.05rem;">software<sup>1</sup></a><a href="/tags/transactional/" style="font-size: 1.05rem;">transactional<sup>1</sup></a><a href="/tags/volatile/" style="font-size: 1.05rem;">volatile<sup>1</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.05rem;">分布式<sup>6</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" style="font-size: 1.05rem;">分布式锁<sup>17</sup></a><a href="/tags/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/" style="font-size: 1.05rem;">动态代理<sup>2</sup></a><a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" style="font-size: 1.05rem;">单例模式<sup>2</sup></a><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 1.05rem;">多线程<sup>4</sup></a><a href="/tags/%E5%B0%8F%E6%8A%80%E5%B7%A7/" style="font-size: 1.05rem;">小技巧<sup>1</sup></a><a href="/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/" style="font-size: 1.05rem;">工作笔记<sup>16</sup></a><a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.05rem;">工具<sup>2</sup></a><a href="/tags/%E5%B7%A5%E5%85%B7%E5%86%8C/" style="font-size: 1.05rem;">工具册<sup>9</sup></a><a href="/tags/%E6%B5%81%E6%B0%B4%E5%8F%B7/" style="font-size: 1.05rem;">流水号<sup>1</sup></a><a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" style="font-size: 1.05rem;">线程池<sup>1</sup></a><a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.05rem;">设计模式<sup>5</sup></a><a href="/tags/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/" style="font-size: 1.05rem;">雪花算法<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="anzhiyufont anzhiyu-icon-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">一月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/11/"><span class="card-archive-list-date">十一月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/09/"><span class="card-archive-list-date">九月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">八月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/07/"><span class="card-archive-list-date">七月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">14</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/06/"><span class="card-archive-list-date">六月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">9</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div><div class="console-btn-item" id="consoleKeyboard" onclick="anzhiyu.keyboardToggle()" title="快捷键开关"><a class="keyboard-switch"><i class="anzhiyufont anzhiyu-icon-keyboard"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/" itemprop="url">源码笔记</a><i class="anzhiyufont anzhiyu-icon-angle-right post-meta-separator"></i><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/JDK/" itemprop="url">JDK</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/JDK/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>JDK</span></a><a class="article-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>源码笔记</span></a></span></div></div><h1 class="post-title" itemprop="name headline">【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2020-07-27T15:50:00.000Z" title="发表于 2020-07-27 23:50:00">2020-07-27</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2025-03-27T17:13:36.169Z" title="更新于 2025-03-28 01:13:36">2025-03-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数总计:</span><span class="word-count" title="文章字数">3.8k</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为杭州"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>杭州</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantReadWriteLock-1ZuPsX.png"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><div class="post-ai-description"><div class="ai-title"><i class="anzhiyufont anzhiyu-icon-bilibili"></i><div class="ai-title-text">AI-摘要</div><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right"></i><i class="anzhiyufont anzhiyu-icon-circle-dot" title="朗读摘要"></i><div id="ai-tag">DeepSeek GPT</div></div><div class="ai-explanation">AI初始化中...</div><div class="ai-btn-box"><div class="ai-btn-item">介绍自己 🙈</div><div class="ai-btn-item">生成本文简介 👋</div><div class="ai-btn-item">推荐相关文章 📖</div><div class="ai-btn-item">前往主页 🏠</div><div class="ai-btn-item" id="go-tianli-blog">前往爱发电购买</div></div><script data-pjax src="/js/anzhiyu/ai_abstract.js"></script></div><article class="post-content" id="article-container" itemscope itemtype="https://liuzhihang.com/2020/07/27/source-code-reentrant-read-write-lock.html"><header><a class="post-meta-categories" href="/categories/%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/" itemprop="url">源码笔记</a><a class="post-meta-categories" href="/categories/%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/JDK/" itemprop="url">JDK</a><a href="/tags/JDK/" tabindex="-1" itemprop="url">JDK</a><a href="/tags/%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/" tabindex="-1" itemprop="url">源码笔记</a><h1 id="CrawlerTitle" itemprop="name headline">【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">liuzhihang</span><time itemprop="dateCreated datePublished" datetime="2020-07-27T15:50:00.000Z" title="发表于 2020-07-27 23:50:00">2020-07-27</time><time itemprop="dateCreated datePublished" datetime="2025-03-27T17:13:36.169Z" title="更新于 2025-03-28 01:13:36">2025-03-28</time></header><blockquote>
+<p><strong>前言</strong></p>
+<br>
+<p>在看完 ReentrantLock 之后，在高并发场景下 ReentrantLock 已经足够使用，但是因为 ReentrantLock 是独占锁，同时只有一个线程可以获取该锁，而很多应用场景都是读多写少，这时候使用 ReentrantLock 就不太合适了。读多写少的场景该如何使用？在 JUC 包下同样提供了读写锁 ReentrantReadWriteLock 来应对读多写少的场景。</p>
+</blockquote>
+<h3 id="介绍">介绍</h3>
+<p>支持类似 ReentrantLock 语义的 ReadWriteLock 的实现。</p>
+<p>具有以下属性：</p>
+<ul>
+<li><strong>获取顺序</strong></li>
+</ul>
+<p>此类不会将读取优先或写入优先强加给锁访问的排序。但是，它确实支持可选的<em>公平</em> 策略。</p>
+<p>支持<strong>公平模式</strong>和<strong>非公平模式</strong>，默认为<strong>非公平模式</strong>。</p>
+<ul>
+<li><strong>重入</strong></li>
+</ul>
+<p>允许 reader 和 writer 按照 <code>ReentrantLock</code> 的样式重新获取读锁或写锁。在写线程释放持有的所有写锁后，reader 才允许重入使用它们。此外，writer 可以获取读锁，但反过来则不成立。</p>
+<ul>
+<li><strong>锁降级</strong></li>
+</ul>
+<p>重入还允许从写锁降级为读锁，通过先获取写锁，然后获取读锁，最后释放写锁的方式降级。但是，从读锁升级到写锁是<strong>不可能的</strong>。</p>
+<ul>
+<li><strong>锁获取的中断</strong></li>
+</ul>
+<p>读锁和写锁都支持锁获取期间的中断。</p>
+<ul>
+<li><strong><code>Condition</code> 支持</strong></li>
+</ul>
+<p>写锁提供了一个 <code>Condition</code> 实现，对于写锁来说，该实现的方式与 <code>ReentrantLock.newCondition()</code> 提供的 <code>Condition</code> 实现对 <code>ReentrantLock</code> 所做的行为相同。当然，此 <code>Condition</code> 只能用于写锁。读锁不支持 <code>Condition</code>。</p>
+<ul>
+<li><strong>监测</strong></li>
+</ul>
+<p>此类支持一些确定是保持锁还是争用锁的方法。这些方法设计用于监视系统状态，而不是同步控制。</p>
+<p>锁最多支持 65535 个递归写锁和 65535 个读锁</p>
+<p>以上为 <em>Java Api 官方文档</em><sup>[1]</sup> 的解释，总结一下内容如下：</p>
+<ol>
+<li>支持非公平和公平模式，默认为非公平模式。</li>
+<li>支持重入，读锁可以重入获取读锁，写锁可以重入获取写锁，写锁可以获取读锁，读锁不可以获取写锁。</li>
+<li>锁可以降级，从写锁降级为读锁，但是不可能从读锁升级到写锁。</li>
+</ol>
+<h4 id="基本使用">基本使用</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CachedData</span> &#123;</span><br><span class="line">    Object data;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">boolean</span> cacheValid;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">ReentrantReadWriteLock</span> <span class="variable">rwl</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantReadWriteLock</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">processCachedData</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 读锁加锁</span></span><br><span class="line">        rwl.readLock().lock();</span><br><span class="line">        <span class="keyword">if</span> (!cacheValid) &#123;</span><br><span class="line">            <span class="comment">// 获取写锁之前必须释放读锁</span></span><br><span class="line">            rwl.readLock().unlock();</span><br><span class="line">            <span class="comment">// 写锁加锁</span></span><br><span class="line">            rwl.writeLock().lock();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 重新检查状态，因为另一个线程可能</span></span><br><span class="line">                <span class="comment">// 在执行操作之前获取了写锁定并更改了状态</span></span><br><span class="line">                <span class="keyword">if</span> (!cacheValid) &#123;</span><br><span class="line">                    data = ...</span><br><span class="line">                    cacheValid = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 通过在释放写锁之前获取读锁来降级</span></span><br><span class="line">                rwl.readLock().lock();</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                rwl.writeLock().unlock(); <span class="comment">// Unlock write, still hold read</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            use(data);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            rwl.readLock().unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面只是官方文档提供的一个 demo。</p>
+<h4 id="问题疑问">问题疑问</h4>
+<ol>
+<li>在 ReentrantReadWriteLock 中 state 代表什么？</li>
+<li>线程获取锁的流程是怎么样的？</li>
+<li>读锁和写锁的可重入性是如何实现的？</li>
+<li>当前线程获取锁失败，被阻塞的后续操作是什么？</li>
+<li>锁降级是怎么降级的？</li>
+</ol>
+<h3 id="源码分析">源码分析</h3>
+<h4 id="代码结构">代码结构</h4>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantReadWriteLock-uml-SQCZqu.png" alt="ReentrantReadWriteLock-uml-SQCZqu"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReentrantReadWriteLock</span> <span class="keyword">implements</span> <span class="title class_">ReadWriteLock</span>, java.io.Serializable &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">6992448646407690164L</span>;</span><br><span class="line">    <span class="comment">/** 提供读锁的内部类 */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReentrantReadWriteLock.ReadLock readerLock;</span><br><span class="line">    <span class="comment">/** 提供写锁的内部类 */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReentrantReadWriteLock.WriteLock writerLock;</span><br><span class="line">    <span class="comment">/** 执行所有同步机制 */</span></span><br><span class="line">    <span class="keyword">final</span> Sync sync;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="state">state</h4>
+<p>之前在阅读 ReentrantLock 源码的时候 state 代表了锁的状态，0 表示没有线程持有锁，大于 1 表示已经有线程持有锁及其重入的次数。而在 ReentrantReadWriteLock 是读写锁，那就需要保存<strong>读锁</strong>和<strong>写锁</strong>两种状态的，那是怎么样表示的呢？</p>
+<p>在 ReentrantReadWriteLock 中同样存在一个 Sync 继承了 AbstractQueuedSynchronizer，也是 FairSync、NonfairSync 的父类。内部定义了 state 的一些操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Sync</span> <span class="keyword">extends</span> <span class="title class_">AbstractQueuedSynchronizer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">6317671515068378041L</span>;</span><br><span class="line">    <span class="comment">// 移位数</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">SHARED_SHIFT</span>   <span class="operator">=</span> <span class="number">16</span>;</span><br><span class="line">    <span class="comment">// 单位</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">SHARED_UNIT</span>    <span class="operator">=</span> (<span class="number">1</span> &lt;&lt; SHARED_SHIFT);</span><br><span class="line">    <span class="comment">// 最大数量 1 &lt;&lt; 16 -&gt; 65536</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_COUNT</span>      <span class="operator">=</span> (<span class="number">1</span> &lt;&lt; SHARED_SHIFT) - <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 计算独占数使用 1 &lt;&lt; 16 -&gt; 65536</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">EXCLUSIVE_MASK</span> <span class="operator">=</span> (<span class="number">1</span> &lt;&lt; SHARED_SHIFT) - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回共享保留数</span></span><br><span class="line">    <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">sharedCount</span><span class="params">(<span class="type">int</span> c)</span>    &#123; <span class="keyword">return</span> c &gt;&gt;&gt; SHARED_SHIFT; &#125;</span><br><span class="line">    <span class="comment">// 返回独占保留数 </span></span><br><span class="line">    <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">exclusiveCount</span><span class="params">(<span class="type">int</span> c)</span> &#123; <span class="keyword">return</span> c &amp; EXCLUSIVE_MASK; &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在 AQS 中定义 state 为 int 类型，而在 ReentrantReadWriteLock 中，将 state 的 高 16 位和低 16 位拆开表示读写锁。其中高 16 位表示读锁，低 16 位表示写锁。分别使用 sharedCount 和 exclusiveCount 方法获取读锁和写锁的当前状态。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantReadWriteLock-state-JusW2l.png" alt="ReentrantReadWriteLock-state-JusW2l"></p>
+<p>下面分别从读锁和写锁的角度来看如何进行加锁和释放锁的？</p>
+<h4 id="ReadLock-lock">ReadLock.lock</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ReadLock</span> </span><br><span class="line">    <span class="keyword">implements</span> <span class="title class_">Lock</span>, java.io.Serializable &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取读取锁。</span></span><br><span class="line"><span class="comment">     * 如果写锁没有被另一个线程持有，则获取读锁并立即返回。</span></span><br><span class="line"><span class="comment">     * 如果写锁由另一个线程持有，则出于线程调度目的，</span></span><br><span class="line"><span class="comment">     * 当前线程将被禁用，并处于休眠状态，直到获取读锁为止。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 调用 AQS 获取共享资源</span></span><br><span class="line">        sync.acquireShared(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantReadWriteLock-AQS-Share-gTrD2e.png" alt="ReentrantReadWriteLock-AQS-Share-gTrD2e"></p>
+<p>获取共享资源，这块使用的 AQS 的逻辑，其中 tryAcquireShared(arg) 是在 ReentrantReadWriteLock.Sync 中实现的。并且 AQS 中有规定，tryAcquireShared 分为三种返回值：</p>
+<ol>
+<li>小于 0: 表示失败；</li>
+<li>等于 0: 表示共享模式获取资源成功，但后续的节点不能以共享模式获取成功;</li>
+<li>大于 0: 表示共享模式获取资源成功，后续节点在共享模式获取也可能会成功，在这种情况下，后续等待线程必须检查可用性。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Sync</span> <span class="keyword">extends</span> <span class="title class_">AbstractQueuedSynchronizer</span> &#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">tryAcquireShared</span><span class="params">(<span class="type">int</span> unused)</span> &#123;</span><br><span class="line">     </span><br><span class="line">        <span class="type">Thread</span> <span class="variable">current</span> <span class="operator">=</span> Thread.currentThread();</span><br><span class="line">        <span class="comment">// 获取 state 值</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> getState();</span><br><span class="line">        <span class="comment">// 独占计数不为 0 且 不是当前线程， 说明已经有写锁</span></span><br><span class="line">        <span class="keyword">if</span> (exclusiveCount(c) != <span class="number">0</span> &amp;&amp; getExclusiveOwnerThread() != current)</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 获取共享计数（读锁计数）</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> sharedCount(c);</span><br><span class="line">        <span class="comment">// 不需要阻塞读锁 &amp;&amp; 共享计数小于最大值 &amp;&amp; state 更新成功</span></span><br><span class="line">        <span class="keyword">if</span> (!readerShouldBlock() &amp;&amp; r &lt; MAX_COUNT &amp;&amp;</span><br><span class="line">            compareAndSetState(c, c + SHARED_UNIT)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (r == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// 当前读锁计数为 0</span></span><br><span class="line">                <span class="comment">// firstReader是获得读锁的第一个线程</span></span><br><span class="line">                <span class="comment">// firstReaderHoldCount是firstReader的保持计数</span></span><br><span class="line">                firstReader = current;</span><br><span class="line">                firstReaderHoldCount = <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (firstReader == current) &#123;</span><br><span class="line">                <span class="comment">// 读锁重入</span></span><br><span class="line">                firstReaderHoldCount++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 当前缓存计数</span></span><br><span class="line">                <span class="type">HoldCounter</span> <span class="variable">rh</span> <span class="operator">=</span> cachedHoldCounter;</span><br><span class="line">                <span class="comment">// 当前线程没有计数 或者 没有创建计数器</span></span><br><span class="line">                <span class="keyword">if</span> (rh == <span class="literal">null</span> || rh.tid != getThreadId(current))</span><br><span class="line">                    <span class="comment">// 创建计数，基于 ThreadLocal</span></span><br><span class="line">                    cachedHoldCounter = rh = readHolds.get();</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (rh.count == <span class="number">0</span>) </span><br><span class="line">                    readHolds.set(rh);</span><br><span class="line">                <span class="comment">// 计数累加</span></span><br><span class="line">                rh.count++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 完整地获取共享锁方法，作为tryAcquireShared方法因CAS获取锁失败后的处理。</span></span><br><span class="line">        <span class="comment">// 因为前面可能失败 CAS 失败， 队列策略失败等原因。</span></span><br><span class="line">        <span class="keyword">return</span> fullTryAcquireShared(current);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>先获取 state ，通过 exclusiveCount 方法获取到写锁的计数值，不为 0 且 不是当前线程， 说明已经有写锁。返回 -1 失败。</li>
+<li>通过 sharedCount 获取读锁计数，判断是否需要阻塞以及是否超过上限后，使用 CAS 更新 读锁计数。</li>
+<li>设置或更新 firstReader、firstReaderHoldCount、 cachedHoldCounter。</li>
+<li>最后会进行完整的获取共享锁方法，作为之前获取失败的后续处理方法。</li>
+</ol>
+<p>firstReader：firstReader是获得读锁的第一个线程；<br>
+firstReaderHoldCount：firstReaderHoldCount是firstReader的保持计数。即获得读锁的第一个线程的重入次数。<br>
+cachedHoldCounter：最后一个获得读锁的线程获得读锁的重入次数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">int</span> <span class="title function_">fullTryAcquireShared</span><span class="params">(Thread current)</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="type">HoldCounter</span> <span class="variable">rh</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">// 无限循环</span></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> getState();</span><br><span class="line">        <span class="comment">// 是否有写锁</span></span><br><span class="line">        <span class="keyword">if</span> (exclusiveCount(c) != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 有写锁，但是不是当前线程，直接返回失败</span></span><br><span class="line">            <span class="keyword">if</span> (getExclusiveOwnerThread() != current)</span><br><span class="line">                <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (readerShouldBlock()) &#123;</span><br><span class="line">            <span class="comment">// 需要阻塞</span></span><br><span class="line">            <span class="comment">// 没有写锁，确保没有重新获取读锁</span></span><br><span class="line">            <span class="keyword">if</span> (firstReader == current) &#123;</span><br><span class="line">                <span class="comment">// assert firstReaderHoldCount &gt; 0;</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 当前线程的读锁计数 ThreadLocal 中</span></span><br><span class="line">                <span class="keyword">if</span> (rh == <span class="literal">null</span>) &#123;</span><br><span class="line">                    rh = cachedHoldCounter;</span><br><span class="line">                    <span class="keyword">if</span> (rh == <span class="literal">null</span> || rh.tid != getThreadId(current)) &#123;</span><br><span class="line">                        rh = readHolds.get();</span><br><span class="line">                        <span class="comment">// 计数结束，remove 掉</span></span><br><span class="line">                        <span class="keyword">if</span> (rh.count == <span class="number">0</span>)</span><br><span class="line">                            readHolds.remove();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 为 0 直接失败</span></span><br><span class="line">                <span class="keyword">if</span> (rh.count == <span class="number">0</span>)</span><br><span class="line">                    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 到达上限 抛出异常</span></span><br><span class="line">        <span class="keyword">if</span> (sharedCount(c) == MAX_COUNT)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;Maximum lock count exceeded&quot;</span>);</span><br><span class="line">        <span class="comment">// CAS 设置读锁</span></span><br><span class="line">        <span class="keyword">if</span> (compareAndSetState(c, c + SHARED_UNIT)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (sharedCount(c) == <span class="number">0</span>) &#123;</span><br><span class="line">                firstReader = current;</span><br><span class="line">                firstReaderHoldCount = <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (firstReader == current) &#123;</span><br><span class="line">                firstReaderHoldCount++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (rh == <span class="literal">null</span>)</span><br><span class="line">                    rh = cachedHoldCounter;</span><br><span class="line">                <span class="keyword">if</span> (rh == <span class="literal">null</span> || rh.tid != getThreadId(current))</span><br><span class="line">                    rh = readHolds.get();</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (rh.count == <span class="number">0</span>)</span><br><span class="line">                    readHolds.set(rh);</span><br><span class="line">                rh.count++;</span><br><span class="line">                cachedHoldCounter = rh; <span class="comment">// cache for release</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>首先会一直循环</li>
+<li>有写锁，但是不是当前线程，直接返回失败。<strong>但是，有写锁，如果是当前线程，是会继续执行的。</strong></li>
+<li>设置或更新 firstReader、firstReaderHoldCount、 cachedHoldCounter。</li>
+</ol>
+<p>当存在写锁（独占锁）时，方法会返回 -1 失败，后续会调用 AQS 的 doAcquireShared 方法，循环获取资源。doAcquireShared 方法会不断循环，尝试获取读锁，一旦获取到读锁，当前节点会立即唤醒后续节点，后续节点开始尝试获取读锁，依次传播。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantReadWriteLock-1-rl0DjC.png" alt="ReentrantReadWriteLock-1-rl0DjC"></p>
+<h4 id="ReadLock-unlock">ReadLock.unlock</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ReadLock</span> </span><br><span class="line">    <span class="keyword">implements</span> <span class="title class_">Lock</span>, java.io.Serializable &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.releaseShared(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用 AQS 的 releaseShared 释放共享资源方法。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReadLock-unlock-LE7vUH.png" alt="ReadLock-unlock-LE7vUH"></p>
+<p>其中 tryReleaseShared 有 ReadLock 实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryReleaseShared</span><span class="params">(<span class="type">int</span> unused)</span> &#123;</span><br><span class="line">    <span class="type">Thread</span> <span class="variable">current</span> <span class="operator">=</span> Thread.currentThread();</span><br><span class="line">    <span class="keyword">if</span> (firstReader == current) &#123;</span><br><span class="line">        <span class="comment">// 第一个线程是当前线程</span></span><br><span class="line">        <span class="keyword">if</span> (firstReaderHoldCount == <span class="number">1</span>)</span><br><span class="line">            firstReader = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            firstReaderHoldCount--;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 第一个线程不是当前线程，更新自己的 ThreadLocal 里面的计数</span></span><br><span class="line">        <span class="type">HoldCounter</span> <span class="variable">rh</span> <span class="operator">=</span> cachedHoldCounter;</span><br><span class="line">        <span class="keyword">if</span> (rh == <span class="literal">null</span> || rh.tid != getThreadId(current))</span><br><span class="line">            rh = readHolds.get();</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> rh.count;</span><br><span class="line">        <span class="keyword">if</span> (count &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">            readHolds.remove();</span><br><span class="line">            <span class="keyword">if</span> (count &lt;= <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">throw</span> unmatchedUnlockException();</span><br><span class="line">        &#125;</span><br><span class="line">        --rh.count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 循环</span></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> getState();</span><br><span class="line">        <span class="type">int</span> <span class="variable">nextc</span> <span class="operator">=</span> c - SHARED_UNIT;</span><br><span class="line">        <span class="comment">// 使用 CAS 更新 state</span></span><br><span class="line">        <span class="keyword">if</span> (compareAndSetState(c, nextc))</span><br><span class="line">            <span class="comment">// 但是如果现在读和写锁都已释放，</span></span><br><span class="line">            <span class="comment">// 它可能允许等待的写程序继续进行。</span></span><br><span class="line">            <span class="keyword">return</span> nextc == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>如果是第一个线程，直接更新技术，不是则更新自己 ThreadLocal 里面保存的计数。</li>
+<li>循环，使用 CAS 更新 state 的值。</li>
+<li>如果 state 更新后的值为 0，说明没有线程持有读锁或者写锁了。</li>
+<li>当 state 为 0，此时会调用 AQS 的 doReleaseShared 方法。此时队列如果有写锁，那就会被写锁获取的锁。</li>
+</ol>
+<h4 id="WriteLock-lock">WriteLock.lock</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">WriteLock</span> </span><br><span class="line">    <span class="keyword">implements</span> <span class="title class_">Lock</span>, java.io.Serializable &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取写入锁。</span></span><br><span class="line"><span class="comment">     * 如果没有其他线程持有读锁或写锁，会直接返回，并将写锁计数设置为1。</span></span><br><span class="line"><span class="comment">     * 如果当前线程持有写锁，则将写锁计数 +1，然后返回。</span></span><br><span class="line"><span class="comment">     * 如果锁正在被其他线程持有，则当前线程用于线程调度目的，</span></span><br><span class="line"><span class="comment">     * 当前线程将被禁用，并处于休眠状态，直到获取读锁并将写锁计数设置为1。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">lock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.acquire(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/WriteLock.lock-wBuvUA.png" alt="WriteLock.lock-wBuvUA"></p>
+<p>tryAcquire 方法由 Write 自己实现，方式和 ReentrantLock 类似。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryAcquire</span><span class="params">(<span class="type">int</span> acquires)</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果读锁计数为非零或写锁计数为非零，并且所有者是另一个线程，则失败。</span></span><br><span class="line">    <span class="comment">// 如果计数饱和，则失败。只有在count不为零时，才可能发生这种情况。</span></span><br><span class="line">    <span class="comment">// 否则，如果该线程是可重入获取或队列策略允许的话，则有资格进行锁定。</span></span><br><span class="line">    <span class="comment">// 如果是这样，请更新状态并设置所有者。</span></span><br><span class="line">    <span class="type">Thread</span> <span class="variable">current</span> <span class="operator">=</span> Thread.currentThread();</span><br><span class="line">    <span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> getState();</span><br><span class="line">    <span class="comment">// 写锁计数</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">w</span> <span class="operator">=</span> exclusiveCount(c);</span><br><span class="line">    <span class="comment">// c ！= 0 说明有有线程获取锁了</span></span><br><span class="line">    <span class="keyword">if</span> (c != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// (Note: if c != 0 and w == 0 then shared count != 0)</span></span><br><span class="line">        <span class="comment">// 判断是不是自己，不是自己 返回 false</span></span><br><span class="line">        <span class="keyword">if</span> (w == <span class="number">0</span> || current != getExclusiveOwnerThread())</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="comment">// 判断有没有超过上限</span></span><br><span class="line">        <span class="keyword">if</span> (w + exclusiveCount(acquires) &gt; MAX_COUNT)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;Maximum lock count exceeded&quot;</span>);</span><br><span class="line">        <span class="comment">// 重入</span></span><br><span class="line">        setState(c + acquires);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 不需要阻塞，或者 CAS 更新 state 失败</span></span><br><span class="line">    <span class="keyword">if</span> (writerShouldBlock() || !compareAndSetState(c, c + acquires))</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    setExclusiveOwnerThread(current);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>获取 state ， 如果 state 不为 0 则判断是否为当前线程重入获取。</li>
+<li>state 为 0 ，则当前线程 CAS 更新 state，获取锁。</li>
+<li>更新成功之后绑定当前线程。</li>
+<li>如果失败会继续调用 AQS 的 acquireQueued，将当前阻塞放在 AQS 队列中。AQS 会不断循环，等待上一个锁释放后，尝试获得锁。</li>
+</ol>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantReadWriteLock-2-mQAgGL.png" alt="ReentrantReadWriteLock-2-mQAgGL"></p>
+<h4 id="WriteLock-unlock">WriteLock.unlock</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">WriteLock</span> </span><br><span class="line">    <span class="keyword">implements</span> <span class="title class_">Lock</span>, java.io.Serializable &#123;</span><br><span class="line">    <span class="comment">// 如果当前线程是此锁的持有者，则保持计数递减。 </span></span><br><span class="line">    <span class="comment">// 如果保持现在的计数为零，则解除锁定。 </span></span><br><span class="line">    <span class="comment">// 如果当前线程不是此锁的持有者则IllegalMonitorStateException异常。</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">        sync.release(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/Write-unlock-bwHAcw.png" alt="Write-unlock-bwHAcw"></p>
+<p>同样这块代码是使用 AQS 的逻辑，tryRelease 部分由 WriteLock 自己实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">tryRelease</span><span class="params">(<span class="type">int</span> releases)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!isHeldExclusively())</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalMonitorStateException</span>();</span><br><span class="line">    <span class="type">int</span> <span class="variable">nextc</span> <span class="operator">=</span> getState() - releases;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">free</span> <span class="operator">=</span> exclusiveCount(nextc) == <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (free)</span><br><span class="line">        setExclusiveOwnerThread(<span class="literal">null</span>);</span><br><span class="line">    setState(nextc);</span><br><span class="line">    <span class="keyword">return</span> free;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>如果是当前线程重入，扣减重入次数。</li>
+<li>扣减后如果为 0，则设置锁持有线程为 null，更新 state 值。AQS 会唤醒后续节点获取锁。</li>
+</ol>
+<h3 id="总结">总结</h3>
+<h4 id="问题">问题</h4>
+<p>**Q：**在 ReentrantReadWriteLock 中 state 代表什么？</p>
+<p>**A：**state 代表锁的状态。state 为 0 ，没有线程持有锁，state 的高 16 为代表读锁状态，低 16 为代表写锁状态。通过位运算可以获取读写锁的实际值。</p>
+<p>**Q：**线程获取锁的流程是怎么样的？</p>
+<p>**A：**可以参考上面的源码笔记，以及后面的流程图。</p>
+<p>**Q：**读锁和写锁的可重入性是如何实现的？</p>
+<p>**A：**在加锁的时候，判断是否为当前线程，如果是当前线程，则直接累加计数。值得注意的是：读锁重入计数使用的 ThreadLocal 在线程中缓存计数，而写锁则直接用的 state 进行累加（其实和 state 低 16 位进行累加一样）。</p>
+<p>**Q：**当前线程获取锁失败，被阻塞的后续操作是什么？</p>
+<p>**A：**获取失败，会放到 AQS 等待队列中，在队列中不断循环，监视前一个节点是否为 head ，是的话，会重新尝试获取锁。</p>
+<p>**Q：**锁降级是怎么降级的？</p>
+<p><strong>A：</strong> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/write-to-read-koAuqm.png" alt="write-to-read-koAuqm"><br>
+如图，在圈出部分 fullTryAcquireShared 代码中，可以看出来，在获取读锁的时候，如果当前线程持有写锁，是可以获取读锁的。这块就是指锁降级，比如线程 A 获取到了写锁，当线程 A 执行完毕时，它需要获取当前数据，假设不支持锁降级，就会导致 A 释放写锁，然后再次请求读锁。而在这中间是有可能被其他阻塞的线程获取到写锁的。从而导致线程 A 在一次执行过程中数据不一致。</p>
+<h3 id="小结">小结</h3>
+<ol>
+<li>ReentrantReadWriteLock 读写锁，内部实现是 ReadLock 读锁 和 WriteLock 写锁。读锁，允许共享；写锁，是独占锁。</li>
+<li>读写锁都支持重入，读锁的重入次数记录在线程维护的 ThreadLocal 中，写锁维护在 state 上（低 16 位）。</li>
+<li>支持锁降级，从写锁降级为读锁，防止脏读。</li>
+<li>ReadLock 和 WriteLock 都是通过 AQS 来实现的。获取锁失败后会放到 AQS 等待队列中，后续不断尝试获取锁。区别在读锁只有存在写锁的时候才放到等待队列，而写锁是只要存在非当前线程锁（无论写锁还是读锁）都会放到等待队列。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/read-write-different-gzNdCo.png" alt="read-write-different-gzNdCo"></li>
+<li>通过源码分析，可以得出读写锁适合在<strong>读多写少</strong>的场景中使用。</li>
+</ol>
+<h4 id="相关资料">相关资料</h4>
+<p>[1] Java Api：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/overview-summary.html">https://docs.oracle.com/javase/8/docs/api/overview-summary.html</a></p>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" title="头像" alt="头像"></a><div class="post-copyright__author_name">liuzhihang</div><div class="post-copyright__author_desc">程序员小航</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://liuzhihang.com/2020/07/27/source-code-reentrant-read-write-lock.html">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://liuzhihang.com/2020/07/27/source-code-reentrant-read-write-lock.html')">【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://liuzhihang.com/2020/07/27/source-code-reentrant-read-write-lock.html"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！&amp;url=https://liuzhihang.com/2020/07/27/source-code-reentrant-read-write-lock.html&amp;pic=https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantReadWriteLock-1ZuPsX.png" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://liuzhihang.com" target="_blank">程序员小航</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/JDK/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>JDK<span class="tagsPageCount">20</span></a><a class="post-meta__box__tags" href="/tags/%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>源码笔记<span class="tagsPageCount">38</span></a></div></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/07/25/source-code-reentrant-lock.html"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ReentrantLock-RljCvj.jpeg" onerror="onerror=null;src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【JDK源码笔记】- 不能再被问住了！ReentrantLock 源码、画图一起看一看！</div></div></a></div><div class="next-post pull-right"><a href="/2020/07/29/tool-book-copy-as-json.html"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/copy-as-json-JBXqqv.jpeg" onerror="onerror=null;src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【工具册】- IDEA 插件找不到？看这里！那就自己敲一个！</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2020/07/12/source-code-aqs.html" title="【JDK源码笔记】- 别走！这里有个笔记：图文讲解 AQS ，一起看看 AQS 的源码……(图文较长)"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/aqs-uhgQnu.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-07-12</div><div class="title">【JDK源码笔记】- 别走！这里有个笔记：图文讲解 AQS ，一起看看 AQS 的源码……(图文较长)</div></div></a></div><div><a href="/2020/09/27/source-code-arrayblockingqueue.html" title="【JDK源码笔记】- 基于数组的有界阻塞队列 —— ArrayBlockingQueue"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ArrayBlockingQueue-cover-ESuNmo.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-09-27</div><div class="title">【JDK源码笔记】- 基于数组的有界阻塞队列 —— ArrayBlockingQueue</div></div></a></div><div><a href="/2020/06/12/source-code-cas.html" title="【JDK源码笔记】- 从JUC源码看CAS，我做了个笔记 ......"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/cas.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-06-12</div><div class="title">【JDK源码笔记】- 从JUC源码看CAS，我做了个笔记 ......</div></div></a></div><div><a href="/2020/10/25/source-code-concurrentlinkedqueue.html" title="【JDK源码笔记】- 非阻塞的无界线程安全队列 —— ConcurrentLinkedQueue"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/concurrentlinkedqueue-6pf8RL.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-10-25</div><div class="title">【JDK源码笔记】- 非阻塞的无界线程安全队列 —— ConcurrentLinkedQueue</div></div></a></div><div><a href="/2020/10/01/source-code-condition.html" title="【JDK源码笔记】- AQS 都看完了，Condition 原理可不能少！"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/condition-cover-JlcSZ0.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-10-01</div><div class="title">【JDK源码笔记】- AQS 都看完了，Condition 原理可不能少！</div></div></a></div><div><a href="/2020/10/31/copyonwritearraylist.html" title="【JDK源码笔记】- 写时复制集合 —— CopyOnWriteArrayList"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/copyonwrite-2CAZWo.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-10-31</div><div class="title">【JDK源码笔记】- 写时复制集合 —— CopyOnWriteArrayList</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left: 4px">隐私政策</a></div><div class="comment-tips" id="comment-tips"><span>✅ 你无需删除空行，直接评论以获取最佳展示效果</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/YG8h86-oyTuVT.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/bilibilitv/[tv_微笑].png" alt="status"/></div></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">这有关于<b style="color:#fff">产品、设计、开发</b>相关的问题和看法，还有<b style="color:#fff">文章翻译</b>和<b style="color:#fff">分享</b>。</div><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>和<b style="color:#fff">教程</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">liuzhihang</h1><div class="author-info__desc">程序员小航</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/liuzhihang" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a><a class="social-icon faa-parent animated-hover" href="https://space.bilibili.com/291259412" target="_blank" title="BiliBili"><i class="anzhiyufont anzhiyu-icon-bilibili"></i></a></div></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bullhorn anzhiyu-shake"></i><span>公告</span></div><div class="announcement_content">近期工作繁忙 <br>博客缓慢装修中...</div></div><div class="card-widget anzhiyu-right-widget" id="card-wechat" onclick="null"><div id="flip-wrapper"><div id="flip-content"><div class="face" style="background: url(https://bu.dusays.com/2023/01/13/63c02edf44033.png) center center / 100% no-repeat"></div><div class="back face" style="background: url(https://oss.liuzhihang.com/article/wechat-1-mcIbMv.png) center center / 100% no-repeat"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E7%96%91%E9%97%AE"><span class="toc-text">问题疑问</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="toc-text">代码结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#state"><span class="toc-text">state</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ReadLock-lock"><span class="toc-text">ReadLock.lock</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ReadLock-unlock"><span class="toc-text">ReadLock.unlock</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WriteLock-lock"><span class="toc-text">WriteLock.lock</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WriteLock-unlock"><span class="toc-text">WriteLock.unlock</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-text">问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="toc-text">相关资料</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/18/dubbo_source_code_reading_environment_construction.html" title="Dubbo 源码阅读环境搭建"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://s2.loli.net/2022/01/10/vVBN64aDG8bY9Sr.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="Dubbo 源码阅读环境搭建"/></a><div class="content"><a class="title" href="/2022/04/18/dubbo_source_code_reading_environment_construction.html" title="Dubbo 源码阅读环境搭建">Dubbo 源码阅读环境搭建</a><time datetime="2022-04-18T12:58:41.000Z" title="发表于 2022-04-18 20:58:41">2022-04-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/15/google-search-blocking.html" title="Google 搜索屏蔽「小 X 知识网」"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/UO3Md0-aU68Ga.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="Google 搜索屏蔽「小 X 知识网」"/></a><div class="content"><a class="title" href="/2022/04/15/google-search-blocking.html" title="Google 搜索屏蔽「小 X 知识网」">Google 搜索屏蔽「小 X 知识网」</a><time datetime="2022-04-15T12:49:37.000Z" title="发表于 2022-04-15 20:49:37">2022-04-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/06/distributed_timed_task_multilayer_distribution.html" title="从单机定时到多层分发"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.nlark.com/yuque/0/2022/png/695705/1649493778387-4fab7b9e-18e8-46c4-9ab8-0500725689d3.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="从单机定时到多层分发"/></a><div class="content"><a class="title" href="/2022/04/06/distributed_timed_task_multilayer_distribution.html" title="从单机定时到多层分发">从单机定时到多层分发</a><time datetime="2022-04-06T14:00:00.000Z" title="发表于 2022-04-06 22:00:00">2022-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/22/yuque-hexo-auto-deployment.html" title="yuque-hexo：语雀写文，hexo 自动部署"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.nlark.com/yuque/0/2022/png/695705/1648041016487-2df893d1-0cd4-42b4-bfec-a80119c928ed.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="yuque-hexo：语雀写文，hexo 自动部署"/></a><div class="content"><a class="title" href="/2022/03/22/yuque-hexo-auto-deployment.html" title="yuque-hexo：语雀写文，hexo 自动部署">yuque-hexo：语雀写文，hexo 自动部署</a><time datetime="2022-03-22T15:28:41.000Z" title="发表于 2022-03-22 23:28:41">2022-03-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/13/dubbo_concept_and_architecture.html" title="Dubbo 概念及架构"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://s2.loli.net/2022/01/10/SIkRd5LcYQrsDeO.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="Dubbo 概念及架构"/></a><div class="content"><a class="title" href="/2022/01/13/dubbo_concept_and_architecture.html" title="Dubbo 概念及架构">Dubbo 概念及架构</a><time datetime="2022-01-13T12:54:45.000Z" title="发表于 2022-01-13 20:54:45">2022-01-13</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="footer_deal"><a class="deal_link" href="mailto:liuzhihangs@qq.com" title="email"><i class="anzhiyufont anzhiyu-icon-envelope"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://weibo.com/u/7879755919" title="微博"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://www.zhihu.com/people/liuzhihang" title="知乎"><i class="fa-brands fa-zhihu"></i></a><a class="deal_link" href="/atom.xml" title="RSS"><i class="anzhiyufont anzhiyu-icon-rss"></i></a><img class="footer_mini_logo" title="返回顶部" alt="返回顶部" onclick="anzhiyu.scrollToDest(0, 500)" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" size="50px"/><a class="deal_link" target="_blank" rel="noopener" href="https://github.com/liuzhihang" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://space.bilibili.com/291259412" title="Bilibili"><i class="anzhiyufont anzhiyu-icon-bilibili"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://v.douyin.com/RZA0Ya6VoOI/" title="抖音"><i class="anzhiyufont anzhiyu-icon-tiktok"></i></a><a class="deal_link" href="/copyright" title="CC"><i class="anzhiyufont anzhiyu-icon-copyright-line"></i></a></div><div id="anzhiyu-footer"><div class="footer-group"><div class="footer-title">服务</div><div class="footer-links"><a class="footer-item" title="51la统计" target="_blank" rel="noopener" href="https://v6.51.la/">51la统计</a><a class="footer-item" title="十年之约" target="_blank" rel="noopener" href="https://www.foreverblog.cn/">十年之约</a><a class="footer-item" title="开往" target="_blank" rel="noopener" href="https://github.com/travellings-link/travellings">开往</a></div></div><div class="footer-group"><div class="footer-title">主题</div><div class="footer-links"><a class="footer-item" title="文档" href="/docs/">文档</a><a class="footer-item" title="源码" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu">源码</a><a class="footer-item" title="更新日志" href="/update/">更新日志</a></div></div><div class="footer-group"><div class="footer-title">导航</div><div class="footer-links"><a class="footer-item" title="即刻短文" href="/essay/">即刻短文</a><a class="footer-item" title="友链文章" href="/fcircle/">友链文章</a><a class="footer-item" title="留言板" href="/comments/">留言板</a></div></div><div class="footer-group"><div class="footer-title">协议</div><div class="footer-links"><a class="footer-item" title="隐私协议" href="/privacy/">隐私协议</a><a class="footer-item" title="Cookies" href="/cookies/">Cookies</a><a class="footer-item" title="版权协议" href="/copyright/">版权协议</a></div></div><div class="footer-group"><div class="footer-title-group"><div class="footer-title">友链</div><a class="random-friends-btn" id="footer-random-friends-btn" href="javascript:addFriendLinksInFooter();" title="换一批友情链接"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right"></i></a></div><div class="footer-links" id="friend-links-in-footer"></div></div></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v5.4.0" title="博客框架为Hexo_v5.4.0"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Frame-Hexo.svg" alt="博客框架为Hexo_v5.4.0"/></a><a class="github-badge" target="_blank" href="https://blog.anheyu.com/" style="margin-inline:5px" data-title="本站使用AnZhiYu主题" title="本站使用AnZhiYu主题"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.9/img/Theme-AnZhiYu-2E67D3.svg" alt="本站使用AnZhiYu主题"/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title="本站项目由Github托管"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Source-Github.svg" alt="本站项目由Github托管"/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.2.0/img/badge/Copyright-BY-NC-SA.svg" alt="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"/></a></p></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2017 - 2025 By <a class="footer-bar-link" href="/" title="liuzhihang" target="_blank">liuzhihang</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a><a class="footer-bar-link" target="_blank" rel="noopener" href="https://image.anheyu.com" title="图床">图床</a><a class="footer-bar-link" target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" title="京ICP备20000888号">京ICP备20000888号</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">152</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">35</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://liuzhihang.com/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" alt="博客"/><span class="back-menu-item-text">博客</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://juejin.im/user/1987506650493117" title="掘金"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/static/favicons/apple-touch-icon.png" alt="掘金"/><span class="back-menu-item-text">掘金</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://www.zhihu.com/people/liuzhihang" title="知乎"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://static.zhihu.com/heifetz/favicon.ico" alt="知乎"/><span class="back-menu-item-text">知乎</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36535538" title="CSDN"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://g.csdnimg.cn/static/logo/favicon32.ico" alt="CSDN"/><span class="back-menu-item-text">CSDN</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://leetcode-cn.com/u/liuzhihang/" title="LeetCode"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://static.leetcode.cn/cn-frontendx-assets/production/_next/static/images/logo-711e116152be014f445f50aa6a369231.png" alt="LeetCode"/><span class="back-menu-item-text">LeetCode</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">开源</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://github.com/liuzhihang/doc-view" title="doc-view"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://github.com/liuzhihang/doc-view/blob/master/src/main/resources/META-INF/pluginIcon.svg" alt="doc-view"/><span class="back-menu-item-text">doc-view</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/fcircle/"><i class="anzhiyufont anzhiyu-icon-artstation faa-tada" style="font-size: 0.9em;"></i><span> 朋友圈</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size: 0.9em;"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/bangumis/"><i class="anzhiyufont anzhiyu-icon-bilibili faa-tada" style="font-size: 0.9em;"></i><span> 追番页</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/air-conditioner/"><i class="anzhiyufont anzhiyu-icon-fan faa-tada" style="font-size: 0.9em;"></i><span> 小空调</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/ELK/" style="font-size: 0.88rem;">ELK<sup>18</sup></a><a href="/tags/docker/" style="font-size: 0.88rem;">docker<sup>1</sup></a><a href="/tags/error/" style="font-size: 0.88rem;">error<sup>1</sup></a><a href="/tags/hexo/" style="font-size: 0.88rem;">hexo<sup>4</sup></a><a href="/tags/ip/" style="font-size: 0.88rem;">ip<sup>1</sup></a><a href="/tags/issue/" style="font-size: 0.88rem;">issue<sup>5</sup></a><a href="/tags/mac/" style="font-size: 0.88rem;">mac<sup>3</sup></a><a href="/tags/mysql/" style="font-size: 0.88rem;">mysql<sup>5</sup></a><a href="/tags/software/" style="font-size: 0.88rem;">software<sup>1</sup></a><a href="/tags/volatile/" style="font-size: 0.88rem;">volatile<sup>1</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 0.88rem;">分布式<sup>6</sup></a><a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" style="font-size: 0.88rem;">单例模式<sup>2</sup></a><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 0.88rem;">多线程<sup>4</sup></a><a href="/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/" style="font-size: 0.88rem;">工作笔记<sup>16</sup></a><a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 0.88rem;">工具<sup>2</sup></a><a href="/tags/%E5%B7%A5%E5%85%B7%E5%86%8C/" style="font-size: 0.88rem;">工具册<sup>9</sup></a><a href="/tags/%E6%B5%81%E6%B0%B4%E5%8F%B7/" style="font-size: 0.88rem;">流水号<sup>1</sup></a><a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" style="font-size: 0.88rem;">线程池<sup>1</sup></a><a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 0.88rem;">设计模式<sup>5</sup></a><a href="/tags/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/" style="font-size: 0.88rem;">雪花算法<sup>1</sup></a></div></div><hr/></div></div><div id="keyboard-tips"><div class="keyboardTitle">博客快捷键</div><div class="keybordList"><div class="keybordItem"><div class="keyGroup"><div class="key">shift K</div></div><div class="keyContent"><div class="content">关闭快捷键功能</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift A</div></div><div class="keyContent"><div class="content">打开/关闭中控台</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift M</div></div><div class="keyContent"><div class="content">播放/暂停音乐</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift D</div></div><div class="keyContent"><div class="content">深色/浅色显示模式</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift S</div></div><div class="keyContent"><div class="content">站内搜索</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift R</div></div><div class="keyContent"><div class="content">随机访问</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift H</div></div><div class="keyContent"><div class="content">返回首页</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift F</div></div><div class="keyContent"><div class="content">友链鱼塘</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift L</div></div><div class="keyContent"><div class="content">友链页面</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift P</div></div><div class="keyContent"><div class="content">关于本站</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift I</div></div><div class="keyContent"><div class="content">原版/本站右键菜单</div></div></div></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="nav-music"><a id="nav-music-hoverTips" onclick="anzhiyu.musicToggle()" accesskey="m">播放音乐</a><div id="console-music-bg"></div><meting-js id="8152976493" server="netease" type="playlist" mutex="true" preload="none" theme="var(--anzhiyu-main)" data-lrctype="0" order="random" volume="0.7"></meting-js></div><div class="docsearch-wrap"><div id="docsearch" style="display:none"></div><link rel="stylesheet" href="https://cdn.cbd.int/@docsearch/css@3.5.2/dist/style.css"/><script src="https://cdn.cbd.int/@docsearch/js@3.5.2/dist/umd/index.js"></script><script>(() => {
+  docsearch(Object.assign({
+    appId: 'Y0LVBAJPDK',
+    apiKey: '22b3e3f8bf93960df17ce619c31236d0',
+    indexName: 'liuzhihang',
+    container: '#docsearch',
+  }, null))
+  
+  const searchClickFn = () => {
+    document.querySelector('#search-button > .search').addEventListener('click', () => {
+      document.querySelector('.DocSearch-Button').click()
+    })
+  }
+
+  searchClickFn()
+  window.addEventListener('pjax:complete', searchClickFn)
+})()</script></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script>// 消除控制台打印
+var HoldLog = console.log;
+console.log = function () {};
+let now1 = new Date();
+queueMicrotask(() => {
+  const Log = function () {
+    HoldLog.apply(console, arguments);
+  }; //在恢复前输出日志
+  const grt = new Date("01/01/2017 00:00:00"); //此处修改你的建站时间或者网站上线时间
+  now1.setTime(now1.getTime() + 250);
+  const days = (now1 - grt) / 1000 / 60 / 60 / 24;
+  const dnum = Math.floor(days);
+  const ascll = [
+    `欢迎使用安知鱼!`,
+    `生活明朗, 万物可爱`,
+    `
+        
+       █████╗ ███╗   ██╗███████╗██╗  ██╗██╗██╗   ██╗██╗   ██╗
+      ██╔══██╗████╗  ██║╚══███╔╝██║  ██║██║╚██╗ ██╔╝██║   ██║
+      ███████║██╔██╗ ██║  ███╔╝ ███████║██║ ╚████╔╝ ██║   ██║
+      ██╔══██║██║╚██╗██║ ███╔╝  ██╔══██║██║  ╚██╔╝  ██║   ██║
+      ██║  ██║██║ ╚████║███████╗██║  ██║██║   ██║   ╚██████╔╝
+      ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝
+        
+        `,
+    "已上线",
+    dnum,
+    "天",
+    "©2017 By 安知鱼 V1.6.14",
+  ];
+  const ascll2 = [`NCC2-036`, `调用前置摄像头拍照成功，识别为【小笨蛋】.`, `Photo captured: `, `🤪`];
+
+  setTimeout(
+    Log.bind(
+      console,
+      `\n%c${ascll[0]} %c ${ascll[1]} %c ${ascll[2]} %c${ascll[3]}%c ${ascll[4]}%c ${ascll[5]}\n\n%c ${ascll[6]}\n`,
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      ""
+    )
+  );
+  setTimeout(
+    Log.bind(
+      console,
+      `%c ${ascll2[0]} %c ${ascll2[1]} %c \n${ascll2[2]} %c\n${ascll2[3]}\n`,
+      "color:white; background-color:#4fd953",
+      "",
+      "",
+      'background:url("https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/tinggge.gif") no-repeat;font-size:450%'
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c WELCOME %c 你好，小笨蛋.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(
+      console,
+      "%c ⚡ Powered by 安知鱼 %c 你正在访问 liuzhihang 的博客.",
+      "color:white; background-color:#f0ad4e",
+      ""
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c W23-12 %c 你已打开控制台.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(console, "%c S013-782 %c 你现在正处于监控中.", "color:white; background-color:#d9534f", "")
+  );
+});</script><script async src="/anzhiyu/random.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.cbd.int/mermaid@10.2.4/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  anzhiyu.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-fbi8ol32a-liuzhihangs-projects.vercel.app',
+      region: '',
+      onCommentLoaded: () => {
+        anzhiyu.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(runFn,0)
+    else getScript('https://cdn.cbd.int/twikoo@1.6.39/dist/twikoo.all.min.js').then(runFn)
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-fbi8ol32a-liuzhihangs-projects.vercel.app',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const runFn = () => {
+    init();
+    
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) anzhiyu.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else {
+      loadTwikoo()
+    }
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script><input type="hidden" name="page-type" id="page-type" value="post"></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-fbi8ol32a-liuzhihangs-projects.vercel.app',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.cbd.int/twikoo@1.6.39/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'data-lazy-src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'><div class='name'><span>${array[i].nick} </span></div></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <time datetime="${array[i].date}">${anzhiyu.diffDate(array[i].date, true)}</time></div>
+        </div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script>var visitorMail = "";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:type\"]","meta[property=\"og:site_name\"]","meta[property=\"og:description\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: true,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', 'UA-126394362-1', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>

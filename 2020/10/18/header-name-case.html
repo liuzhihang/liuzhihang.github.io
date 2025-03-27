@@ -1,0 +1,832 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！ | 程序员小航</title><meta name="keywords" content="工作笔记"><meta name="author" content="liuzhihang"><meta name="copyright" content="liuzhihang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！"><meta name="application-name" content="APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！"><meta property="og:url" content="https://liuzhihang.com/2020/10/18/header-name-case.html"><meta property="og:site_name" content="程序员小航"><meta property="og:description" content="在自己模拟过程中，才发现和容器有关系。"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/app-header-ydHubh.png"><meta property="article:author" content="liuzhihang"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/app-header-ydHubh.png"><meta name="description" content="在自己模拟过程中，才发现和容器有关系。"><link rel="shortcut icon" href="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg"><link rel="canonical" href="https://liuzhihang.com/2020/10/18/header-name-case.html"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="GZshAnnrC-4eCrl5h-e_5Rdk4lOUhRK7ShULoRi2q0E"/><meta name="baidu-site-verification" content="code-acvmSXHRKh"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@1.0.17/lib/assets/font-awesome-animation.min.css"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d9fdd597c560d9d9abc284df00839485";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-126394362-1"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-126394362-1');
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: {"enable":true,"title":"与数百名博主无限进步","addFriendPlaceholder":"昵称（请勿包含博客等字样）：\n网站地址（要求博客地址，请勿提交个人主页）：\n头像图片url（请提供尽可能清晰的图片，我会上传到我自己的图床）：\n描述：\n站点截图（可选）：\n"},
+  peoplecanvas: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"DeepSeek","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: undefined,
+  LA51: undefined,
+  greetingBox: undefined,
+  twikooEnvId: 'https://twikoo-fbi8ol32a-liuzhihangs-projects.vercel.app',
+  commentBarrageConfig:undefined,
+  music_page_default: "nav_music",
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: {"apiurl":null},
+  navMusic: true,
+  mainTone: undefined,
+  authorStatus: {"skills":["🎮 联盟手游金铲铲","🔨 全干开发工程师","🤖️ 数码科技爱好者","🔍 分享与热心帮助","🏠 智能家居小能手","🏃 脚踏实地行动派"]},
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: liuzhihang","link":"链接: ","source":"来源: 程序员小航","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: {"enable":true,"delay":100,"shiftDelay":200},
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '程序员小航',
+  title: 'APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！',
+  postAI: '本文针对生产环境中因HTTP请求头大小写不一致导致的系统故障展开分析，详细探讨了Spring Boot应用中获取请求头的多种实现方式。通过对比@RequestHeader注解直接获取、Map接收、MultiValueMap接收、HttpHeaders接收以及HttpServletRequest获取等五种方法，揭示了不同实现方案的技术特点。研究发现部分实现方案存在请求头名称强制小写化的潜在问题，可能',
+  pageFillDescription: '背景, 原流程, 新需求, 从 Header 中获取信息, 直接获取请求头某一个 headerName, 使用 Map 获取所有请求头, 使用 MultiValueMap 获取请求头, 使用 HttpHeaders 获取请求头, 使用 HttpServletRequest 获取, 测试文件, 思考, 模拟排查, 环境配置, 使用拦截器传小写为什么没有问题, 使用 Map 为什么会区分大小写, 容器对 header 的处理, undertow 容器的处理, tomcat 容器的处理, jetty 容器的处理, 总结, QampA, 结束语, 相关资料前言部署测试部署预发布一切测试就绪上生产发布生产闪退马上回滚开始排查后端一模一样的代码不是端的问题吧可端没有发版啊一番排查原来是端打包测试和预发布包传的都是生产传的是就是大小写问题那赶紧改背景首页接口只有登录才可以进入因为首页要展示获取用户账户的一些信息这里使用的是统一拦截从中获取后使用获取用户信息而现在要改为用户未登录也可以查看首页信息中的宣传文案等等只不过账户信息不显示原流程整个过程代码在底层原理里面有所介绍这里省略一部分代码请求方法是否存在注解没有加注解直接放过从中获取从中获取失败其他代码省略从代码中可以看出这里大概过程如下是使用拦截器拦截请求如果方法没有注解直接放过有注解则从的中获取新需求这里想到只需要把注解去掉然后从请求参数中获取即可获取到走原逻辑获取不到则只返回宣传文案等信息从中获取信息直接获取请求头某一个获取使用获取所有请求头获取使用获取请求头获取使用获取请求头获取使用获取获取测试文件经过测试这些都是可以的最终选择使用接收然后从中获取可能有小伙伴测试不过发现接受的里的全都是小写了可以继续阅读源码在文末也可以关注公众号发送获取你以为事情如果到这里就结束了那真是太天真了这不出现了文章开头的描述的场景赶紧回滚然后排查问题最后定位到是的大小写问题思考之前端也是这么传的那为什么使用拦截器是正常的呢上面的那几种方式是不是都是这样不排除发现原来都会转换为小写又是为什么模拟排查环境配置模拟生产首先使用相同的容器配置这里排除了内置的容器并且使用容器使用拦截器传小写为什么没有问题修改使用小写断点神奇的一幕出现了收到的确实是小写但是却可以获取到继续往里跟第行从中获取第一个元素第行通过方法获取继续追踪发现在方法行的时候获取到了信息那就看一下这块的源码吧在仔细看一下发现是行在获取的时这里无论大小写都是同一个这块代码如下方法这块的含义如果是小写字符则如果是大写字符则对照表大小写字母相差而和同样相差所以问题定位到了的无论是大写还是小写都会查出同一个值当然你也可以这么传这样的话谁在上面中使用的就是那个使用为什么会区分大小写传入的是大写解析参数值如图所示被区分大小写放到了中后续会反射调用对应的方法所以也就出现了我所遇到的问题当然理论上客户端不应该测试和预发布使用大写而生产使用小写上面阅读的源码只是对的处理在收到请求时没有对请求的大小写进行转换只是在获取对应的时候没有区分大小写进行获取容器对的处理容器的处理请求参数的处理这里发现并没有对请求参数进行大小写转换处理操作从获取发现调用的是这个过程就是上面的排查过程从中获取通过发现调用的是然后调用然后调用这里会不区分大小写从获取这块发现是直接从获取的所以区分了大小写容器的处理请求参数的处理而如果没有排除的话即使用内嵌的容器无论传递大写还是小写接收到的全部都是小写又是怎么个情况呢通过发现没有排除使用的是在接收请求时使用的是在方法中类行负责处理解析进入方法第行后阅读方法发现会将请求的转换为小写从获取当使用容器时调用最后调用获取这里也会忽略大小写判断从获取通过发现容器下调用的是然后调用然后调用这里会不区分大小写从获取这块发现是直接从获取的所以区分了大小写容器的处理请求参数的处理如果换成容器的话在中又会发现无论传入大写还是小写都会被转换为驼峰源码可以阅读会转换为驼峰命名法从获取通过发现调用的是在获取时会调用原来在获取的时候忽略了大小写从获取通过发现容器下调用的是然后调用然后调用这里会不区分大小写从获取也是调用的然后不区分大小写和从中获取相同总结为什么拦截器获取可以不区分大小写从拦截器获取其实就是从中获取这里无论使用还是使用或者获取是都是忽略的大小写的具体可以阅读上面的源码分析这么多获取的方式有什么区别不同的容器下实现方式不同这里列表说明请求参数大小写转换不变小写驼峰直接获取请求头某一个忽略大小写不能为空忽略大小写不能为空忽略大小写不能为空使用获取所有请求头的和传入大小写的一致保持一致可获取到的全是小写需要使用小写获取的是驼峰命名法要使用驼峰命名才可以获取到使用获取请求头实际是从中获取区分大小写实际是从中获取区分大小写从获取不区分大小写使用获取请求头从获取不区分大小写从获取不区分大小写从获取不区分大小写使用获取使用忽略了大小写调用忽略了大小写忽略了大小写通过表格发现即使是不同的容器在使用获取请求头是都是调用了的获取并且内部忽略了大小写这里比较推荐使用同样使用的方式获取也比较推荐结束语本文主要是分析生产遇到的一个问题然后开始探究原因开始的时候发现是的原因因为使用接收时什么格式就是什么格式在自己写时又发现原来和的关系并不大是容器的原因不同的容器处理方式不同所以总结出来相关文章供大家参考不足之处欢迎指正相关资料本文源码地址',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-28 01:13:36',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="程序员小航" type="application/atom+xml">
+</head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://npm.elemecdn.com/anzhiyu-blog-static@1.0.4/img/avatar.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://liuzhihang.com/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" alt="博客"/><span class="back-menu-item-text">博客</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://juejin.im/user/1987506650493117" title="掘金"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/static/favicons/apple-touch-icon.png" alt="掘金"/><span class="back-menu-item-text">掘金</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://www.zhihu.com/people/liuzhihang" title="知乎"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://static.zhihu.com/heifetz/favicon.ico" alt="知乎"/><span class="back-menu-item-text">知乎</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36535538" title="CSDN"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://g.csdnimg.cn/static/logo/favicon32.ico" alt="CSDN"/><span class="back-menu-item-text">CSDN</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://leetcode-cn.com/u/liuzhihang/" title="LeetCode"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://static.leetcode.cn/cn-frontendx-assets/production/_next/static/images/logo-711e116152be014f445f50aa6a369231.png" alt="LeetCode"/><span class="back-menu-item-text">LeetCode</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">开源</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://github.com/liuzhihang/doc-view" title="doc-view"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://github.com/liuzhihang/doc-view/blob/master/src/main/resources/META-INF/pluginIcon.svg" alt="doc-view"/><span class="back-menu-item-text">doc-view</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">程序员小航</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a><div id="he-plugin-simple"></div><script>var WIDGET = {
+  "CONFIG": {
+    "modules": "0124",
+    "background": "2",
+    "tmpColor": "FFFFFF",
+    "tmpSize": "16",
+    "cityColor": "FFFFFF",
+    "citySize": "16",
+    "aqiColor": "E8D87B",
+    "aqiSize": "16",
+    "weatherIconSize": "24",
+    "alertIconSize": "18",
+    "padding": "10px 10px 10px 10px",
+    "shadow": "0",
+    "language": "auto",
+    "borderRadius": "20",
+    "fixed": "true",
+    "vertical": "top",
+    "horizontal": "left",
+    "left": "20",
+    "top": "7.1",
+    "key": "df245676fb434a0691ead1c63341cd94"
+  }
+}
+</script><link rel="stylesheet" href="https://widget.qweather.net/simple/static/css/he-simple.css?v=1.4.0"/><script src="https://widget.qweather.net/simple/static/js/he-simple.js?v=1.4.0"></script></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/fcircle/"><i class="anzhiyufont anzhiyu-icon-artstation faa-tada" style="font-size: 0.9em;"></i><span> 朋友圈</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size: 0.9em;"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/bangumis/"><i class="anzhiyufont anzhiyu-icon-bilibili faa-tada" style="font-size: 0.9em;"></i><span> 追番页</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/air-conditioner/"><i class="anzhiyufont anzhiyu-icon-fan faa-tada" style="font-size: 0.9em;"></i><span> 小空调</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button only-home" id="travellings_button" title="随机前往一个开往项目网站"><a class="site-page" onclick="anzhiyu.totraveling()" title="随机前往一个开往项目网站" href="javascript:void(0);" rel="external nofollow" data-pjax-state="external"><i class="anzhiyufont anzhiyu-icon-train"></i></a></div><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Doc-View/" style="font-size: 1.05rem;">Doc View<sup>6</sup></a><a href="/tags/ELK/" style="font-size: 1.05rem;">ELK<sup>18</sup></a><a href="/tags/IDEA/" style="font-size: 1.05rem;">IDEA<sup>1</sup></a><a href="/tags/JDK/" style="font-size: 1.05rem;">JDK<sup>20</sup></a><a href="/tags/JWT/" style="font-size: 1.05rem;">JWT<sup>1</sup></a><a href="/tags/Redis/" style="font-size: 1.05rem;">Redis<sup>1</sup></a><a href="/tags/Spring/" style="font-size: 1.05rem;">Spring<sup>24</sup></a><a href="/tags/SpringSecurity/" style="font-size: 1.05rem;">SpringSecurity<sup>1</sup></a><a href="/tags/aop/" style="font-size: 1.05rem;">aop<sup>1</sup></a><a href="/tags/brew/" style="font-size: 1.05rem;">brew<sup>1</sup></a><a href="/tags/cache/" style="font-size: 1.05rem;">cache<sup>1</sup></a><a href="/tags/docker/" style="font-size: 1.05rem;">docker<sup>1</sup></a><a href="/tags/error/" style="font-size: 1.05rem;">error<sup>1</sup></a><a href="/tags/hexo/" style="font-size: 1.05rem;">hexo<sup>4</sup></a><a href="/tags/interceptor/" style="font-size: 1.05rem;">interceptor<sup>1</sup></a><a href="/tags/ip/" style="font-size: 1.05rem;">ip<sup>1</sup></a><a href="/tags/issue/" style="font-size: 1.05rem;">issue<sup>5</sup></a><a href="/tags/mac/" style="font-size: 1.05rem;">mac<sup>3</sup></a><a href="/tags/markdown/" style="font-size: 1.05rem;">markdown<sup>1</sup></a><a href="/tags/mysql/" style="font-size: 1.05rem;">mysql<sup>5</sup></a><a href="/tags/next-key/" style="font-size: 1.05rem;">next-key<sup>4</sup></a><a href="/tags/plugin/" style="font-size: 1.05rem;">plugin<sup>5</sup></a><a href="/tags/servlet/" style="font-size: 1.05rem;">servlet<sup>1</sup></a><a href="/tags/skywalking/" style="font-size: 1.05rem;">skywalking<sup>1</sup></a><a href="/tags/software/" style="font-size: 1.05rem;">software<sup>1</sup></a><a href="/tags/transactional/" style="font-size: 1.05rem;">transactional<sup>1</sup></a><a href="/tags/volatile/" style="font-size: 1.05rem;">volatile<sup>1</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.05rem;">分布式<sup>6</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" style="font-size: 1.05rem;">分布式锁<sup>17</sup></a><a href="/tags/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/" style="font-size: 1.05rem;">动态代理<sup>2</sup></a><a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" style="font-size: 1.05rem;">单例模式<sup>2</sup></a><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 1.05rem;">多线程<sup>4</sup></a><a href="/tags/%E5%B0%8F%E6%8A%80%E5%B7%A7/" style="font-size: 1.05rem;">小技巧<sup>1</sup></a><a href="/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/" style="font-size: 1.05rem;">工作笔记<sup>16</sup></a><a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.05rem;">工具<sup>2</sup></a><a href="/tags/%E5%B7%A5%E5%85%B7%E5%86%8C/" style="font-size: 1.05rem;">工具册<sup>9</sup></a><a href="/tags/%E6%B5%81%E6%B0%B4%E5%8F%B7/" style="font-size: 1.05rem;">流水号<sup>1</sup></a><a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" style="font-size: 1.05rem;">线程池<sup>1</sup></a><a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.05rem;">设计模式<sup>5</sup></a><a href="/tags/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/" style="font-size: 1.05rem;">雪花算法<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="anzhiyufont anzhiyu-icon-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">一月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/11/"><span class="card-archive-list-date">十一月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/09/"><span class="card-archive-list-date">九月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">八月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/07/"><span class="card-archive-list-date">七月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">14</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/06/"><span class="card-archive-list-date">六月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">9</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div><div class="console-btn-item" id="consoleKeyboard" onclick="anzhiyu.keyboardToggle()" title="快捷键开关"><a class="keyboard-switch"><i class="anzhiyufont anzhiyu-icon-keyboard"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/" itemprop="url">工作笔记</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>工作笔记</span></a></span></div></div><h1 class="post-title" itemprop="name headline">APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2020-10-18T23:00:00.000Z" title="发表于 2020-10-19 07:00:00">2020-10-19</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2025-03-27T17:13:36.173Z" title="更新于 2025-03-28 01:13:36">2025-03-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数总计:</span><span class="word-count" title="文章字数">2.7k</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为杭州"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>杭州</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/app-header-ydHubh.png"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><div class="post-ai-description"><div class="ai-title"><i class="anzhiyufont anzhiyu-icon-bilibili"></i><div class="ai-title-text">AI-摘要</div><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right"></i><i class="anzhiyufont anzhiyu-icon-circle-dot" title="朗读摘要"></i><div id="ai-tag">DeepSeek GPT</div></div><div class="ai-explanation">AI初始化中...</div><div class="ai-btn-box"><div class="ai-btn-item">介绍自己 🙈</div><div class="ai-btn-item">生成本文简介 👋</div><div class="ai-btn-item">推荐相关文章 📖</div><div class="ai-btn-item">前往主页 🏠</div><div class="ai-btn-item" id="go-tianli-blog">前往爱发电购买</div></div><script data-pjax src="/js/anzhiyu/ai_abstract.js"></script></div><article class="post-content" id="article-container" itemscope itemtype="https://liuzhihang.com/2020/10/18/header-name-case.html"><header><a class="post-meta-categories" href="/categories/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/" itemprop="url">工作笔记</a><a href="/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/" tabindex="-1" itemprop="url">工作笔记</a><h1 id="CrawlerTitle" itemprop="name headline">APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">liuzhihang</span><time itemprop="dateCreated datePublished" datetime="2020-10-18T23:00:00.000Z" title="发表于 2020-10-19 07:00:00">2020-10-19</time><time itemprop="dateCreated datePublished" datetime="2025-03-27T17:13:36.173Z" title="更新于 2025-03-28 01:13:36">2025-03-28</time></header><blockquote>
+<p><strong>前言</strong></p>
+<br>
+<p>部署测试，部署预发布，一切测试就绪，上生产。</p>
+<p>发布生产</p>
+<p>闪退</p>
+<p>What？？？</p>
+<p>马上回滚</p>
+<p>开始排查</p>
+<p>后端一模一样的代码，不是 APP 端的问题吧。可 APP 端没有发版啊。</p>
+<p>…… 一番排查</p>
+<p>原来是 APP 端打包，测试和预发布包 Header 传的都是 <code>Authorization</code> ，生产传的是 <code>authorization</code> 。就是大小写问题，那赶紧改。</p>
+</blockquote>
+<h3 id="背景">背景</h3>
+<p>首页接口只有登录才可以进入，因为首页要展示获取用户账户的一些信息。这里使用的是统一拦截，从 Header 中获取 token 后，使用 token 获取用户信息。</p>
+<p>而现在要改为用户未登录也可以查看首页信息中的宣传文案等等，只不过账户信息不显示。</p>
+<h4 id="原流程">原流程</h4>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/FiwOie-8ZLjgv.png" alt="FiwOie-8ZLjgv"></p>
+<p>整个过程代码在 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/8qY94y3w0Q2RRhkG7iUfOg">ThreadLocal底层原理</a> 里面有所介绍。这里省略一部分代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TokenInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterCompletion</span><span class="params">(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)</span></span><br><span class="line">            <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        LocalUserUtils.remove();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 请求方法是否存在注解</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">assignableFrom</span> <span class="operator">=</span> handler.getClass().isAssignableFrom(HandlerMethod.class);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!assignableFrom) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">CheckToken</span> <span class="variable">checkToken</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (handler <span class="keyword">instanceof</span> HandlerMethod) &#123;</span><br><span class="line">            checkToken = ((HandlerMethod) handler).getMethodAnnotation(CheckToken.class);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 没有加注解 直接放过</span></span><br><span class="line">        <span class="keyword">if</span> (checkToken == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 从Header中获取Authorization</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">authorization</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;Authorization&quot;</span>);</span><br><span class="line">        log.info(<span class="string">&quot;header authorization : &#123;&#125;&quot;</span>, authorization);</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isBlank(authorization)) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;从Header中获取Authorization失败&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> CustomExceptionEnum.NOT_HAVE_TOKEN.throwCustomException();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 其他代码省略</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从代码中可以看出这里大概过程如下：</p>
+<ol>
+<li>是使用拦截器拦截请求</li>
+<li>如果方法没有 CheckToken 注解直接放过</li>
+<li>有 CheckToken 注解，则从 request 的 header 中获取 Authorization</li>
+</ol>
+<h4 id="新需求">新需求</h4>
+<p>这里想到只需要把注解去掉，然后从请求参数中获取 token 即可。获取到走原逻辑，获取不到则只返回宣传文案等信息。</p>
+<h3 id="从-Header-中获取信息">从 Header 中获取信息</h3>
+<h4 id="直接获取请求头某一个-headerName">直接获取请求头某一个 headerName</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/getAuthorizationByKey&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getAuthorizationByKey</span><span class="params">(<span class="meta">@RequestHeader(&quot;Authorization&quot;)</span> String authorization)</span> &#123;</span><br><span class="line"></span><br><span class="line">    log.info(<span class="string">&quot;获取 Authorization ---&gt;&#123;&#125;&quot;</span>, authorization);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> authorization;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用-Map-获取所有请求头">使用 Map 获取所有请求头</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/getAuthorizationByMap&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getAuthorizationByMap</span><span class="params">(<span class="meta">@RequestHeader</span> Map&lt;String, String&gt; map)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">authorization</span> <span class="operator">=</span> map.get(<span class="string">&quot;Authorization&quot;</span>);</span><br><span class="line"></span><br><span class="line">    log.info(<span class="string">&quot;获取 Authorization ---&gt;&#123;&#125;&quot;</span>, authorization);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> authorization;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用-MultiValueMap-获取请求头">使用 MultiValueMap 获取请求头</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/getAuthorizationByMultiValueMap&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getAuthorizationByMultiValueMap</span><span class="params">(<span class="meta">@RequestHeader</span> MultiValueMap&lt;String, String&gt; map)</span> &#123;</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; authorization = map.get(<span class="string">&quot;Authorization&quot;</span>);</span><br><span class="line"></span><br><span class="line">    log.info(<span class="string">&quot;获取 Authorization ---&gt;&#123;&#125;&quot;</span>, authorization);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;SUCCESS&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用-HttpHeaders-获取请求头">使用 HttpHeaders 获取请求头</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/getAuthorizationByHeaders&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getAuthorizationByHeaders</span><span class="params">(<span class="meta">@RequestHeader</span> HttpHeaders headers)</span> &#123;</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; authorization = headers.get(<span class="string">&quot;Authorization&quot;</span>);</span><br><span class="line"></span><br><span class="line">    log.info(<span class="string">&quot;获取 Authorization ---&gt;&#123;&#125;&quot;</span>, authorization);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;SUCCESS&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用-HttpServletRequest-获取">使用 HttpServletRequest 获取</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/getAuthorizationByServlet&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getAuthorizationByServlet</span><span class="params">(HttpServletRequest request)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">authorization</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;Authorization&quot;</span>);</span><br><span class="line"></span><br><span class="line">    log.info(<span class="string">&quot;获取 Authorization ---&gt;&#123;&#125;&quot;</span>, authorization);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> authorization;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="测试文件">测试文件</h4>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/dqAEES-LSudFy.png" alt="dqAEES-LSudFy"></p>
+<p>经过测试这些都是可以的，最终选择使用 Map 接收 Header ，然后从 Map 中获取 Authorization。</p>
+<blockquote>
+<p>PS: 可能有小伙伴测试不过，发现接受的 header 里的 name 全都是小写了，可以继续阅读。<br>
+源码在文末，也可以关注公众号，发送 headerName/4 获取。</p>
+</blockquote>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/rXC2fS-cVftVR.jpg" alt="rXC2fS-cVftVR"></p>
+<p>你以为事情如果到这里就结束了，那真是太天真了。</p>
+<p>这不，出现了文章开头的描述的场景，赶紧回滚，然后排查问题，最后定位到是 Header 的 name 大小写问题。</p>
+<h4 id="思考">思考</h4>
+<ol>
+<li>之前 APP 端也是这么传的，那为什么使用拦截器是正常的呢？</li>
+<li>上面的那几种方式是不是都是这样？</li>
+<li>不排除 tomcat 发现原来都会转换为小写，又是为什么？</li>
+</ol>
+<h3 id="模拟排查">模拟排查</h3>
+<h4 id="环境配置">环境配置</h4>
+<p>模拟生产首先使用相同的容器配置，这里排除了内置的 tomcat 容器，并且使用 undertow 容器。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- Exclude the Tomcat dependency --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-undertow<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="使用拦截器传小写为什么没有问题">使用拦截器传小写为什么没有问题</h4>
+<ul>
+<li>修改使用小写 <code>authorization</code></li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/BnwZnf-7AvYYg.png" alt="BnwZnf-7AvYYg"></p>
+<ul>
+<li>debug 断点</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/OOjOyV-54K6Na.png" alt="OOjOyV-54K6Na"></p>
+<p>神奇的一幕出现了，收到的确实是小写，但是 <strong>request.getHeader(“Authorization”);</strong> 却可以获取到 <code>authorization</code></p>
+<ul>
+<li>F7 继续往里跟</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/JwgnFS-cW3pJY.png" alt="JwgnFS-cW3pJY"></p>
+<p><code>io.undertow.servlet.spec.HttpServletRequestImpl#getHeader</code> 第 190 行，从 HeaderMap 中获取第一个元素</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/DnRSum-crs0Mb.png" alt="DnRSum-crs0Mb"></p>
+<p><code>io.undertow.util.HeaderMap#getFirst</code> 第 297 行， 通过 getEntry 方法获取 header</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/C8lSGw-XxKDPW.png" alt="C8lSGw-XxKDPW"></p>
+<p>继续追踪，发现在 <code>io.undertow.util.HeaderMap#getEntry(java.lang.String)</code> 方法 77~79 行的时候获取到了 header 信息。那就看一下这块的源码吧。</p>
+<p>在仔细看一下发现是 77 行 <code>final int hc = HttpString.hashCodeOf(headerName);</code> 在获取 name 的 hashCode 时，这里无论大小写，都是同一个 hashCode。这块代码如下</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/3v1FVJ-MuPXUA.png" alt="3v1FVJ-MuPXUA"></p>
+<p>higher 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">higher</span><span class="params">(<span class="type">byte</span> b)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> b &amp; (b &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; b &lt;= <span class="string">&#x27;z&#x27;</span> ? <span class="number">0xDF</span> : <span class="number">0xFF</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这块的含义</p>
+<ol>
+<li>如果 b 是小写字符则 <code>b &amp; 0xDF</code></li>
+<li>如果 b 是大写字符则 <code>b &amp; 0xFF</code></li>
+</ol>
+<p>对照 ASCII 表，大小写字母相差 32 而 0xFF(255) 和 0xDF(223) 同样相差 32，所以问题定位到了。header 的 name 无论是大写还是小写，都会查出同一个值。</p>
+<p>当然你也可以这么传</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/VOOF8k-LoGjAf.png" alt="VOOF8k-LoGjAf"></p>
+<p>这样的话谁在上面，Header 中使用的 name 就是那个。</p>
+<h4 id="使用-Map-为什么会区分大小写">使用 Map 为什么会区分大小写</h4>
+<p>传入的是大写</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HttpServlet </span><br><span class="line">-&gt; DispatcherServlet#doDispatch </span><br><span class="line">-&gt; AbstractHandlerMethodAdapter#handle </span><br><span class="line">-&gt; RequestMappingHandlerAdapter#handleInternal </span><br><span class="line">-&gt; RequestMappingHandlerAdapter#invokeHandlerMethod </span><br><span class="line">-&gt; ServletInvocableHandlerMethod#invokeAndHandle</span><br><span class="line">-&gt; InvocableHandlerMethod#invokeForRequest (解析参数值)</span><br><span class="line">-&gt; InvocableHandlerMethod#getMethodArgumentValues</span><br><span class="line">-&gt; RequestHeaderMapMethodArgumentResolver#resolveArgument</span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/dqAEES-LSudFy.png" alt="dqAEES-LSudFy"></p>
+<p>如图所示 <code>String headerName = iterator.next();</code> name 被区分大小写放到了 LinkedHashMap 中，后续会反射调用对应的 Controller 方法。</p>
+<p>所以也就出现了我所遇到的问题。</p>
+<p>当然理论上 APP 客户端不应该测试和预发布使用大写，而生产使用小写。</p>
+<p>上面阅读的源码只是 Spring 对 Header 的处理，Spring 在 <code>HttpServlet</code> 收到请求时，Spring 没有对请求 Header 的 name 大小写进行转换，只是在获取对应 value 的时候，没有区分大小写进行获取。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/mpl3PK-m7dKAb.jpg" alt=""></p>
+<h3 id="容器对-header-的处理">容器对 header 的处理</h3>
+<h5 id="undertow-容器的处理">undertow 容器的处理</h5>
+<ul>
+<li>请求参数的处理</li>
+</ul>
+<p>这里发现 undertow 并没有对请求参数进行大小写转换处理操作。</p>
+<ul>
+<li>从 HttpServletRequest 获取 header</li>
+</ul>
+<p>debug 发现调用的是 <code>io.undertow.servlet.spec.HttpServletRequestImpl#getHeader</code>，这个过程就是上面的排查过程。</p>
+<ul>
+<li>从 Headers 中获取 header</li>
+</ul>
+<p>通过 debug 发现 jetty 调用的是 <code>org.springframework.http.HttpHeaders#get</code>，然后调用 <code>org.springframework.util.MultiValueMapAdapter#get</code>，然后调用 <code>org.springframework.util.LinkedCaseInsensitiveMap#get</code></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/nRw6xN-GkUqAN.png" alt="nRw6xN-GkUqAN"></p>
+<p>这里会不区分大小写</p>
+<ul>
+<li>从 MultiValueMap 获取 header</li>
+</ul>
+<p>这块 debug 发现是直接从 <code>LinkedHashMap</code> 获取的，所以区分了大小写。</p>
+<h4 id="tomcat-容器的处理">tomcat 容器的处理</h4>
+<ul>
+<li>请求参数的处理</li>
+</ul>
+<p>而如果没有排除的话，即使用内嵌的 tomcat 容器无论传递大写还是小写，接收到的全部都是小写，又是怎么个情况呢？</p>
+<p>通过 debug 发现没有排除 tomcat 使用的是，在接收请求时使用的是 <code>org.apache.coyote.http11.Http11Processor</code>。</p>
+<p>在 <code>Http11Processor#service</code> 方法中</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/303mmp-6TczCR.png" alt="303mmp-6TczCR"></p>
+<p>类 284 行负责处理解析 header</p>
+<p>进入 <code>org.apache.coyote.http11.Http11InputBuffer#parseHeaders</code> 方法</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/cqHTEZ-1E9mH7.png" alt="cqHTEZ-1E9mH7"></p>
+<p>第 589 行 （Download Sources 后），阅读 <code>parseHeader</code> 方法</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/oEEbej-rMulR7.png" alt="oEEbej-rMulR7"></p>
+<p>发现会将请求 header 的 name 转换为小写</p>
+<ul>
+<li>从 HttpServletRequest 获取 header</li>
+</ul>
+<p>当使用 tomcat 容器时，调用 <code>org.apache.catalina.connector.RequestFacade#getHeader</code>， <code>org.apache.catalina.connector.Request#getHeader</code>， <code>org.apache.coyote.Request#getHeader</code> <code>org.apache.tomcat.util.http.MimeHeaders#getHeader</code> 最后调用 <code>org.apache.tomcat.util.http.MimeHeaders#getValue</code> 获取 header</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/qDJXXn-z6hTjZ.png" alt="qDJXXn-z6hTjZ"></p>
+<p>这里也会忽略大小写判断</p>
+<ul>
+<li>从 Headers 获取 header</li>
+</ul>
+<p>通过 debug 发现 tomcat 容器下调用的是 <code>org.springframework.http.HttpHeaders#get</code>，然后调用 <code>org.springframework.util.MultiValueMapAdapter#get</code>，然后调用 <code>org.springframework.util.LinkedCaseInsensitiveMap#get</code></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/nRw6xN-GkUqAN.png" alt="nRw6xN-GkUqAN"></p>
+<p>这里会不区分大小写</p>
+<ul>
+<li>从 MultiValueMap 获取 header</li>
+</ul>
+<p>这块 debug 发现是直接从 <code>LinkedHashMap</code> 获取的，所以区分了大小写。</p>
+<h4 id="jetty-容器的处理">jetty 容器的处理</h4>
+<ul>
+<li>请求参数的处理</li>
+</ul>
+<p>如果换成 jetty 容器的话</p>
+<p>在 <code>org.eclipse.jetty.server.HttpConnection</code> 中又会发现无论传入大写还是小写都会被转换为驼峰。</p>
+<p>源码可以阅读 <code>org.eclipse.jetty.http.HttpParser#parseFields</code></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/Q9KjmT-HSRusz.png" alt="Q9KjmT-HSRusz"></p>
+<p>会转换为驼峰命名法。</p>
+<ul>
+<li>从 HttpServletRequest 获取 header</li>
+</ul>
+<p>通过 debug 发现 jetty 调用的是 <code>org.eclipse.jetty.server.Request#getHeader</code></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/H9onCc-uyaMMn.png" alt="H9onCc-uyaMMn"></p>
+<p>jetty 在获取 header 时，会调用 <code>org.eclipse.jetty.http.HttpFields#get</code></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/BOkxFw-op6ZIV.png" alt="BOkxFw-op6ZIV"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/ioe7pS-uNuRU6.png" alt="ioe7pS-uNuRU6"></p>
+<p>原来在获取的时候忽略了大小写</p>
+<ul>
+<li>从 Headers 获取 header</li>
+</ul>
+<p>通过 debug 发现 jetty 容器下调用的是 <code>org.springframework.http.HttpHeaders#get</code>，然后调用 <code>org.springframework.util.MultiValueMapAdapter#get</code>，然后调用 <code>org.springframework.util.LinkedCaseInsensitiveMap#get</code></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/nRw6xN-GkUqAN.png" alt="nRw6xN-GkUqAN"></p>
+<p>这里会不区分大小写</p>
+<ul>
+<li>从 MultiValueMap 获取</li>
+</ul>
+<p>也是调用的 <code>org.springframework.util.MultiValueMapAdapter#get</code> 然后不区分大小写。和从 Headers 中获取相同。</p>
+<h3 id="总结">总结</h3>
+<h4 id="Q-A">Q&amp;A</h4>
+<p><strong>Q: 为什么拦截器获取 Authorization 可以不区分大小写？</strong></p>
+<p><strong>A:</strong> 从拦截器获取 Authorization 其实就是从 <code>HttpServletRequest</code> 中获取，这里无论使用 tomcat 还是使用 undertow 或者 jetty 获取 Header 是都是忽略 headerName 的大小写的。具体可以阅读上面的源码分析。</p>
+<p><strong>Q: 这么多获取 Header 的方式有什么区别？</strong><br>
+<strong>A:</strong></p>
+<p>不同的容器下实现方式不同，这里列表说明</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">undertow</th>
+<th style="text-align:center">tomcat</th>
+<th style="text-align:center">jetty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">请求参数大小写转换</td>
+<td style="text-align:center">不变</td>
+<td style="text-align:center">小写</td>
+<td style="text-align:center">驼峰</td>
+</tr>
+<tr>
+<td style="text-align:center">直接获取请求头某一个 headerName</td>
+<td style="text-align:center">忽略大小写，不能为空</td>
+<td style="text-align:center">忽略大小写，不能为空</td>
+<td style="text-align:center">忽略大小写，不能为空</td>
+</tr>
+<tr>
+<td style="text-align:center">使用 Map 获取所有请求头</td>
+<td style="text-align:center">Map 的 key 和传入 headerName 大小写的一致，保持一致可获取到</td>
+<td style="text-align:center">Map 的 key 全是小写，需要使用小写headerName 获取</td>
+<td style="text-align:center">Map 的 key 是驼峰命名法，要使用驼峰命名才可以获取到</td>
+</tr>
+<tr>
+<td style="text-align:center">使用 MultiValueMap 获取请求头</td>
+<td style="text-align:center">实际是从 LinkedHashMap 中获取，区分大小写</td>
+<td style="text-align:center">实际是从 LinkedHashMap 中获取，区分大小写</td>
+<td style="text-align:center">从 LinkedCaseInsensitiveMap 获取，不区分大小写</td>
+</tr>
+<tr>
+<td style="text-align:center">使用 HttpHeaders 获取请求头</td>
+<td style="text-align:center">从 LinkedCaseInsensitiveMap 获取，不区分大小写</td>
+<td style="text-align:center">从 LinkedCaseInsensitiveMap 获取，不区分大小写</td>
+<td style="text-align:center">从 LinkedCaseInsensitiveMap 获取，不区分大小写</td>
+</tr>
+<tr>
+<td style="text-align:center">使用 HttpServletRequest 获取</td>
+<td style="text-align:center">使用 HttpString.hashCodeOf(headerName) 忽略了大小写</td>
+<td style="text-align:center">调用 MimeHeaders#getValue 忽略了大小写</td>
+<td style="text-align:center">HttpFields#get 忽略了大小写</td>
+</tr>
+</tbody>
+</table>
+<p>通过表格发现，即使是不同的容器在使用 HttpHeaders 获取请求头是都是调用了 Spring 的 <code>LinkedCaseInsensitiveMap</code> 获取 header，并且内部忽略了大小写，这里比较推荐使用。</p>
+<p>同样使用 HttpServletRequest 的方式获取也比较推荐。</p>
+<h4 id="结束语">结束语</h4>
+<p>本文主要是分析生产遇到的一个问题，然后开始探究原因，开始的时候发现是 Spring 的原因，因为使用 Map 接收时， headerName 什么格式就是什么格式。</p>
+<p>在自己写 demo 时又发现，原来和 Spring 的关系并不大，是容器的原因。不同的容器处理方式不同。所以总结出来相关文章，供大家参考，不足之处，欢迎指正。</p>
+<h4 id="相关资料">相关资料</h4>
+<ol>
+<li>本文源码地址：<a target="_blank" rel="noopener" href="https://github.com/liuzhihang/header-demo">https://github.com/liuzhihang/header-demo</a></li>
+</ol>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" title="头像" alt="头像"></a><div class="post-copyright__author_name">liuzhihang</div><div class="post-copyright__author_desc">程序员小航</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://liuzhihang.com/2020/10/18/header-name-case.html">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://liuzhihang.com/2020/10/18/header-name-case.html')">APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://liuzhihang.com/2020/10/18/header-name-case.html"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！&amp;url=https://liuzhihang.com/2020/10/18/header-name-case.html&amp;pic=https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/app-header-ydHubh.png" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://liuzhihang.com" target="_blank">程序员小航</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>工作笔记<span class="tagsPageCount">16</span></a></div></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/10/18/log-trace-id.html"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/log-trace-cover-LnUPB9.jpeg" onerror="onerror=null;src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">几行代码轻松实现跨系统传递 traceId，再也不用担心对不上日志了！</div></div></a></div><div class="next-post pull-right"><a href="/2020/10/25/source-code-concurrentlinkedqueue.html"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/concurrentlinkedqueue-6pf8RL.jpeg" onerror="onerror=null;src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【JDK源码笔记】- 非阻塞的无界线程安全队列 —— ConcurrentLinkedQueue</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2020/08/18/technology-sharing-es-1.html" title="【Elasticsearch 技术分享】—— Elasticsearch ？倒排索引？这都是什么？"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/es-1-JhMblx.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-08-18</div><div class="title">【Elasticsearch 技术分享】—— Elasticsearch ？倒排索引？这都是什么？</div></div></a></div><div><a href="/2020/08/23/technology-sharing-es-2.html" title="【Elasticsearch 技术分享】—— ES 常用名词及结构"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/es-3-X6uCwo.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-08-23</div><div class="title">【Elasticsearch 技术分享】—— ES 常用名词及结构</div></div></a></div><div><a href="/2020/08/26/technology-sharing-es-4.html" title="【Elasticsearch 技术分享】—— ES 查询检索数据的过程，是什么样子的？"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/es-4-84cvLo.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-08-26</div><div class="title">【Elasticsearch 技术分享】—— ES 查询检索数据的过程，是什么样子的？</div></div></a></div><div><a href="/2020/08/25/technology-sharing-es-3.html" title="【Elasticsearch 技术分享】—— Elasticsearch 存储一条数据， put 过程是什么样子的？"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/es-3-lGaP9k.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-08-26</div><div class="title">【Elasticsearch 技术分享】—— Elasticsearch 存储一条数据， put 过程是什么样子的？</div></div></a></div><div><a href="/2020/08/28/technology-sharing-es-5.html" title="【Elasticsearch 技术分享】—— 十张图带大家看懂 ES 原理 ！明白为什么说：ES 是准实时的！"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/es-5-82E4zZ.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-08-29</div><div class="title">【Elasticsearch 技术分享】—— 十张图带大家看懂 ES 原理 ！明白为什么说：ES 是准实时的！</div></div></a></div><div><a href="/2020/10/18/log-trace-id.html" title="几行代码轻松实现跨系统传递 traceId，再也不用担心对不上日志了！"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/log-trace-cover-LnUPB9.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2020-10-18</div><div class="title">几行代码轻松实现跨系统传递 traceId，再也不用担心对不上日志了！</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left: 4px">隐私政策</a></div><div class="comment-tips" id="comment-tips"><span>✅ 你无需删除空行，直接评论以获取最佳展示效果</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/YG8h86-oyTuVT.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/bilibilitv/[tv_微笑].png" alt="status"/></div></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">这有关于<b style="color:#fff">产品、设计、开发</b>相关的问题和看法，还有<b style="color:#fff">文章翻译</b>和<b style="color:#fff">分享</b>。</div><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>和<b style="color:#fff">教程</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">liuzhihang</h1><div class="author-info__desc">程序员小航</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/liuzhihang" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a><a class="social-icon faa-parent animated-hover" href="https://space.bilibili.com/291259412" target="_blank" title="BiliBili"><i class="anzhiyufont anzhiyu-icon-bilibili"></i></a></div></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bullhorn anzhiyu-shake"></i><span>公告</span></div><div class="announcement_content">近期工作繁忙 <br>博客缓慢装修中...</div></div><div class="card-widget anzhiyu-right-widget" id="card-wechat" onclick="null"><div id="flip-wrapper"><div id="flip-content"><div class="face" style="background: url(https://bu.dusays.com/2023/01/13/63c02edf44033.png) center center / 100% no-repeat"></div><div class="back face" style="background: url(https://oss.liuzhihang.com/article/wechat-1-mcIbMv.png) center center / 100% no-repeat"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E6%B5%81%E7%A8%8B"><span class="toc-text">原流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B0%E9%9C%80%E6%B1%82"><span class="toc-text">新需求</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E-Header-%E4%B8%AD%E8%8E%B7%E5%8F%96%E4%BF%A1%E6%81%AF"><span class="toc-text">从 Header 中获取信息</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E8%8E%B7%E5%8F%96%E8%AF%B7%E6%B1%82%E5%A4%B4%E6%9F%90%E4%B8%80%E4%B8%AA-headerName"><span class="toc-text">直接获取请求头某一个 headerName</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Map-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E8%AF%B7%E6%B1%82%E5%A4%B4"><span class="toc-text">使用 Map 获取所有请求头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-MultiValueMap-%E8%8E%B7%E5%8F%96%E8%AF%B7%E6%B1%82%E5%A4%B4"><span class="toc-text">使用 MultiValueMap 获取请求头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-HttpHeaders-%E8%8E%B7%E5%8F%96%E8%AF%B7%E6%B1%82%E5%A4%B4"><span class="toc-text">使用 HttpHeaders 获取请求头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-HttpServletRequest-%E8%8E%B7%E5%8F%96"><span class="toc-text">使用 HttpServletRequest 获取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6"><span class="toc-text">测试文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-text">思考</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E6%8E%92%E6%9F%A5"><span class="toc-text">模拟排查</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%8B%A6%E6%88%AA%E5%99%A8%E4%BC%A0%E5%B0%8F%E5%86%99%E4%B8%BA%E4%BB%80%E4%B9%88%E6%B2%A1%E6%9C%89%E9%97%AE%E9%A2%98"><span class="toc-text">使用拦截器传小写为什么没有问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Map-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%8C%BA%E5%88%86%E5%A4%A7%E5%B0%8F%E5%86%99"><span class="toc-text">使用 Map 为什么会区分大小写</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E5%AF%B9-header-%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-text">容器对 header 的处理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undertow-%E5%AE%B9%E5%99%A8%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-text">undertow 容器的处理</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#tomcat-%E5%AE%B9%E5%99%A8%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-text">tomcat 容器的处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#jetty-%E5%AE%B9%E5%99%A8%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-text">jetty 容器的处理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Q-A"><span class="toc-text">Q&amp;A</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F%E8%AF%AD"><span class="toc-text">结束语</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="toc-text">相关资料</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/18/dubbo_source_code_reading_environment_construction.html" title="Dubbo 源码阅读环境搭建"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://s2.loli.net/2022/01/10/vVBN64aDG8bY9Sr.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="Dubbo 源码阅读环境搭建"/></a><div class="content"><a class="title" href="/2022/04/18/dubbo_source_code_reading_environment_construction.html" title="Dubbo 源码阅读环境搭建">Dubbo 源码阅读环境搭建</a><time datetime="2022-04-18T12:58:41.000Z" title="发表于 2022-04-18 20:58:41">2022-04-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/15/google-search-blocking.html" title="Google 搜索屏蔽「小 X 知识网」"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/article/UO3Md0-aU68Ga.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="Google 搜索屏蔽「小 X 知识网」"/></a><div class="content"><a class="title" href="/2022/04/15/google-search-blocking.html" title="Google 搜索屏蔽「小 X 知识网」">Google 搜索屏蔽「小 X 知识网」</a><time datetime="2022-04-15T12:49:37.000Z" title="发表于 2022-04-15 20:49:37">2022-04-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/06/distributed_timed_task_multilayer_distribution.html" title="从单机定时到多层分发"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.nlark.com/yuque/0/2022/png/695705/1649493778387-4fab7b9e-18e8-46c4-9ab8-0500725689d3.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="从单机定时到多层分发"/></a><div class="content"><a class="title" href="/2022/04/06/distributed_timed_task_multilayer_distribution.html" title="从单机定时到多层分发">从单机定时到多层分发</a><time datetime="2022-04-06T14:00:00.000Z" title="发表于 2022-04-06 22:00:00">2022-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/22/yuque-hexo-auto-deployment.html" title="yuque-hexo：语雀写文，hexo 自动部署"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://cdn.nlark.com/yuque/0/2022/png/695705/1648041016487-2df893d1-0cd4-42b4-bfec-a80119c928ed.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="yuque-hexo：语雀写文，hexo 自动部署"/></a><div class="content"><a class="title" href="/2022/03/22/yuque-hexo-auto-deployment.html" title="yuque-hexo：语雀写文，hexo 自动部署">yuque-hexo：语雀写文，hexo 自动部署</a><time datetime="2022-03-22T15:28:41.000Z" title="发表于 2022-03-22 23:28:41">2022-03-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/13/dubbo_concept_and_architecture.html" title="Dubbo 概念及架构"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://s2.loli.net/2022/01/10/SIkRd5LcYQrsDeO.png" onerror="this.onerror=null;this.src='https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png'" alt="Dubbo 概念及架构"/></a><div class="content"><a class="title" href="/2022/01/13/dubbo_concept_and_architecture.html" title="Dubbo 概念及架构">Dubbo 概念及架构</a><time datetime="2022-01-13T12:54:45.000Z" title="发表于 2022-01-13 20:54:45">2022-01-13</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="footer_deal"><a class="deal_link" href="mailto:liuzhihangs@qq.com" title="email"><i class="anzhiyufont anzhiyu-icon-envelope"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://weibo.com/u/7879755919" title="微博"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://www.zhihu.com/people/liuzhihang" title="知乎"><i class="fa-brands fa-zhihu"></i></a><a class="deal_link" href="/atom.xml" title="RSS"><i class="anzhiyufont anzhiyu-icon-rss"></i></a><img class="footer_mini_logo" title="返回顶部" alt="返回顶部" onclick="anzhiyu.scrollToDest(0, 500)" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" size="50px"/><a class="deal_link" target="_blank" rel="noopener" href="https://github.com/liuzhihang" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://space.bilibili.com/291259412" title="Bilibili"><i class="anzhiyufont anzhiyu-icon-bilibili"></i></a><a class="deal_link" target="_blank" rel="noopener" href="https://v.douyin.com/RZA0Ya6VoOI/" title="抖音"><i class="anzhiyufont anzhiyu-icon-tiktok"></i></a><a class="deal_link" href="/copyright" title="CC"><i class="anzhiyufont anzhiyu-icon-copyright-line"></i></a></div><div id="anzhiyu-footer"><div class="footer-group"><div class="footer-title">服务</div><div class="footer-links"><a class="footer-item" title="51la统计" target="_blank" rel="noopener" href="https://v6.51.la/">51la统计</a><a class="footer-item" title="十年之约" target="_blank" rel="noopener" href="https://www.foreverblog.cn/">十年之约</a><a class="footer-item" title="开往" target="_blank" rel="noopener" href="https://github.com/travellings-link/travellings">开往</a></div></div><div class="footer-group"><div class="footer-title">主题</div><div class="footer-links"><a class="footer-item" title="文档" href="/docs/">文档</a><a class="footer-item" title="源码" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu">源码</a><a class="footer-item" title="更新日志" href="/update/">更新日志</a></div></div><div class="footer-group"><div class="footer-title">导航</div><div class="footer-links"><a class="footer-item" title="即刻短文" href="/essay/">即刻短文</a><a class="footer-item" title="友链文章" href="/fcircle/">友链文章</a><a class="footer-item" title="留言板" href="/comments/">留言板</a></div></div><div class="footer-group"><div class="footer-title">协议</div><div class="footer-links"><a class="footer-item" title="隐私协议" href="/privacy/">隐私协议</a><a class="footer-item" title="Cookies" href="/cookies/">Cookies</a><a class="footer-item" title="版权协议" href="/copyright/">版权协议</a></div></div><div class="footer-group"><div class="footer-title-group"><div class="footer-title">友链</div><a class="random-friends-btn" id="footer-random-friends-btn" href="javascript:addFriendLinksInFooter();" title="换一批友情链接"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right"></i></a></div><div class="footer-links" id="friend-links-in-footer"></div></div></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v5.4.0" title="博客框架为Hexo_v5.4.0"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Frame-Hexo.svg" alt="博客框架为Hexo_v5.4.0"/></a><a class="github-badge" target="_blank" href="https://blog.anheyu.com/" style="margin-inline:5px" data-title="本站使用AnZhiYu主题" title="本站使用AnZhiYu主题"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.9/img/Theme-AnZhiYu-2E67D3.svg" alt="本站使用AnZhiYu主题"/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title="本站项目由Github托管"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Source-Github.svg" alt="本站项目由Github托管"/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.2.0/img/badge/Copyright-BY-NC-SA.svg" alt="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"/></a></p></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2017 - 2025 By <a class="footer-bar-link" href="/" title="liuzhihang" target="_blank">liuzhihang</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a><a class="footer-bar-link" target="_blank" rel="noopener" href="https://image.anheyu.com" title="图床">图床</a><a class="footer-bar-link" target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" title="京ICP备20000888号">京ICP备20000888号</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">152</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">58</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">35</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://liuzhihang.com/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" alt="博客"/><span class="back-menu-item-text">博客</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://juejin.im/user/1987506650493117" title="掘金"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/static/favicons/apple-touch-icon.png" alt="掘金"/><span class="back-menu-item-text">掘金</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://www.zhihu.com/people/liuzhihang" title="知乎"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://static.zhihu.com/heifetz/favicon.ico" alt="知乎"/><span class="back-menu-item-text">知乎</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36535538" title="CSDN"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://g.csdnimg.cn/static/logo/favicon32.ico" alt="CSDN"/><span class="back-menu-item-text">CSDN</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://leetcode-cn.com/u/liuzhihang/" title="LeetCode"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://static.leetcode.cn/cn-frontendx-assets/production/_next/static/images/logo-711e116152be014f445f50aa6a369231.png" alt="LeetCode"/><span class="back-menu-item-text">LeetCode</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">开源</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://github.com/liuzhihang/doc-view" title="doc-view"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;https://oss.liuzhihang.com/article/NtBRVL-ZuLlJW.png&quot;" data-lazy-src="https://github.com/liuzhihang/doc-view/blob/master/src/main/resources/META-INF/pluginIcon.svg" alt="doc-view"/><span class="back-menu-item-text">doc-view</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/fcircle/"><i class="anzhiyufont anzhiyu-icon-artstation faa-tada" style="font-size: 0.9em;"></i><span> 朋友圈</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size: 0.9em;"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/bangumis/"><i class="anzhiyufont anzhiyu-icon-bilibili faa-tada" style="font-size: 0.9em;"></i><span> 追番页</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/air-conditioner/"><i class="anzhiyufont anzhiyu-icon-fan faa-tada" style="font-size: 0.9em;"></i><span> 小空调</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/ELK/" style="font-size: 0.88rem;">ELK<sup>18</sup></a><a href="/tags/docker/" style="font-size: 0.88rem;">docker<sup>1</sup></a><a href="/tags/error/" style="font-size: 0.88rem;">error<sup>1</sup></a><a href="/tags/hexo/" style="font-size: 0.88rem;">hexo<sup>4</sup></a><a href="/tags/ip/" style="font-size: 0.88rem;">ip<sup>1</sup></a><a href="/tags/issue/" style="font-size: 0.88rem;">issue<sup>5</sup></a><a href="/tags/mac/" style="font-size: 0.88rem;">mac<sup>3</sup></a><a href="/tags/mysql/" style="font-size: 0.88rem;">mysql<sup>5</sup></a><a href="/tags/software/" style="font-size: 0.88rem;">software<sup>1</sup></a><a href="/tags/volatile/" style="font-size: 0.88rem;">volatile<sup>1</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 0.88rem;">分布式<sup>6</sup></a><a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" style="font-size: 0.88rem;">单例模式<sup>2</sup></a><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 0.88rem;">多线程<sup>4</sup></a><a href="/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/" style="font-size: 0.88rem;">工作笔记<sup>16</sup></a><a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 0.88rem;">工具<sup>2</sup></a><a href="/tags/%E5%B7%A5%E5%85%B7%E5%86%8C/" style="font-size: 0.88rem;">工具册<sup>9</sup></a><a href="/tags/%E6%B5%81%E6%B0%B4%E5%8F%B7/" style="font-size: 0.88rem;">流水号<sup>1</sup></a><a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" style="font-size: 0.88rem;">线程池<sup>1</sup></a><a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 0.88rem;">设计模式<sup>5</sup></a><a href="/tags/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/" style="font-size: 0.88rem;">雪花算法<sup>1</sup></a></div></div><hr/></div></div><div id="keyboard-tips"><div class="keyboardTitle">博客快捷键</div><div class="keybordList"><div class="keybordItem"><div class="keyGroup"><div class="key">shift K</div></div><div class="keyContent"><div class="content">关闭快捷键功能</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift A</div></div><div class="keyContent"><div class="content">打开/关闭中控台</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift M</div></div><div class="keyContent"><div class="content">播放/暂停音乐</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift D</div></div><div class="keyContent"><div class="content">深色/浅色显示模式</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift S</div></div><div class="keyContent"><div class="content">站内搜索</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift R</div></div><div class="keyContent"><div class="content">随机访问</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift H</div></div><div class="keyContent"><div class="content">返回首页</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift F</div></div><div class="keyContent"><div class="content">友链鱼塘</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift L</div></div><div class="keyContent"><div class="content">友链页面</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift P</div></div><div class="keyContent"><div class="content">关于本站</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift I</div></div><div class="keyContent"><div class="content">原版/本站右键菜单</div></div></div></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="nav-music"><a id="nav-music-hoverTips" onclick="anzhiyu.musicToggle()" accesskey="m">播放音乐</a><div id="console-music-bg"></div><meting-js id="8152976493" server="netease" type="playlist" mutex="true" preload="none" theme="var(--anzhiyu-main)" data-lrctype="0" order="random" volume="0.7"></meting-js></div><div class="docsearch-wrap"><div id="docsearch" style="display:none"></div><link rel="stylesheet" href="https://cdn.cbd.int/@docsearch/css@3.5.2/dist/style.css"/><script src="https://cdn.cbd.int/@docsearch/js@3.5.2/dist/umd/index.js"></script><script>(() => {
+  docsearch(Object.assign({
+    appId: 'Y0LVBAJPDK',
+    apiKey: '22b3e3f8bf93960df17ce619c31236d0',
+    indexName: 'liuzhihang',
+    container: '#docsearch',
+  }, null))
+  
+  const searchClickFn = () => {
+    document.querySelector('#search-button > .search').addEventListener('click', () => {
+      document.querySelector('.DocSearch-Button').click()
+    })
+  }
+
+  searchClickFn()
+  window.addEventListener('pjax:complete', searchClickFn)
+})()</script></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script>// 消除控制台打印
+var HoldLog = console.log;
+console.log = function () {};
+let now1 = new Date();
+queueMicrotask(() => {
+  const Log = function () {
+    HoldLog.apply(console, arguments);
+  }; //在恢复前输出日志
+  const grt = new Date("01/01/2017 00:00:00"); //此处修改你的建站时间或者网站上线时间
+  now1.setTime(now1.getTime() + 250);
+  const days = (now1 - grt) / 1000 / 60 / 60 / 24;
+  const dnum = Math.floor(days);
+  const ascll = [
+    `欢迎使用安知鱼!`,
+    `生活明朗, 万物可爱`,
+    `
+        
+       █████╗ ███╗   ██╗███████╗██╗  ██╗██╗██╗   ██╗██╗   ██╗
+      ██╔══██╗████╗  ██║╚══███╔╝██║  ██║██║╚██╗ ██╔╝██║   ██║
+      ███████║██╔██╗ ██║  ███╔╝ ███████║██║ ╚████╔╝ ██║   ██║
+      ██╔══██║██║╚██╗██║ ███╔╝  ██╔══██║██║  ╚██╔╝  ██║   ██║
+      ██║  ██║██║ ╚████║███████╗██║  ██║██║   ██║   ╚██████╔╝
+      ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝
+        
+        `,
+    "已上线",
+    dnum,
+    "天",
+    "©2017 By 安知鱼 V1.6.14",
+  ];
+  const ascll2 = [`NCC2-036`, `调用前置摄像头拍照成功，识别为【小笨蛋】.`, `Photo captured: `, `🤪`];
+
+  setTimeout(
+    Log.bind(
+      console,
+      `\n%c${ascll[0]} %c ${ascll[1]} %c ${ascll[2]} %c${ascll[3]}%c ${ascll[4]}%c ${ascll[5]}\n\n%c ${ascll[6]}\n`,
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      ""
+    )
+  );
+  setTimeout(
+    Log.bind(
+      console,
+      `%c ${ascll2[0]} %c ${ascll2[1]} %c \n${ascll2[2]} %c\n${ascll2[3]}\n`,
+      "color:white; background-color:#4fd953",
+      "",
+      "",
+      'background:url("https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/tinggge.gif") no-repeat;font-size:450%'
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c WELCOME %c 你好，小笨蛋.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(
+      console,
+      "%c ⚡ Powered by 安知鱼 %c 你正在访问 liuzhihang 的博客.",
+      "color:white; background-color:#f0ad4e",
+      ""
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c W23-12 %c 你已打开控制台.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(console, "%c S013-782 %c 你现在正处于监控中.", "color:white; background-color:#d9534f", "")
+  );
+});</script><script async src="/anzhiyu/random.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.cbd.int/mermaid@10.2.4/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  anzhiyu.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-fbi8ol32a-liuzhihangs-projects.vercel.app',
+      region: '',
+      onCommentLoaded: () => {
+        anzhiyu.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(runFn,0)
+    else getScript('https://cdn.cbd.int/twikoo@1.6.39/dist/twikoo.all.min.js').then(runFn)
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-fbi8ol32a-liuzhihangs-projects.vercel.app',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const runFn = () => {
+    init();
+    
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) anzhiyu.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else {
+      loadTwikoo()
+    }
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script><input type="hidden" name="page-type" id="page-type" value="post"></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-fbi8ol32a-liuzhihangs-projects.vercel.app',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.cbd.int/twikoo@1.6.39/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'data-lazy-src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'><div class='name'><span>${array[i].nick} </span></div></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <time datetime="${array[i].date}">${anzhiyu.diffDate(array[i].date, true)}</time></div>
+        </div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script>var visitorMail = "";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:type\"]","meta[property=\"og:site_name\"]","meta[property=\"og:description\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: true,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', 'UA-126394362-1', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>

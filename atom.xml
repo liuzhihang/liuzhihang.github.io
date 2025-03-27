@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>程序员小航</title>
+  
+  <subtitle>程序员小航</subtitle>
+  <link href="https://liuzhihang.com/atom.xml" rel="self"/>
+  
+  <link href="https://liuzhihang.com/"/>
+  <updated>2025-03-27T17:13:36.167Z</updated>
+  <id>https://liuzhihang.com/</id>
+  
+  <author>
+    <name>liuzhihang</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Dubbo 源码阅读环境搭建</title>
+    <link href="https://liuzhihang.com/2022/04/18/dubbo_source_code_reading_environment_construction.html"/>
+    <id>https://liuzhihang.com/2022/04/18/dubbo_source_code_reading_environment_construction.html</id>
+    <published>2022-04-18T12:58:41.000Z</published>
+    <updated>2025-03-27T17:13:36.167Z</updated>
+    
+    
+    <summary type="html">在了解 Dubbo 的概念以及基础架构之后，可以考虑自己搭个 Demo，运行一下，基本知道是怎么回事。</summary>
+    
+    
+    
+    <category term="Dubbo" scheme="https://liuzhihang.com/categories/Dubbo/"/>
+    
+    
+    <category term="Dubbo" scheme="https://liuzhihang.com/tags/Dubbo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Google 搜索屏蔽「小 X 知识网」</title>
+    <link href="https://liuzhihang.com/2022/04/15/google-search-blocking.html"/>
+    <id>https://liuzhihang.com/2022/04/15/google-search-blocking.html</id>
+    <published>2022-04-15T12:49:37.000Z</published>
+    <updated>2025-03-27T17:13:36.173Z</updated>
+    
+    
+    <summary type="html">最近使用 Google 的体验越来越差，全都是各种垃圾站点，或者爬虫网站，完全影响了体验。</summary>
+    
+    
+    
+    <category term="工具" scheme="https://liuzhihang.com/categories/%E5%B7%A5%E5%85%B7/"/>
+    
+    
+    <category term="工具" scheme="https://liuzhihang.com/tags/%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从单机定时到多层分发</title>
+    <link href="https://liuzhihang.com/2022/04/06/distributed_timed_task_multilayer_distribution.html"/>
+    <id>https://liuzhihang.com/2022/04/06/distributed_timed_task_multilayer_distribution.html</id>
+    <published>2022-04-06T14:00:00.000Z</published>
+    <updated>2025-03-27T17:13:36.173Z</updated>
+    
+    
+    <summary type="html">定时任务从单机到多层分发演变过程</summary>
+    
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/categories/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>yuque-hexo：语雀写文，hexo 自动部署</title>
+    <link href="https://liuzhihang.com/2022/03/22/yuque-hexo-auto-deployment.html"/>
+    <id>https://liuzhihang.com/2022/03/22/yuque-hexo-auto-deployment.html</id>
+    <published>2022-03-22T15:28:41.000Z</published>
+    <updated>2025-03-27T17:13:36.165Z</updated>
+    
+    
+    <summary type="html"> 手把手教学，使用 yuque-hexo 自动同步语雀的文章到个人静态网站</summary>
+    
+    
+    
+    <category term="hexo" scheme="https://liuzhihang.com/categories/hexo/"/>
+    
+    
+    <category term="hexo" scheme="https://liuzhihang.com/tags/hexo/"/>
+    
+    <category term="工具" scheme="https://liuzhihang.com/tags/%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dubbo 概念及架构</title>
+    <link href="https://liuzhihang.com/2022/01/13/dubbo_concept_and_architecture.html"/>
+    <id>https://liuzhihang.com/2022/01/13/dubbo_concept_and_architecture.html</id>
+    <published>2022-01-13T12:54:45.000Z</published>
+    <updated>2025-03-27T17:13:36.167Z</updated>
+    
+    
+    <summary type="html">本着知其所以然的目的，翻查资料，阅读源码，一起深入了解一下 Dubbo 的原理。</summary>
+    
+    
+    
+    <category term="Dubbo" scheme="https://liuzhihang.com/categories/Dubbo/"/>
+    
+    
+    <category term="Dubbo" scheme="https://liuzhihang.com/tags/Dubbo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从 Java 锁到分布式锁</title>
+    <link href="https://liuzhihang.com/2021/11/17/lock-summary.html"/>
+    <id>https://liuzhihang.com/2021/11/17/lock-summary.html</id>
+    <published>2021-11-17T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.171Z</updated>
+    
+    
+    <summary type="html">在并发编程中常用到 synchronized 以及 ReentrantLock 锁，在业务开发过程中也可能会用到分布式锁，分布式锁常用框架的就是基于 Redis 实现的分布式锁框架 Redisson 和 基于 Zookeeper 实现的分布式锁框架 Curator。当然，也有其他的锁实现方式，在这里不做介绍。</summary>
+    
+    
+    
+    <category term="java" scheme="https://liuzhihang.com/categories/java/"/>
+    
+    
+    <category term="JDK" scheme="https://liuzhihang.com/tags/JDK/"/>
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL datetime 时间字段的四舍五入</title>
+    <link href="https://liuzhihang.com/2021/09/30/rounding_of_the_time_field.html"/>
+    <id>https://liuzhihang.com/2021/09/30/rounding_of_the_time_field.html</id>
+    <published>2021-09-30T11:00:00.000Z</published>
+    <updated>2025-03-27T17:13:36.173Z</updated>
+    
+    
+    <summary type="html">如果不是踩到坑，我估计到现在还不知道时间字段会四舍五入。</summary>
+    
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/categories/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="MySQL" scheme="https://liuzhihang.com/categories/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/MySQL/"/>
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="MySQL" scheme="https://liuzhihang.com/tags/MySQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 SpringBoot 转换器将前端参数转换为枚举</title>
+    <link href="https://liuzhihang.com/2021/09/03/the_converter_converts_front_end_parameters_to_enumerations.html"/>
+    <id>https://liuzhihang.com/2021/09/03/the_converter_converts_front_end_parameters_to_enumerations.html</id>
+    <published>2021-09-03T23:00:00.000Z</published>
+    <updated>2025-03-27T17:13:36.173Z</updated>
+    
+    
+    <summary type="html">最近遇到一个小伙伴问前端枚举转换问题，才意识到可以通过转换器（Converter）自动将前端传入的字段值使用枚举接收。</summary>
+    
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/categories/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MyBatis-Plus 中 Mapper 重载踩坑指南</title>
+    <link href="https://liuzhihang.com/2021/08/21/guide_to_mapper_overloading_crater_in_mybatis_plus.html"/>
+    <id>https://liuzhihang.com/2021/08/21/guide_to_mapper_overloading_crater_in_mybatis_plus.html</id>
+    <published>2021-08-21T23:00:00.000Z</published>
+    <updated>2025-03-27T17:13:36.173Z</updated>
+    
+    
+    <summary type="html">近期在 Mapper 中写了个方法重载，然后死活查不到正确结果，最终灵机一动，想到是不是因为重载，然后我 `Shift + F6` 把重载方法名字改了一下！结果，显而易见，重载的那个方法也一块改了。再次躺坑！</summary>
+    
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/categories/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>并发场景加锁优化小技巧</title>
+    <link href="https://liuzhihang.com/2021/07/24/tips_for_locking_and_optimizing_concurrent_scenes.html"/>
+    <id>https://liuzhihang.com/2021/07/24/tips_for_locking_and_optimizing_concurrent_scenes.html</id>
+    <published>2021-07-24T23:00:00.000Z</published>
+    <updated>2025-03-27T17:13:36.173Z</updated>
+    
+    
+    <summary type="html">在 JDK 中有很多锁，包括 synchronized、ReentrantLock、ReentrantReadWriteLock、锁的使用场景也分很多种，下面看一下对加锁优化的小技巧。</summary>
+    
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/categories/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="工作笔记" scheme="https://liuzhihang.com/tags/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 05：分布式读写锁和联锁</title>
+    <link href="https://liuzhihang.com/2021/07/16/curator-5.html"/>
+    <id>https://liuzhihang.com/2021/07/16/curator-5.html</id>
+    <published>2021-07-16T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.167Z</updated>
+    
+    
+    <summary type="html">Curator 同样支持分布式读写锁 和联锁，只需要使用 InterProcessReadWriteLock 即可，来一起看看它的源码以及实现方式。</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 04：分布式信号量和互斥锁</title>
+    <link href="https://liuzhihang.com/2021/07/15/curator-4.html"/>
+    <id>https://liuzhihang.com/2021/07/15/curator-4.html</id>
+    <published>2021-07-15T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.167Z</updated>
+    
+    
+    <summary type="html">分布式信号量，之前在 Redisson 中也介绍过，Redisson 的信号量是将计数维护在 Redis 中的，那现在来看一下 Curator 是如何基于 ZooKeeper 实现信号量的。</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 03：可重入锁并发加锁</title>
+    <link href="https://liuzhihang.com/2021/07/14/curator-3.html"/>
+    <id>https://liuzhihang.com/2021/07/14/curator-3.html</id>
+    <published>2021-07-14T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.167Z</updated>
+    
+    
+    <summary type="html">在了解了加锁和锁重入之后，最需要了解的还是在分布式场景下或者多线程并发加锁是如何处理的？</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 02：可重入锁重复加锁和锁释放</title>
+    <link href="https://liuzhihang.com/2021/07/12/curator-2.html"/>
+    <id>https://liuzhihang.com/2021/07/12/curator-2.html</id>
+    <published>2021-07-12T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.167Z</updated>
+    
+    
+    <summary type="html">加锁逻辑已经介绍完毕，那当一个线程重复加锁是如何处理的呢？</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ZooKeeper 分布式锁 Curator 源码 01：可重入锁</title>
+    <link href="https://liuzhihang.com/2021/07/10/curator-1.html"/>
+    <id>https://liuzhihang.com/2021/07/10/curator-1.html</id>
+    <published>2021-07-10T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.166Z</updated>
+    
+    
+    <summary type="html">一般工作中常用的分布式锁，就是基于 Redis 和 ZooKeeper，前面已经介绍完了 Redisson 锁相关的源码，下面一起看看基于 ZooKeeper 的锁。也就是 Curator 这个框架。</summary>
+    
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/Curator/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="Curator" scheme="https://liuzhihang.com/tags/Curator/"/>
+    
+    <category term="ZooKeeper" scheme="https://liuzhihang.com/tags/ZooKeeper/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redisson 分布式锁源码 10：读写锁</title>
+    <link href="https://liuzhihang.com/2021/07/07/redisson-10.html"/>
+    <id>https://liuzhihang.com/2021/07/07/redisson-10.html</id>
+    <published>2021-07-07T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.170Z</updated>
+    
+    
+    <summary type="html">Redisson 还支持可重入读写锁，允许在分布式场景下，同时有多个读锁和一个写锁处于加锁状态。</summary>
+    
+    
+    
+    <category term="redisson" scheme="https://liuzhihang.com/categories/redisson/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
+    
+    <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redisson 分布式锁源码 11：Semaphore 和 CountDownLatch</title>
+    <link href="https://liuzhihang.com/2021/07/07/redisson-11.html"/>
+    <id>https://liuzhihang.com/2021/07/07/redisson-11.html</id>
+    <published>2021-07-07T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.170Z</updated>
+    
+    
+    <summary type="html">Redisson 除了提供了分布式锁之外，还额外提供了同步组件，Semaphore 和 CountDownLatch。</summary>
+    
+    
+    
+    <category term="redisson" scheme="https://liuzhihang.com/categories/redisson/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
+    
+    <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redisson 分布式锁源码 09：RedLock 红锁的故事</title>
+    <link href="https://liuzhihang.com/2021/07/06/redisson-9.html"/>
+    <id>https://liuzhihang.com/2021/07/06/redisson-9.html</id>
+    <published>2021-07-06T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.170Z</updated>
+    
+    
+    <summary type="html">RedLock 红锁，是分布式锁中必须要了解的一个概念。 但是不建议使用 Redisson 实现的 Redis 的红锁。</summary>
+    
+    
+    
+    <category term="redisson" scheme="https://liuzhihang.com/categories/redisson/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
+    
+    <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redisson 分布式锁源码 08：MultiLock 加锁与锁释放</title>
+    <link href="https://liuzhihang.com/2021/07/05/redisson-8.html"/>
+    <id>https://liuzhihang.com/2021/07/05/redisson-8.html</id>
+    <published>2021-07-05T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.170Z</updated>
+    
+    
+    <summary type="html">基于 Redis 的 Redisson 分布式联锁 RedissonMultiLock 对象可以将多个 RLock 对象关联为一个联锁，每个 RLock 对象实例可以来自于不同的 Redisson 实例。</summary>
+    
+    
+    
+    <category term="redisson" scheme="https://liuzhihang.com/categories/redisson/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
+    
+    <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redisson 分布式锁源码 07：公平锁释放</title>
+    <link href="https://liuzhihang.com/2021/07/04/redisson-7.html"/>
+    <id>https://liuzhihang.com/2021/07/04/redisson-7.html</id>
+    <published>2021-07-04T13:30:30.000Z</published>
+    <updated>2025-03-27T17:13:36.170Z</updated>
+    
+    
+    <summary type="html">公平锁的释放同样分为主动释放和超时释放。</summary>
+    
+    
+    
+    <category term="redisson" scheme="https://liuzhihang.com/categories/redisson/"/>
+    
+    
+    <category term="分布式锁" scheme="https://liuzhihang.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    
+    <category term="redisson" scheme="https://liuzhihang.com/tags/redisson/"/>
+    
+    <category term="redis" scheme="https://liuzhihang.com/tags/redis/"/>
+    
+  </entry>
+  
+</feed>
