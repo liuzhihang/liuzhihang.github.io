@@ -1,0 +1,1396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>程序员小航</title>
+  <link>https://liuzhihang.com/</link>
+  <description>记录 AI 工程、软件实践与持续写作。</description>
+  <language>zh-CN</language>
+  <atom:link href="https://liuzhihang.com/rss.xml" rel="self" type="application/rss+xml" />
+  <item>
+  <title>五张图看懂 Loop Engineering</title>
+  <link>https://liuzhihang.com/posts/loop-engineering-visual-guide/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/loop-engineering-visual-guide/</guid>
+  <pubDate>Mon, 20 Jul 2026 02:00:00 GMT</pubDate>
+  <description>用五张图梳理从 Prompt 到 Loop 的演进、Loop 的 5+1 基础件，以及研发场景中的 Agent 闭环。</description>
+</item>
+<item>
+  <title>什么是 Loop Engineering？AI Coding 正在从 Prompt 走向 Loop</title>
+  <link>https://liuzhihang.com/posts/loop-engineering/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/loop-engineering/</guid>
+  <pubDate>Mon, 22 Jun 2026 15:28:00 GMT</pubDate>
+  <description>从 Prompt、Context、Harness 到 Loop，解释 AI 如何在可控、可验证、可追踪、可接管的工程系统中持续推进真实研发任务。</description>
+</item>
+<item>
+  <title>Karpathy：AI 越能干，输出越要看得懂</title>
+  <link>https://liuzhihang.com/posts/karpathy-agent-understanding/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/karpathy-agent-understanding/</guid>
+  <pubDate>Sat, 03 Oct 2026 09:33:59 GMT</pubDate>
+  <description>从 Karpathy 的推文出发，理解文字、图解、交互网页和讲解视频各自解决的问题，并把清晰表达与结果核验用到 Agent 工作中。</description>
+</item>
+<item>
+  <title>Karpathy：让 AI 的输出更好懂</title>
+  <link>https://liuzhihang.com/posts/karpathy-agent-understanding-photos/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/karpathy-agent-understanding-photos/</guid>
+  <pubDate>Sat, 03 Oct 2026 09:33:59 GMT</pubDate>
+  <description>七张白底手绘图说明 Writing、Diagram、HTML、Video，以及人的理解、核验与指令审查。</description>
+</item>
+<item>
+  <title>OpenAI亲自教你优化Skill与AGENTS.md</title>
+  <link>https://liuzhihang.com/posts/gpt-6-astra-official-skills-agents/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/gpt-6-astra-official-skills-agents/</guid>
+  <pubDate>Sun, 13 Sep 2026 03:57:17 GMT</pubDate>
+  <description>OpenAI 官方建议：写准 Skill 触发条件，按需加载资料，划清 AGENTS.md 作用范围与完成标准，并提供可复制的更新提示词。</description>
+</item>
+<item>
+  <title>AI 研发：我为什么推荐大家使用 SDD</title>
+  <link>https://liuzhihang.com/posts/ai-rd-sdd/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/ai-rd-sdd/</guid>
+  <pubDate>Wed, 09 Sep 2026 01:07:07 GMT</pubDate>
+  <description>为什么用了 AI，还是频繁返工、不断接管？聊聊 SDD 怎样帮助我们先澄清需求，让实现持续推进，并把历史决策沉淀成项目知识。</description>
+</item>
+<item>
+  <title>GPT-6 Astra Token 不够用？试试分模型</title>
+  <link>https://liuzhihang.com/posts/codex-subagent-model-routing/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/codex-subagent-model-routing/</guid>
+  <pubDate>Mon, 07 Sep 2026 04:00:00 GMT</pubDate>
+  <description>Codex 子 Agent 按职责、模型和推理强度分工，把明确执行与独立复核交给合适的角色，并合算完整任务用量。</description>
+</item>
+<item>
+  <title>GPT-6 Astra 开启新版上下文，替代传统压缩</title>
+  <link>https://liuzhihang.com/posts/gpt-6-astra-context-management/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/gpt-6-astra-context-management/</guid>
+  <pubDate>Mon, 07 Sep 2026 04:00:00 GMT</pubDate>
+  <description>GPT-6 Astra 用工作笔记与历史检索接续长任务，保留官方配置、实验状态与验证边界。</description>
+</item>
+<item>
+  <title>GPT-6 Astra：先试低或中等推理强度</title>
+  <link>https://liuzhihang.com/posts/gpt-6-astra-reasoning-effort/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/gpt-6-astra-reasoning-effort/</guid>
+  <pubDate>Mon, 07 Sep 2026 04:00:00 GMT</pubDate>
+  <description>Tibo 建议从 Astra 低或中等推理强度开始；保留比较前提，用熟悉任务一起观察质量、耗时、用量与返工。</description>
+</item>
+<item>
+  <title>GPT-6 Astra来了，升级AGENTS.md和Skills</title>
+  <link>https://liuzhihang.com/posts/gpt-6-astra-instruction-refresh/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/gpt-6-astra-instruction-refresh/</guid>
+  <pubDate>Sat, 05 Sep 2026 07:24:20 GMT</pubDate>
+  <description>GPT-6 Astra 发布后，参考官方模型指南审计 AGENTS.md、SKILL.md 与 references，并提供可直接复制的优化提示词。</description>
+</item>
+<item>
+  <title>Anthropic 4D：AI 研发不只是写代码</title>
+  <link>https://liuzhihang.com/posts/anthropic-4d/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/anthropic-4d/</guid>
+  <pubDate>Tue, 01 Sep 2026 01:00:00 GMT</pubDate>
+  <description>Anthropic 介绍的 4D AI Fluency Framework，提供了一套理解这些问题的协作框架。</description>
+</item>
+<item>
+  <title>“牛来” Ox Alpha，原来是智谱</title>
+  <link>https://liuzhihang.com/posts/ox-alpha-glm-5-3-flash/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/ox-alpha-glm-5-3-flash/</guid>
+  <pubDate>Thu, 27 Aug 2026 04:00:00 GMT</pubDate>
+  <description>关于 GLM-5.3-Flash 的身份揭晓、多模态能力、官方评测与限时价格记录。</description>
+</item>
+<item>
+  <title>Shopify CEO正考虑内部禁用Claude Code</title>
+  <link>https://liuzhihang.com/posts/shopify-claude-code-split-brain/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/shopify-claude-code-split-brain/</guid>
+  <pubDate>Wed, 26 Aug 2026 04:00:00 GMT</pubDate>
+  <description>从 Shopify CEO 与 Anthropic 的公开讨论，看多种 AI 编程工具共用项目规则时的配置分歧。</description>
+</item>
+<item>
+  <title>为什么我不推荐使用中转站</title>
+  <link>https://liuzhihang.com/posts/why-i-dont-recommend-model-relays/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/why-i-dont-recommend-model-relays/</guid>
+  <pubDate>Tue, 25 Aug 2026 17:50:46 GMT</pubDate>
+  <description>从中转站的工作方式、低价来源与数据边界，讨论高权限 Agent 接入不透明中转服务的风险。</description>
+</item>
+<item>
+  <title>ELI5 Skill 实测：一句指令能讲明白吗？</title>
+  <link>https://liuzhihang.com/posts/eli5-skill-test/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/eli5-skill-test/</guid>
+  <pubDate>Sun, 23 Aug 2026 04:00:00 GMT</pubDate>
+  <description>在 Codex 中用 ELI5 解释 Anthropic 4D：从一句核心指令到可展开的 HTML 页面，记录这次实测的效果与边界。</description>
+</item>
+<item>
+  <title>A 社新 Skill ELI5：请把我的同事当成 5 岁</title>
+  <link>https://liuzhihang.com/posts/eli5-visual-explainer/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/eli5-visual-explainer/</guid>
+  <pubDate>Sat, 22 Aug 2026 16:03:47 GMT</pubDate>
+  <description>ELI5 是 “explain like I’m 5” 的缩写，意思是“像对 5 岁小孩解释那样说明白”。</description>
+</item>
+<item>
+  <title>为什么要写测试用例</title>
+  <link>https://liuzhihang.com/posts/1/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/1/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>为什么要写测试用例 作为一名开发人员，你可能会发现周围的开发并不太喜欢写测试用例，甚至有些同学根本不写测试用例，认为写测试用例完全是浪费时间，或者是测试用例只是测试的事情。 在开发过程中，往往都是呼啦啦的写完代码，然后用 Postman 或者 Httpclient 等接口工具请求下接口，看着没问题就提测，然后等测试人员反馈问题。 这大概和职业以及所处的环境有关系，有些是公司没有相关的要求，有些是注重敏捷开发（项目和自己总有一个敏捷），不</description>
+</item>
+<item>
+  <title>使用 IDEA 快速创建测试用例</title>
+  <link>https://liuzhihang.com/posts/2-idea/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/2-idea/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>使用 IDEA 快速创建测试用例 在写测试用例中，一般要遵循一些规范，像命名规范、注释规范等等。 像测试用例命名规范，一般建议测试类命名为 ClassNameTest，这样能很好的表示当前测试类对应的是哪个类的测试用例。 对于测试方法的命名建议为 testMethodNameWithXXX 或者 methodNameWithXXX，methodName 很好理解，就是被测试方法的名字，后面为什么加 WithXXX 是因为一个方法的测试用</description>
+</item>
+<item>
+  <title>工作中的设计模式 —— 门面模式</title>
+  <link>https://liuzhihang.com/posts/4/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/4/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>工作中的设计模式 —— 门面模式 前言 门面模式也叫外观模式，是一种结构型设计模式，能为程序库、框架或其他复杂类提供一个简单的接口。 使用场景 门面模式可以说是在工作中使用非常多的一种设计模式了，比如常用的 slf4j。 下面简单介绍常用的使用场景： 为远程接口设计统一入口 比如需要调用微信支付宝支付，里面一大堆参数，参数什么也不一样，这时候就可以统一封装一个接口，然后小伙伴们使用的时候，只需要调用封装的接口就可以了。 也不用担心同样是</description>
+</item>
+<item>
+  <title>Halo 主题基础设置</title>
+  <link>https://liuzhihang.com/posts/hao/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/hao/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>本章教你如何进行一些基础配置，包括：网站标题、站点 logo、侧栏头像、首页分页、评论功能 以下内容为 Halo 的公共设置，和主题无关，可能会随着 Halo 更新发生变化，如果有所差异，可以留言并 @我，进行修改。 主题在设计之初，会复用一些 Halo 自带的部分设置，不会在主题菜单中，所以有些小伙伴会疑惑找不到 logo、标题设置的地方，那是因为他们设置的地方在系统-设置这里。 基本设置 分页设置 列表数量影响着每夜会展示多少文章，</description>
+</item>
+<item>
+  <title>服务器 500 错误</title>
+  <link>https://liuzhihang.com/posts/hao-500/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/hao-500/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>服务器 500 错误 不少小伙伴安装，或者升级主题后会遇到这个情况，原因是因为后台部分配置不适配，或者新的配置没有设置属性。 理论上应该保证升级不受到影响，但是没排查到是什么配置没有设置默认值，后续会尝试解决，避免这种情况。 临时解决办法 后台主题设置，都保存一遍！</description>
+</item>
+<item>
+  <title>Halo 主题安装</title>
+  <link>https://liuzhihang.com/posts/hao-install-theme/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/hao-install-theme/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>在查看本篇文档之前，请确保你已经正确安装 Halo，如果不了解什么是 Halo，可以查看官网：https://halo.run/(https://halo.run/) 下面介绍三种方式安装主题：推荐第三种方式，直接在应用市场插件中安装 下载安装 在 GitHub 直接下载安装 如果小伙伴网络不太好，可以参考下面的方式，从 Halo 应用市场下载 Releases · liuzhihang/halo-theme-hao(https://g</description>
+</item>
+<item>
+  <title>Halo 主题导航栏设置</title>
+  <link>https://liuzhihang.com/posts/hao-navigation/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/hao-navigation/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>本篇文章会教你如何配置导航栏，最终效果参考如下。 感谢 Lanbin、小孙同学 等同学的贡献（语雀参与编辑）。 标题 1. 进入站点后台 2. 点击左侧面板中的主题 3. 点击上方的导航 4. 修改标题字段即可 主菜单 主菜单即网站导航栏中间部分的菜单 1. 进入站点后台 2. 点击左侧面板中的菜单 3. 点击主菜单 4. 点击右上角的新增 5. 可以通过拖拽调整缩进，从而创建子菜单 6. 填写相应表单即可 标题左侧相关链接 1. 进入</description>
+</item>
+<item>
+  <title>IDEA 自动折叠隐藏 getter setter 小技巧</title>
+  <link>https://liuzhihang.com/posts/idea-idea-getter-setter/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/idea-idea-getter-setter/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>IDEA 自动折叠隐藏 getter setter 小技巧 lombok 大部分小伙伴会推荐 lombok，当然我也使用，加上 @Data、@Getter、@Setter 注解，确实很方便。 但是总有一些原因，可能在开发中并不能使用 lombok，这时候又习惯了 lombok 的清爽，可以通过对 IDEA 进行如下设置以达到同样的效果。 添加 region 操作很简单，选中自己的 get set 方法，然后使用 Command + Op</description>
+</item>
+<item>
+  <title>线程池 ThreadPoolExecutor 原理及源码笔记</title>
+  <link>https://liuzhihang.com/posts/java/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/java/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>线程池 ThreadPoolExecutor 原理及源码笔记 前言 前面在学习 JUC 源码时，很多代码举例中都使用了线程池 ThreadPoolExecutor，并且在工作中也经常用到线程池，所以现在就一步一步看看，线程池的源码，了解其背后的核心原理。 介绍 什么是线程池 线程池（英语：thread pool）：一种线程使用模式。线程过多会带来调度开销，进而影响缓存局部性和整体性能。而线程池维护着多个线程，等待着监督管理者分配可并发执</description>
+</item>
+<item>
+  <title>正经人谁写 Junit 啊！</title>
+  <link>https://liuzhihang.com/posts/junit/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/junit/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>正经人谁写 Junit 啊！ 前言 这也太敏捷了 你的单元测试呢？ 测了几个功能？ 代码覆盖率多少？ 哦，你说这些啊，我从来不写单元测试！ 惊！你这单元测试的姿势都不对，就和打王者一样，同样是玩游戏，有人躺着，有人跪着…… 来，赶紧过来跟着我看看单元测试！ 项目分层 一般开发过程中，都是要对项目进行分层的，先来看看阿里巴巴 Java 开发手册中，是如何对项目进行分层的？ 当然实际工作中不可能是这样的，再来看看我一般使用的分层： 单元测试</description>
+</item>
+<item>
+  <title>反转链表</title>
+  <link>https://liuzhihang.com/posts/leetcode/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>前言 近期小伙伴群里各种反转链表题目，你说这个算法，嗯~ 还挺有意思的！ 我也来做一做吧！ 1 反转单链表 解题思路 使用两个临时变量，分别标记反转过程中的两个链表的头。 我也就虐虐这种 Easy 的。 2 反转 m 到 n 的链表 解题思路 1. 先定位到 left 和 leftPrev 节点 2. 反转 3. 结束 3 K 个一组翻转链表 还有！一个链表翻来翻去 ……</description>
+</item>
+<item>
+  <title>1. 两数之和</title>
+  <link>https://liuzhihang.com/posts/leetcode-1/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-1/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>1. 两数之和 题目 题解 暴力枚举 直接遍历出所有的可能性，一一比较。 很显然这种方式不会很快，因为双层遍历，时间复杂度为 $O(n^2)$。 哈希表 只需要将已经遍历过的值放在 Hash 表中。 K：存放 target - 当前值 V：存放当前 index 这样只需要判断是否在 Hash 表中即可。</description>
+</item>
+<item>
+  <title>136. 只出现一次的数字</title>
+  <link>https://liuzhihang.com/posts/leetcode-136/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-136/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 - 考察的是位运算 —— 异或(^)，相同为 0，不同为 1 - 1^0 = 1，1^1 = 0 - 则直接对数据所有元素执行 ^ 操作，最终的就是结果</description>
+</item>
+<item>
+  <title>137. 只出现一次的数字 II</title>
+  <link>https://liuzhihang.com/posts/leetcode-137-ii/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-137-ii/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 方法一 - 直接用哈希表出现 3 次则从哈希表移除，最后剩下的就是结果 方法二 - 其余元素都出现三次，其中某个元素只出现一次，将每个元素都转化为二进制，则可能的结果为 4 个数都相同或者 3 个数都相同 - 同一位结果可能为 0000、1111、0001、1110 - 通过位运算得出所有该位的和，对 3 进行取模则得出结果数字该位的值</description>
+</item>
+<item>
+  <title>1488. 避免洪水泛滥</title>
+  <link>https://liuzhihang.com/posts/leetcode-1488/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-1488/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 - 默认对所有天数填写默认值，即都抽 1 号湖泊 - 用 Map 存储湖泊编号和下雨天的对应关系 - 把所有的空闲日子（不下雨的天数）存起来，注意要使用 TreeSet，因为后面需要进行比较 - 遍历数组 - 不下雨：将 i 天存储到 TreeSet 中，等后面再选择这一天抽哪个湖泊 - 下雨：如果下雨的湖泊已经有水，则判断有水后至今期间有没有空闲日子 - 有空闲：设置那天为抽水，并移除该空闲日子，使用 TreeSet.ce</description>
+</item>
+<item>
+  <title>2512. 奖励最顶尖的 K 名学生</title>
+  <link>https://liuzhihang.com/posts/leetcode-2512-k/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-2512-k/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 Map + Map Map + 二维数组</description>
+</item>
+<item>
+  <title>2562. 找出数组的串联值</title>
+  <link>https://liuzhihang.com/posts/leetcode-2562/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-2562/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 - 直接使用双指针，依次拼接 - 如果指针结束指向同一个数，则再加上该数</description>
+</item>
+<item>
+  <title>260. 只出现一次的数字 III</title>
+  <link>https://liuzhihang.com/posts/leetcode-260-iii/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-260-iii/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 题解一 - 直接使用 HashSet 判断 题解二 - 对数组所有元素求异或，得到的值为那两个不同元素的异或结果 - 明确那两个数肯定不同，所以肯定有的位数异或后结果为 1 - 假如第 x 位异或的结果为 1，即所有数的 x 位异或结果为 1 - 找到 x 的最小值 - 现在数组中只有两类数：x 位为 0 的，和 x 位为 1 的，并且这两个不同的数的 x 位还不同 - 通过 &amp; 操作，将数组氛围两类 - 最后问题拆解为 1</description>
+</item>
+<item>
+  <title>27. 移除元素</title>
+  <link>https://liuzhihang.com/posts/leetcode-27/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-27/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成 所以只能修改原数组。 题解一： 直接对满足 numsi == val 的值进行依次覆盖即可。 题解二： 元素的顺序可以改变 因为对顺序没有要求，所以可以直接使用数组尾部的值覆盖前面的值。</description>
+</item>
+<item>
+  <title>334. 递增的三元子序列</title>
+  <link>https://liuzhihang.com/posts/leetcode-334/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-334/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 - i、j、k 可以不连续，所以不能够使用滑动窗口 - $O(n)$ ，空间复杂度为 $O(1)$ 表示只能遍历一次 - 假设 first 和 second 是有序的，且开始 first second 就会满足条件 - first third，则将 first 进行赋值为 third，因为在数组中肯定有比 second 小的数</description>
+</item>
+<item>
+  <title>747. 至少是其他数字两倍的最大数</title>
+  <link>https://liuzhihang.com/posts/leetcode-747/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-747/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 只要通过遍历获得最大和第二大的数即可。</description>
+</item>
+<item>
+  <title>9. 回文数</title>
+  <link>https://liuzhihang.com/posts/leetcode-9/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/leetcode-9/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>题目 题解 - 小于 0 肯定不满足条件 - 大于 0 且尾数为 0，则不满足条件 题解一： 直接转换成字符串，然后 reverse 比较一下。但是题目中有写： 进阶：你能不将整数转为字符串来解决这个问题吗？ 所以肯定不能使用这种方式！ 题解二： - 对数字进行反转 题解三： - 既然是回文数，那就反转一半的数字即可 - 如何知道反转到一半了 - tmp 不断减少位数，当 tmp 小于 res 时，说明反转到一半或者一半过一位了 - 总</description>
+</item>
+<item>
+  <title>推荐一个 Mac 终端终端工具 Warp</title>
+  <link>https://liuzhihang.com/posts/mac-warp/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/mac-warp/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>推荐一个 Mac 终端终端工具 Warp 在此之前一直使用 iTerm2 经过各种配置，大概样子如下 Warp 可是号称是 21 世纪的终端，看看我配置之后的样子： 1. OneDark 主题 https://github.com/warpdotdev/themes/tree/main/base16 2. workflow 提前将各种常用命令配置成 workflow，双击即可使用，还可以配置占位符变量，我就先配置了 brew 的常用命令</description>
+</item>
+<item>
+  <title>依赖 jar 没有传递，导致找不到类文件而启动失败了</title>
+  <link>https://liuzhihang.com/posts/maven/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/maven/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>依赖 jar 没有传递，导致找不到类文件而启动失败了 前言 最近频繁遇到找不到类文件错误。 Caused by: java.lang.NoClassDefFoundError:xxx 就这个家伙。 但是我本地启动服务是正常的，前前后后经历了 惊讶 - 疑惑 - 烦躁 - 暴躁 - 心塞 - 欣喜 在短短的小半天内，感觉心情像过了一个过山车+大摆锤，结束了，脑袋都是晕的。 ~~关键是本地是正常的！~~ 现在，请跟随我的视角，来看看这个让人</description>
+</item>
+<item>
+  <title>如何开启 MySQL 事务？</title>
+  <link>https://liuzhihang.com/posts/mysql-mysql/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/mysql-mysql/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>如何开启 MySQL 事务？ 前言 本文主要介绍 MySQL 是如何开启一个事务的，相关资料也可以查阅官方文档。 https://dev.mysql.com/doc/refman/8.0/en/commit.html 方式 1 START TRANSACTION 或 BEGIN 开始新的事务 COMMIT 提交当前事务 ROLLBACK 回滚当前事务 这是大家熟知的一种方式，其中开启事务的方式 start transaction 和 b</description>
+</item>
+<item>
+  <title>为了不写接口文档，我肝了个 IDEA 插件！</title>
+  <link>https://liuzhihang.com/posts/plugin-docview-10/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/plugin-docview-10/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>为了不写接口文档，我肝了个 IDEA 插件！ 前言 写代码的快乐，在于通过一顿猛如虎的操作，实现了自己设计的逻辑流程。~~（也可能并不是很快乐！）~~ 这时候，你以为就可以关机么？ 还有接口文档没写呢！ 哈？ 开始进入无限 CV 模式，各种请求参数、必填非必填、请求返回示例！ 几分钟后…… 🤬🤬🤬 我要写个 IDEA 插件，以后再也不想手写文档了！ 下面，来看看我肝出来的插件吧！ 功能介绍 插件名字必须得先介绍，Doc View，</description>
+</item>
+<item>
+  <title>IDEA 文档插件 DocView 版本更新：修改 UI 并支持 IDEA 2020.3 ！</title>
+  <link>https://liuzhihang.com/posts/plugin-docview-5-ui/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/plugin-docview-5-ui/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>IDEA 文档插件 DocView 版本更新：修改 UI 并支持 IDEA 2020.3 ！ 前言 近期工作开始忙起来，各种忙，连阅读 Spring 源码都暂停了，Doc View 也暂时搁置计划，虽然想有很多功能，但是总是要慢慢来的。 也有几个小伙伴在 github 提了 Issues： - 希望支持 IDEA 2020.3 - 也有 bug 反馈说参数列表显示不全 当然就只有两个 Issues …… 也是没几个人用的原因。 下面看一</description>
+</item>
+<item>
+  <title>jsDelivr 缓存刷新</title>
+  <link>https://liuzhihang.com/posts/plugin-jsdelivrh/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/plugin-jsdelivrh/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/wechat.jpg https://purge.jsdelivr.net/gh/liuzhihang/oss/pic/wechat.jpg style=&quot;background-image: url(&apos;https://cdn.jsdelivr.net/gh/liuzhihang/oss/pic/banner/wallhaven-oxjmy9.j</description>
+</item>
+<item>
+  <title>Spring 事务执行过程</title>
+  <link>https://liuzhihang.com/posts/spring-spring/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/spring-spring/</guid>
+  <pubDate>Mon, 13 Jul 2026 17:20:07 GMT</pubDate>
+  <description>前言 相信小伙伴一定用过 @Transactional 注解，那 @Transactional 背后的秘密又知道多少呢？ Spring 是如何开启事务的？又是如何进行提交事务和关闭事务的呢？ 画图猜测 在开始 debug 阅读源码之前，小伙伴们应该已经知道 MySQL 是如何开启事务的(https://mp.weixin.qq.com/s/UgNvOl0RF9v7w7dOLMnglw)。 因此可以得出猜测： 那下面跟着源码一起读一读，S</description>
+</item>
+<item>
+  <title>我用 AI 写了一个能自动生成文章摘要的 Hexo 插件</title>
+  <link>https://liuzhihang.com/posts/hexo-generator-ai-summary/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/hexo-generator-ai-summary/</guid>
+  <pubDate>Sat, 29 Mar 2025 04:00:00 GMT</pubDate>
+  <description>前言：当 Hexo 遇上 AI 作为技术博主，我一直在思考如何让博客创作更高效。在维护 liuzhihang.com(https://liuzhihang.com) 的过程中，发现每次写完技术文章都要手动编写摘要： - 需要从 3000 字长文中提炼 200 字精华 - 不同文章类型需要调整摘要风格 - 后期修改文章时摘要需要同步更新 直到某天调试 DeepSeek 接口时突然顿悟：为什么不让 AI 自动完成这个机械劳动？ 于是诞生了</description>
+</item>
+<item>
+  <title>Dubbo 源码阅读环境搭建</title>
+  <link>https://liuzhihang.com/posts/dubbo-source-code-reading-environment-construction/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/dubbo-source-code-reading-environment-construction/</guid>
+  <pubDate>Mon, 18 Apr 2022 12:58:41 GMT</pubDate>
+  <description>在了解 Dubbo 的概念以及基础架构之后，可以考虑自己搭个 Demo，运行一下，基本知道是怎么回事。</description>
+</item>
+<item>
+  <title>Google 搜索屏蔽「小 X 知识网」</title>
+  <link>https://liuzhihang.com/posts/google-search-blocking/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/google-search-blocking/</guid>
+  <pubDate>Fri, 15 Apr 2022 12:49:37 GMT</pubDate>
+  <description>最近使用 Google 的体验越来越差，全都是各种垃圾站点，或者爬虫网站，完全影响了体验。</description>
+</item>
+<item>
+  <title>从单机定时到多层分发</title>
+  <link>https://liuzhihang.com/posts/distributed-timed-task-multilayer-distribution/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/distributed-timed-task-multilayer-distribution/</guid>
+  <pubDate>Wed, 06 Apr 2022 14:00:00 GMT</pubDate>
+  <description>定时任务从单机到多层分发演变过程</description>
+</item>
+<item>
+  <title>yuque-hexo：语雀写文，hexo 自动部署</title>
+  <link>https://liuzhihang.com/posts/yuque-hexo-auto-deployment/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/yuque-hexo-auto-deployment/</guid>
+  <pubDate>Tue, 22 Mar 2022 15:28:41 GMT</pubDate>
+  <description>手把手教学，使用 yuque-hexo 自动同步语雀的文章到个人静态网站</description>
+</item>
+<item>
+  <title>Dubbo 概念及架构</title>
+  <link>https://liuzhihang.com/posts/dubbo-concept-and-architecture/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/dubbo-concept-and-architecture/</guid>
+  <pubDate>Thu, 13 Jan 2022 12:54:45 GMT</pubDate>
+  <description>本着知其所以然的目的，翻查资料，阅读源码，一起深入了解一下 Dubbo 的原理。</description>
+</item>
+<item>
+  <title>从 Java 锁到分布式锁</title>
+  <link>https://liuzhihang.com/posts/lock-summary/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/lock-summary/</guid>
+  <pubDate>Wed, 17 Nov 2021 13:30:30 GMT</pubDate>
+  <description>围绕锁标志、持有者、重入、等待和释放，对比 synchronized、ReentrantLock、Redisson 与 Curator 的实现。</description>
+</item>
+<item>
+  <title>MySQL datetime 时间字段的四舍五入</title>
+  <link>https://liuzhihang.com/posts/rounding-of-the-time-field/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/rounding-of-the-time-field/</guid>
+  <pubDate>Thu, 30 Sep 2021 11:00:00 GMT</pubDate>
+  <description>如果不是踩到坑，我估计到现在还不知道时间字段会四舍五入。</description>
+</item>
+<item>
+  <title>使用 SpringBoot 转换器将前端参数转换为枚举</title>
+  <link>https://liuzhihang.com/posts/springboot-enum-converter/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/springboot-enum-converter/</guid>
+  <pubDate>Fri, 03 Sep 2021 23:00:00 GMT</pubDate>
+  <description>最近遇到一个小伙伴问前端枚举转换问题，才意识到可以通过转换器（Converter）自动将前端传入的字段值使用枚举接收。</description>
+</item>
+<item>
+  <title>MyBatis-Plus 中 Mapper 重载踩坑指南</title>
+  <link>https://liuzhihang.com/posts/guide-to-mapper-overloading-crater-in-mybatis-plus/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/guide-to-mapper-overloading-crater-in-mybatis-plus/</guid>
+  <pubDate>Sat, 21 Aug 2021 23:00:00 GMT</pubDate>
+  <description>近期在 Mapper 中写了个方法重载，然后死活查不到正确结果，最终灵机一动，想到是不是因为重载，然后我 `Shift + F6` 把重载方法名字改了一下！结果，显而易见，重载的那个方法也一块改了。再次躺坑！</description>
+</item>
+<item>
+  <title>并发场景加锁优化小技巧</title>
+  <link>https://liuzhihang.com/posts/locking-optimization-notes/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/locking-optimization-notes/</guid>
+  <pubDate>Sat, 24 Jul 2021 23:00:00 GMT</pubDate>
+  <description>在 JDK 中有很多锁，包括 synchronized、ReentrantLock、ReentrantReadWriteLock、锁的使用场景也分很多种，下面看一下对加锁优化的小技巧。</description>
+</item>
+<item>
+  <title>ZooKeeper 分布式锁 Curator 源码 05：分布式读写锁和联锁</title>
+  <link>https://liuzhihang.com/posts/curator-5/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/curator-5/</guid>
+  <pubDate>Fri, 16 Jul 2021 13:30:30 GMT</pubDate>
+  <description>Curator 同样支持分布式读写锁 和联锁，只需要使用 InterProcessReadWriteLock 即可，来一起看看它的源码以及实现方式。</description>
+</item>
+<item>
+  <title>ZooKeeper 分布式锁 Curator 源码 04：分布式信号量和互斥锁</title>
+  <link>https://liuzhihang.com/posts/curator-4/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/curator-4/</guid>
+  <pubDate>Thu, 15 Jul 2021 13:30:30 GMT</pubDate>
+  <description>分布式信号量，之前在 Redisson 中也介绍过，Redisson 的信号量是将计数维护在 Redis 中的，那现在来看一下 Curator 是如何基于 ZooKeeper 实现信号量的。</description>
+</item>
+<item>
+  <title>ZooKeeper 分布式锁 Curator 源码 03：可重入锁并发加锁</title>
+  <link>https://liuzhihang.com/posts/curator-3/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/curator-3/</guid>
+  <pubDate>Wed, 14 Jul 2021 13:30:30 GMT</pubDate>
+  <description>在了解了加锁和锁重入之后，最需要了解的还是在分布式场景下或者多线程并发加锁是如何处理的？</description>
+</item>
+<item>
+  <title>ZooKeeper 分布式锁 Curator 源码 02：可重入锁重复加锁和锁释放</title>
+  <link>https://liuzhihang.com/posts/curator-2/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/curator-2/</guid>
+  <pubDate>Mon, 12 Jul 2021 13:30:30 GMT</pubDate>
+  <description>加锁逻辑已经介绍完毕，那当一个线程重复加锁是如何处理的呢？</description>
+</item>
+<item>
+  <title>ZooKeeper 分布式锁 Curator 源码 01：可重入锁</title>
+  <link>https://liuzhihang.com/posts/curator-1/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/curator-1/</guid>
+  <pubDate>Sat, 10 Jul 2021 13:30:30 GMT</pubDate>
+  <description>一般工作中常用的分布式锁，就是基于 Redis 和 ZooKeeper，前面已经介绍完了 Redisson 锁相关的源码，下面一起看看基于 ZooKeeper 的锁。也就是 Curator 这个框架。</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 10：读写锁</title>
+  <link>https://liuzhihang.com/posts/redisson-10/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-10/</guid>
+  <pubDate>Wed, 07 Jul 2021 13:30:30 GMT</pubDate>
+  <description>Redisson 还支持可重入读写锁，允许在分布式场景下，同时有多个读锁和一个写锁处于加锁状态。</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 11：Semaphore 和 CountDownLatch</title>
+  <link>https://liuzhihang.com/posts/redisson-11/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-11/</guid>
+  <pubDate>Wed, 07 Jul 2021 13:30:30 GMT</pubDate>
+  <description>Redisson 除了提供了分布式锁之外，还额外提供了同步组件，Semaphore 和 CountDownLatch。</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 09：RedLock 红锁的故事</title>
+  <link>https://liuzhihang.com/posts/redisson-9/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-9/</guid>
+  <pubDate>Tue, 06 Jul 2021 13:30:30 GMT</pubDate>
+  <description>RedLock 红锁，是分布式锁中必须要了解的一个概念。 但是不建议使用 Redisson 实现的 Redis 的红锁。</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 08：MultiLock 加锁与锁释放</title>
+  <link>https://liuzhihang.com/posts/redisson-8/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-8/</guid>
+  <pubDate>Mon, 05 Jul 2021 13:30:30 GMT</pubDate>
+  <description>基于 Redis 的 Redisson 分布式联锁 RedissonMultiLock 对象可以将多个 RLock 对象关联为一个联锁，每个 RLock 对象实例可以来自于不同的 Redisson 实例。</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 07：公平锁释放</title>
+  <link>https://liuzhihang.com/posts/redisson-7/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-7/</guid>
+  <pubDate>Sun, 04 Jul 2021 13:30:30 GMT</pubDate>
+  <description>公平锁的释放同样分为主动释放和超时释放。</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 06：公平锁排队加锁</title>
+  <link>https://liuzhihang.com/posts/redisson-6/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-6/</guid>
+  <pubDate>Sat, 03 Jul 2021 13:30:30 GMT</pubDate>
+  <description>加锁失败被放到等待队列之后，线程是如何处理的？</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 05：公平锁加锁</title>
+  <link>https://liuzhihang.com/posts/redisson-5/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-5/</guid>
+  <pubDate>Fri, 02 Jul 2021 13:30:30 GMT</pubDate>
+  <description>分布式公平锁是如何实现的？</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 04：可重入锁释放</title>
+  <link>https://liuzhihang.com/posts/redisson-4/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-4/</guid>
+  <pubDate>Thu, 01 Jul 2021 13:30:30 GMT</pubDate>
+  <description>前面已经了解到了，可重入锁加锁，看门狗以及锁的互斥阻塞。当锁加锁成功之后，锁是如何释放的？</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 03：可重入锁互斥</title>
+  <link>https://liuzhihang.com/posts/redisson-3/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-3/</guid>
+  <pubDate>Wed, 30 Jun 2021 13:30:30 GMT</pubDate>
+  <description>看过可重入锁的 Lua 脚本，已经可以知道当锁存在时，是会加锁失败的。下面看一下，加锁失败之后是如何处理的呢？</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 02：看门狗</title>
+  <link>https://liuzhihang.com/posts/redisson-2/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-2/</guid>
+  <pubDate>Tue, 29 Jun 2021 13:30:30 GMT</pubDate>
+  <description>说起 Redisson，比较耳熟能详的就是这个看门狗（Watchdog）机制。本文就一起看看加锁成功之后的看门狗（Watchdog）是如何实现的？</description>
+</item>
+<item>
+  <title>Redisson 分布式锁源码 01：可重入锁加锁</title>
+  <link>https://liuzhihang.com/posts/redisson-1/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redisson-1/</guid>
+  <pubDate>Mon, 28 Jun 2021 13:30:30 GMT</pubDate>
+  <description>单系统很容易想到 Java 的各种锁，像 synchronize、ReentrantLock 等等等，那分布式系统如何处理？</description>
+</item>
+<item>
+  <title>Toolkit Json 转实体也可以支持 lombok 了！</title>
+  <link>https://liuzhihang.com/posts/ides-plugin-toolkit-lombok/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/ides-plugin-toolkit-lombok/</guid>
+  <pubDate>Mon, 07 Jun 2021 11:30:30 GMT</pubDate>
+  <description>记录 Toolkit 根据使用反馈增加 Lombok 支持的版本更新，并展示 JSON 转实体的操作。</description>
+</item>
+<item>
+  <title>MySQL next-key lock 加锁范围总结</title>
+  <link>https://liuzhihang.com/posts/mysql-next-key-4/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/mysql-next-key-4/</guid>
+  <pubDate>Mon, 07 Jun 2021 11:30:30 GMT</pubDate>
+  <description>总结主键、非主键唯一索引、普通索引、普通字段四个方面的加锁范围。</description>
+</item>
+<item>
+  <title>MySQL普通索引的加锁</title>
+  <link>https://liuzhihang.com/posts/mysql-next-key-3/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/mysql-next-key-3/</guid>
+  <pubDate>Sun, 06 Jun 2021 13:30:30 GMT</pubDate>
+  <description>一起看一下普通索引和普通字段的加锁范围是什么?</description>
+</item>
+<item>
+  <title>看来，MySQL next-key lock 的 bug 并没有被修复！</title>
+  <link>https://liuzhihang.com/posts/mysql-next-key-2/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/mysql-next-key-2/</guid>
+  <pubDate>Sun, 06 Jun 2021 12:30:30 GMT</pubDate>
+  <description>非主键唯一索引的锁范围是什么？</description>
+</item>
+<item>
+  <title>使用 Docker 安装并连接 MySQL</title>
+  <link>https://liuzhihang.com/posts/docker-mysql/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/docker-mysql/</guid>
+  <pubDate>Sun, 06 Jun 2021 11:30:30 GMT</pubDate>
+  <description>作为开发，在本机捣鼓一下 Docker 还是很有必要的，本篇文章介绍如何使用 Docker 安装 MySQL，并在终端（iTerm2）使用命令连接 MySQL。</description>
+</item>
+<item>
+  <title>MySQL next-key lock 加锁范围是什么？</title>
+  <link>https://liuzhihang.com/posts/mysql-next-key-1/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/mysql-next-key-1/</guid>
+  <pubDate>Sun, 06 Jun 2021 11:30:30 GMT</pubDate>
+  <description>主键索引的锁范围是什么？</description>
+</item>
+<item>
+  <title>Mac 常用软件推荐 —— Java 开发工程师</title>
+  <link>https://liuzhihang.com/posts/mac-common-software-java/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/mac-common-software-java/</guid>
+  <pubDate>Tue, 25 May 2021 10:30:30 GMT</pubDate>
+  <description>记录一下自己用的 Mac 软件，如果小伙伴需要，可以下载体验一下。</description>
+</item>
+<item>
+  <title>Toolkit 大更新：UI 更美观，用起来更方便！</title>
+  <link>https://liuzhihang.com/posts/idea-plugin-toolkit-0417/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/idea-plugin-toolkit-0417/</guid>
+  <pubDate>Sat, 17 Apr 2021 12:00:00 GMT</pubDate>
+  <description>一个 IDEA 插件，支持 Json 格式化、Json 转实体、实体转 Json、Base64 等操作！</description>
+</item>
+<item>
+  <title>工作中的设计模式 —— 建造者模式</title>
+  <link>https://liuzhihang.com/posts/design-patterns-builder/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/design-patterns-builder/</guid>
+  <pubDate>Thu, 15 Apr 2021 12:00:00 GMT</pubDate>
+  <description>建造者模式是一种创建型设计模式，使你能够分步骤创建复杂对象。该模式允许你使用相同的创建代码生成不同类型和形式的对象。</description>
+</item>
+<item>
+  <title>工作中的设计模式 —— 策略模式</title>
+  <link>https://liuzhihang.com/posts/design-patterns-strategy/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/design-patterns-strategy/</guid>
+  <pubDate>Wed, 07 Apr 2021 12:00:00 GMT</pubDate>
+  <description>策略模式是一种行为设计模式，它能让你定义一系列算法，并将每种算法分别放入独立的类中，以使算法的对象能够相互替换。</description>
+</item>
+<item>
+  <title>IDEA 文档插件 DocView 版本更新：支持编辑文档注释</title>
+  <link>https://liuzhihang.com/posts/doc-view-editor/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/doc-view-editor/</guid>
+  <pubDate>Fri, 02 Apr 2021 14:00:00 GMT</pubDate>
+  <description>介绍 Doc Editor 对接口和实体注释的编辑、字段必填设置、嵌套实体复制 JSON 与预览跳转功能。</description>
+</item>
+<item>
+  <title>工作中的设计模式 —— 原型模式</title>
+  <link>https://liuzhihang.com/posts/design-patterns-prototype/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/design-patterns-prototype/</guid>
+  <pubDate>Wed, 10 Mar 2021 07:00:00 GMT</pubDate>
+  <description>原型模式是一种创建型设计模式， 使你能够复制已有对象， 而又无需使代码依赖它们所属的类。</description>
+</item>
+<item>
+  <title>IDEA 敏捷开发技巧——实时模版</title>
+  <link>https://liuzhihang.com/posts/idea-live-templates/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/idea-live-templates/</guid>
+  <pubDate>Mon, 15 Feb 2021 07:00:00 GMT</pubDate>
+  <description>从内置循环模板到自定义注释模板，记录 IDEA Live Templates 的配置和变量设置。</description>
+</item>
+<item>
+  <title>IDEA 敏捷开发技巧——后缀完成</title>
+  <link>https://liuzhihang.com/posts/idea-postfix-completion/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/idea-postfix-completion/</guid>
+  <pubDate>Wed, 10 Feb 2021 07:00:00 GMT</pubDate>
+  <description>通过 sout、if 与自定义 jsons 示例，介绍 IDEA 后缀完成的使用及配置方法。</description>
+</item>
+<item>
+  <title>Spring 事务、异步和循环依赖有什么关系？</title>
+  <link>https://liuzhihang.com/posts/spring-sync-translational/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/spring-sync-translational/</guid>
+  <pubDate>Mon, 01 Feb 2021 13:40:00 GMT</pubDate>
+  <description>通过自注入示例比较事务、异步与循环依赖的代理行为和差异。</description>
+</item>
+<item>
+  <title>Spring 动态代理时是如何解决循环依赖的？为什么要使用三级缓存？</title>
+  <link>https://liuzhihang.com/posts/source-spring-circular-dependence-2/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-circular-dependence-2/</guid>
+  <pubDate>Sat, 30 Jan 2021 13:40:00 GMT</pubDate>
+  <description>逐步分析动态代理场景下的循环依赖，并说明二级缓存不足与三级缓存的作用。</description>
+</item>
+<item>
+  <title>Spring 是如何解决循环依赖的？</title>
+  <link>https://liuzhihang.com/posts/source-spring-circular-dependence-1/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-circular-dependence-1/</guid>
+  <pubDate>Sat, 23 Jan 2021 13:40:00 GMT</pubDate>
+  <description>从循环依赖示例和调试过程，解释 Spring 创建 Bean 时解决循环依赖的步骤。</description>
+</item>
+<item>
+  <title>Spring 源码学习 16：单例 Bean 创建</title>
+  <link>https://liuzhihang.com/posts/source-spring-16/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-16/</guid>
+  <pubDate>Sun, 17 Jan 2021 13:40:00 GMT</pubDate>
+  <description>跟踪 getSingleton、createBean、doCreateBean 和 getObjectForBeanInstance，解释单例 Bean 的创建缓存过程。</description>
+</item>
+<item>
+  <title>Spring 源码学习 15：finishBeanFactoryInitialization（重点）</title>
+  <link>https://liuzhihang.com/posts/source-spring-15/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-15/</guid>
+  <pubDate>Tue, 12 Jan 2021 13:40:00 GMT</pubDate>
+  <description>围绕 FactoryBean、预实例化单例和 getBean 调用链，分析 finishBeanFactoryInitialization。</description>
+</item>
+<item>
+  <title>Spring 源码学习 14：initApplicationEventMulticaster 、onRefresh 和 registerListeners</title>
+  <link>https://liuzhihang.com/posts/source-spring-14/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-14/</guid>
+  <pubDate>Tue, 05 Jan 2021 13:40:00 GMT</pubDate>
+  <description>从事件注册与监听示例出发，说明 initApplicationEventMulticaster、onRefresh 和 registerListeners。</description>
+</item>
+<item>
+  <title>Spring 源码学习 13：initMessageSource</title>
+  <link>https://liuzhihang.com/posts/source-spring-13/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-13/</guid>
+  <pubDate>Sat, 02 Jan 2021 09:40:00 GMT</pubDate>
+  <description>通过国际化文件和 MessageSource 示例，说明 initMessageSource 的初始化过程。</description>
+</item>
+<item>
+  <title>Spring 源码学习 12：registerBeanPostProcessors</title>
+  <link>https://liuzhihang.com/posts/source-spring-12/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-12/</guid>
+  <pubDate>Fri, 01 Jan 2021 12:50:00 GMT</pubDate>
+  <description>介绍 BeanPostProcessor 的用途，并跟踪 registerBeanPostProcessors 注册处理器的源码流程。</description>
+</item>
+<item>
+  <title>Spring 源码学习 11：invokeBeanFactoryPostProcessors</title>
+  <link>https://liuzhihang.com/posts/source-spring-11/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-11/</guid>
+  <pubDate>Mon, 28 Dec 2020 00:00:00 GMT</pubDate>
+  <description>从示例和源码出发，梳理 BeanFactoryPostProcessor、BeanDefinitionRegistryPostProcessor 与 invokeBeanFactoryPostProcessors。</description>
+</item>
+<item>
+  <title>Spring 源码学习 10：prepareBeanFactory 和 postProcessBeanFactory</title>
+  <link>https://liuzhihang.com/posts/source-spring-10/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-10/</guid>
+  <pubDate>Sun, 27 Dec 2020 15:00:00 GMT</pubDate>
+  <description>结合调试过程解释 prepareBeanFactory 和 postProcessBeanFactory 在 Spring 容器初始化中的作用。</description>
+</item>
+<item>
+  <title>Spring 源码学习 09：refresh 大概流程</title>
+  <link>https://liuzhihang.com/posts/source-spring-09/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-09/</guid>
+  <pubDate>Wed, 16 Dec 2020 15:00:00 GMT</pubDate>
+  <description>概览 Spring refresh 容器刷新流程，重点说明刷新准备和 obtainFreshBeanFactory。</description>
+</item>
+<item>
+  <title>Spring 源码学习 08：register 注册配置类</title>
+  <link>https://liuzhihang.com/posts/source-spring-08/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-08/</guid>
+  <pubDate>Sun, 06 Dec 2020 15:00:00 GMT</pubDate>
+  <description>跟踪配置类注册入口 doRegisterBean 的源码和调试结果。</description>
+</item>
+<item>
+  <title>Spring 源码学习 07：ClassPathBeanDefinitionScanner</title>
+  <link>https://liuzhihang.com/posts/source-spring-07/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-07/</guid>
+  <pubDate>Sat, 05 Dec 2020 15:00:00 GMT</pubDate>
+  <description>分析 ClassPathBeanDefinitionScanner 的默认过滤器、环境与资源加载器设置。</description>
+</item>
+<item>
+  <title>Spring 源码学习 06：AnnotatedBeanDefinitionReader</title>
+  <link>https://liuzhihang.com/posts/source-spring-06/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-06/</guid>
+  <pubDate>Fri, 04 Dec 2020 15:00:00 GMT</pubDate>
+  <description>跟踪 AnnotatedBeanDefinitionReader 注册注解处理器的源码，并用调试验证调用关系。</description>
+</item>
+<item>
+  <title>Spring 源码学习 05：BeanDefinition 概念及其实现</title>
+  <link>https://liuzhihang.com/posts/source-spring-05/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-05/</guid>
+  <pubDate>Thu, 03 Dec 2020 15:00:00 GMT</pubDate>
+  <description>介绍 BeanDefinition 的概念、元数据接口、AbstractBeanDefinition 及其实现类。</description>
+</item>
+<item>
+  <title>Spring 源码学习 04：初始化容器与 DefaultListableBeanFactory</title>
+  <link>https://liuzhihang.com/posts/source-spring-04/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-04/</guid>
+  <pubDate>Wed, 02 Dec 2020 15:00:00 GMT</pubDate>
+  <description>从入口和构造函数开始，说明 Spring 容器启动时 DefaultListableBeanFactory 的初始化。</description>
+</item>
+<item>
+  <title>Spring 源码学习 03：创建 IoC 容器的几种方式</title>
+  <link>https://liuzhihang.com/posts/source-spring-03/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-03/</guid>
+  <pubDate>Tue, 01 Dec 2020 15:00:00 GMT</pubDate>
+  <description>比较 Java、XML、Groovy 和 GenericApplicationContext 创建 Spring IoC 容器的方式。</description>
+</item>
+<item>
+  <title>Spring 源码学习 02：关于 Spring IoC 和 Bean 的概念</title>
+  <link>https://liuzhihang.com/posts/source-spring-02/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-02/</guid>
+  <pubDate>Mon, 30 Nov 2020 15:00:00 GMT</pubDate>
+  <description>用 IoC、DI、Container 和 Bean 的概念，建立 Spring 容器与 Bean 管理的基础认识。</description>
+</item>
+<item>
+  <title>Spring 源码学习 01：源码阅读环境的搭建</title>
+  <link>https://liuzhihang.com/posts/source-spring-build/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-spring-build/</guid>
+  <pubDate>Thu, 26 Nov 2020 15:00:00 GMT</pubDate>
+  <description>记录 Spring 源码学习环境的准备、源码下载、测试执行与常见编译问题排查。</description>
+</item>
+<item>
+  <title>DocView 现在支持自定义 Markdown 模版了！</title>
+  <link>https://liuzhihang.com/posts/doc-view-template/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/doc-view-template/</guid>
+  <pubDate>Mon, 23 Nov 2020 14:00:00 GMT</pubDate>
+  <description>介绍 Doc View 的 Spring、Dubbo Markdown 模板设置，以及基于 Velocity 的模板变量。</description>
+</item>
+<item>
+  <title>【工具册】- Dubbo 接口，导出 Markdown ，这些功能 DocView 现在都有了！</title>
+  <link>https://liuzhihang.com/posts/doc-view-dubbo/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/doc-view-dubbo/</guid>
+  <pubDate>Thu, 19 Nov 2020 15:00:00 GMT</pubDate>
+  <description>记录 DocView 新版本的 Markdown 导出、Dubbo 接口支持、帮助文档地址和后续功能规划。</description>
+</item>
+<item>
+  <title>Warning: Calling `brew list` to only list formulae is deprecated! Use `brew list --formula` instead.</title>
+  <link>https://liuzhihang.com/posts/brew-list-warning/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/brew-list-warning/</guid>
+  <pubDate>Sun, 15 Nov 2020 02:00:00 GMT</pubDate>
+  <description>Warning: Calling `brew list` to only list formulae is deprecated! Use `brew list --formula` instead.</description>
+</item>
+<item>
+  <title>Spring 自调用事务失效，你是怎么解决的？</title>
+  <link>https://liuzhihang.com/posts/spring-self-call/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/spring-self-call/</guid>
+  <pubDate>Sun, 08 Nov 2020 09:00:00 GMT</pubDate>
+  <description>从一次事务失效排查出发，说明 Spring 代理调用边界，并给出拆分服务、编程式事务与事务组件三种方案。</description>
+</item>
+<item>
+  <title>写文档太麻烦，试试这款 IDEA 插件吧！</title>
+  <link>https://liuzhihang.com/posts/doc-view/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/doc-view/</guid>
+  <pubDate>Sun, 01 Nov 2020 07:00:00 GMT</pubDate>
+  <description>介绍 Doc View 首版的开发背景、接口文档预览与 Markdown 复制功能，以及注解和参数规则。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 写时复制集合 —— CopyOnWriteArrayList</title>
+  <link>https://liuzhihang.com/posts/copyonwritearraylist/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/copyonwritearraylist/</guid>
+  <pubDate>Sat, 31 Oct 2020 02:00:00 GMT</pubDate>
+  <description>通过 CopyOnWriteArrayList 的源码，说明写时复制数组、读写锁以及 add、remove、get 的实现取舍。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 非阻塞的无界线程安全队列 —— ConcurrentLinkedQueue</title>
+  <link>https://liuzhihang.com/posts/source-code-concurrentlinkedqueue/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-concurrentlinkedqueue/</guid>
+  <pubDate>Sun, 25 Oct 2020 04:30:00 GMT</pubDate>
+  <description>结合基本使用和源码，梳理 ConcurrentLinkedQueue 的单向节点、CAS 入队出队与无界线程安全特性。</description>
+</item>
+<item>
+  <title>APP 莫名崩溃，开始以为是 Header 中 name 大小写的锅，最后发现原来是容器的错！</title>
+  <link>https://liuzhihang.com/posts/header-name-case/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/header-name-case/</guid>
+  <pubDate>Sun, 18 Oct 2020 23:00:00 GMT</pubDate>
+  <description>从一次 APP 登录故障出发，追踪 Spring 请求头解析及 Undertow、Tomcat、Jetty 对大小写的处理差异。</description>
+</item>
+<item>
+  <title>几行代码轻松实现跨系统传递 traceId，再也不用担心对不上日志了！</title>
+  <link>https://liuzhihang.com/posts/log-trace-id/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/log-trace-id/</guid>
+  <pubDate>Sun, 18 Oct 2020 05:00:00 GMT</pubDate>
+  <description>介绍 MDC 日志字段配置、请求拦截与 Feign、Dubbo 的 traceId 传递示例，并补充集中日志采集思路。</description>
+</item>
+<item>
+  <title>老大问我：“建表为啥还设置个自增 id ？用流水号当主键不正好么？”</title>
+  <link>https://liuzhihang.com/posts/work-trans-why-table-id/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/work-trans-why-table-id/</guid>
+  <pubDate>Sun, 11 Oct 2020 05:00:00 GMT</pubDate>
+  <description>围绕业务流水号与自增主键的取舍，记录 InnoDB 聚簇索引、二级索引和数据插入的学习笔记。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 基于链表的有界阻塞队列 —— LinkedBlockingQueue</title>
+  <link>https://liuzhihang.com/posts/source-code-linkedblockingqueue/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-linkedblockingqueue/</guid>
+  <pubDate>Sun, 04 Oct 2020 06:30:00 GMT</pubDate>
+  <description>对比 ArrayBlockingQueue，分析 LinkedBlockingQueue 的链表节点、双锁结构和阻塞操作。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- AQS 都看完了，Condition 原理可不能少！</title>
+  <link>https://liuzhihang.com/posts/source-code-condition/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-condition/</guid>
+  <pubDate>Thu, 01 Oct 2020 10:00:00 GMT</pubDate>
+  <description>在 AQS 和 ReentrantLock 基础上，解释 Condition 条件队列、await、signal 以及锁释放与重新获取过程。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 基于数组的有界阻塞队列 —— ArrayBlockingQueue</title>
+  <link>https://liuzhihang.com/posts/source-code-arrayblockingqueue/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-arrayblockingqueue/</guid>
+  <pubDate>Sun, 27 Sep 2020 14:50:00 GMT</pubDate>
+  <description>结合生产者消费者示例，梳理 ArrayBlockingQueue 的数组结构、锁、条件队列和阻塞操作。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 使用递增计数器的线程同步工具 —— 信号量，它的原理是什么样子的？</title>
+  <link>https://liuzhihang.com/posts/source-code-semaphore/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-semaphore/</guid>
+  <pubDate>Sun, 20 Sep 2020 23:00:00 GMT</pubDate>
+  <description>从许可数量和基本示例出发，说明 Semaphore 基于 AQS 的初始化、acquire、release 与公平策略。</description>
+</item>
+<item>
+  <title>你有没有想过为什么交易和退款要拆开不同的表</title>
+  <link>https://liuzhihang.com/posts/work-trans-refund-table/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/work-trans-refund-table/</guid>
+  <pubDate>Sat, 19 Sep 2020 02:00:00 GMT</pubDate>
+  <description>从业务字段、状态、拆表和开发协作角度，讨论交易与退款分表及统一查询的实现思路。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- CyclicBarrier 不就是比 CountDownLatch 多了个回环么？</title>
+  <link>https://liuzhihang.com/posts/source-code-cyclicbarrier/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-cyclicbarrier/</guid>
+  <pubDate>Sat, 12 Sep 2020 17:30:00 GMT</pubDate>
+  <description>介绍 CyclicBarrier 的回环屏障、Runnable、await、reset 和它与 CountDownLatch 的区别。</description>
+</item>
+<item>
+  <title>给大家介绍下，这是我的流程图软件 —— draw.io</title>
+  <link>https://liuzhihang.com/posts/source-tool-drawio/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-tool-drawio/</guid>
+  <pubDate>Sun, 06 Sep 2020 09:00:00 GMT</pubDate>
+  <description>分享 draw.io 的多平台使用、语言设置和手绘风格流程图配置经验。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 快来看看！AQS 和  CountDownLatch 有怎么样的关系？</title>
+  <link>https://liuzhihang.com/posts/source-code-countdownlatch/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-countdownlatch/</guid>
+  <pubDate>Sun, 06 Sep 2020 04:00:00 GMT</pubDate>
+  <description>通过示例和源码说明 CountDownLatch 的计数、countDown、await 以及 AQS 关系。</description>
+</item>
+<item>
+  <title>【Elasticsearch 技术分享】—— 十张图带大家看懂 ES 原理 ！明白为什么说：ES 是准实时的！</title>
+  <link>https://liuzhihang.com/posts/technology-sharing-es-5/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/technology-sharing-es-5/</guid>
+  <pubDate>Fri, 28 Aug 2020 17:20:00 GMT</pubDate>
+  <description>以流程图梳理 Lucene 段、refresh、translog、flush 与段合并，记录 Elasticsearch 准实时搜索的学习过程。</description>
+</item>
+<item>
+  <title>【Elasticsearch 技术分享】—— ES 查询检索数据的过程，是什么样子的？</title>
+  <link>https://liuzhihang.com/posts/technology-sharing-es-4/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/technology-sharing-es-4/</guid>
+  <pubDate>Wed, 26 Aug 2020 12:20:00 GMT</pubDate>
+  <description>通过流程图说明 Elasticsearch 按 ID 获取文档与分布式搜索的协调过程。</description>
+</item>
+<item>
+  <title>【Elasticsearch 技术分享】—— Elasticsearch 存储一条数据， put 过程是什么样子的？</title>
+  <link>https://liuzhihang.com/posts/technology-sharing-es-3/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/technology-sharing-es-3/</guid>
+  <pubDate>Tue, 25 Aug 2020 16:10:00 GMT</pubDate>
+  <description>结合 Elasticsearch 7.9 的命令演示，记录索引创建、数据路由与主副分片写入流程。</description>
+</item>
+<item>
+  <title>【Elasticsearch 技术分享】—— ES 常用名词及结构</title>
+  <link>https://liuzhihang.com/posts/technology-sharing-es-2/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/technology-sharing-es-2/</guid>
+  <pubDate>Sun, 23 Aug 2020 02:00:00 GMT</pubDate>
+  <description>整理 Elasticsearch 的集群、节点、索引、文档及主副分片术语，并说明分片结构。</description>
+</item>
+<item>
+  <title>【Elasticsearch 技术分享】—— Elasticsearch ？倒排索引？这都是什么？</title>
+  <link>https://liuzhihang.com/posts/technology-sharing-es-1/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/technology-sharing-es-1/</guid>
+  <pubDate>Tue, 18 Aug 2020 05:00:00 GMT</pubDate>
+  <description>从搜索场景和书籍检索例子出发，介绍 Elasticsearch、倒排索引与 Lucene 的关系。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 除了读写锁，JUC 下面还有个 StampedLock！还不过来了解一下么？</title>
+  <link>https://liuzhihang.com/posts/source-code-stamped-lock/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-stamped-lock/</guid>
+  <pubDate>Sun, 09 Aug 2020 07:30:00 GMT</pubDate>
+  <description>介绍 StampedLock 的写锁、读锁和乐观读三种模式、stamp 生命周期，以及它与 ReentrantReadWriteLock 的区别。</description>
+</item>
+<item>
+  <title>IDEA插件开发常用API</title>
+  <link>https://liuzhihang.com/posts/idea-plugin-development-common-api/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/idea-plugin-development-common-api/</guid>
+  <pubDate>Sat, 01 Aug 2020 03:58:16 GMT</pubDate>
+  <description>整理 IDEA 插件开发中 AnAction、Psi、文件搜索、XML、写文件和通知等常用 API。</description>
+</item>
+<item>
+  <title>【工具册】- IDEA 插件找不到？看这里！那就自己敲一个！</title>
+  <link>https://liuzhihang.com/posts/tool-book-copy-as-json/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/tool-book-copy-as-json/</guid>
+  <pubDate>Wed, 29 Jul 2020 05:00:00 GMT</pubDate>
+  <description>小伙伴你是否想亲手写一个插件，或者你是否有一些插件的想法，但是找不到插件。那就自己实现一个吧</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 快进来！花几分钟看一下 ReentrantReadWriteLock 的原理！</title>
+  <link>https://liuzhihang.com/posts/source-code-reentrant-read-write-lock/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-reentrant-read-write-lock/</guid>
+  <pubDate>Mon, 27 Jul 2020 15:50:00 GMT</pubDate>
+  <description>解释 ReentrantReadWriteLock 的公平策略、读写重入、锁降级、Condition 及读锁写锁的状态编码。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 不能再被问住了！ReentrantLock 源码、画图一起看一看！</title>
+  <link>https://liuzhihang.com/posts/source-code-reentrant-lock/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-reentrant-lock/</guid>
+  <pubDate>Sat, 25 Jul 2020 01:50:00 GMT</pubDate>
+  <description>围绕 AQS、state、可重入、公平与非公平策略，梳理 ReentrantLock 的加锁、tryLock 和解锁源码。</description>
+</item>
+<item>
+  <title>老大说新项目的结构和 xxx 项目一样就可以了，我 ……</title>
+  <link>https://liuzhihang.com/posts/work-archetype/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/work-archetype/</guid>
+  <pubDate>Sat, 18 Jul 2020 05:00:00 GMT</pubDate>
+  <description>介绍使用 Maven Archetype 提取多模块项目模板、配置元数据与自定义属性，并在 IDEA 中生成新项目。</description>
+</item>
+<item>
+  <title>别走！这里有个笔记：图文讲解 AQS ，一起看看 AQS 的源码……(图文较长)</title>
+  <link>https://liuzhihang.com/posts/source-code-aqs/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-aqs/</guid>
+  <pubDate>Sun, 12 Jul 2020 05:00:00 GMT</pubDate>
+  <description>结合源码和队列图，梳理 AQS 的 Node 状态、独占与共享模式、入队、取消、唤醒及资源释放流程。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- JUC 包下工具类，它的名字叫 LockSupport ！你造么？</title>
+  <link>https://liuzhihang.com/posts/source-code-locksupport/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-locksupport/</guid>
+  <pubDate>Sun, 05 Jul 2020 12:20:20 GMT</pubDate>
+  <description>从许可模型和验证实验出发，解释 LockSupport 的 park、unpark、阻塞诊断与源码实现。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- JDK 8 新增的 LongAdder，得过来看一下！</title>
+  <link>https://liuzhihang.com/posts/source-code-longadder/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-longadder/</guid>
+  <pubDate>Sun, 28 Jun 2020 15:50:20 GMT</pubDate>
+  <description>结合 Striped64 和 Cell 源码，说明 LongAdder 如何通过分散竞争提升高并发累加性能。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 请介绍下你了解的ThreadLocal，它的底层原理！</title>
+  <link>https://liuzhihang.com/posts/source-code-threadlocal/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-threadlocal/</guid>
+  <pubDate>Sun, 21 Jun 2020 02:00:00 GMT</pubDate>
+  <description>从用户信息保存示例出发，跟踪 ThreadLocal、ThreadLocalMap、弱引用和 remove 的实现。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- 从JUC源码看CAS，我做了个笔记 ......</title>
+  <link>https://liuzhihang.com/posts/source-code-cas/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-cas/</guid>
+  <pubDate>Fri, 12 Jun 2020 15:50:20 GMT</pubDate>
+  <description>从乐观锁和 AtomicInteger 的使用出发，结合 JUC 源码解释 CAS、Unsafe 与原子更新的关系。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- HashMap红黑树</title>
+  <link>https://liuzhihang.com/posts/source-code-hashmap-red-black-tree/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-hashmap-red-black-tree/</guid>
+  <pubDate>Mon, 25 May 2020 12:50:20 GMT</pubDate>
+  <description>先介绍红黑树的性质、旋转和插入，再说明 HashMap 链表转红黑树及相关节点操作。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- HashMap扩容</title>
+  <link>https://liuzhihang.com/posts/source-code-hashmap-resize/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-hashmap-resize/</guid>
+  <pubDate>Sun, 17 May 2020 12:50:20 GMT</pubDate>
+  <description>沿着 HashMap 的 put 流程，说明哈希定位、链表或红黑树处理、容量阈值与 resize 扩容。</description>
+</item>
+<item>
+  <title>【JDK源码笔记】- HashMap的初始化</title>
+  <link>https://liuzhihang.com/posts/source-code-hashmap-init/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/source-code-hashmap-init/</guid>
+  <pubDate>Mon, 11 May 2020 10:50:20 GMT</pubDate>
+  <description>解释 HashMap 初始容量和负载因子、tableSizeFor 的二次幂计算，以及 key 哈希和数组下标定位。</description>
+</item>
+<item>
+  <title>markdown代码折叠</title>
+  <link>https://liuzhihang.com/posts/markdown-code-folding/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/markdown-code-folding/</guid>
+  <pubDate>Mon, 20 Apr 2020 07:20:20 GMT</pubDate>
+  <description>在markdown中折叠一部分内容, 点击可以展开.</description>
+</item>
+<item>
+  <title>雪花算法</title>
+  <link>https://liuzhihang.com/posts/snowflake-algorithm/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/snowflake-algorithm/</guid>
+  <pubDate>Mon, 13 Apr 2020 08:03:09 GMT</pubDate>
+  <description>雪花算法简单介绍, 以及如何使用雪花算法, 生成流水号. 一个简易的流水号生成器.</description>
+</item>
+<item>
+  <title>项目启动失败:java.lang.NoClassDefFoundError</title>
+  <link>https://liuzhihang.com/posts/no-class-def-found-error-rule-configuration/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/no-class-def-found-error-rule-configuration/</guid>
+  <pubDate>Sun, 12 Apr 2020 05:20:48 GMT</pubDate>
+  <description>遇到项目启动失败, 报错信息: ... nested exception is java.lang.NoClassDefFoundError: org/apache/shardingsphere/api/config/RuleConfiguration ...</description>
+</item>
+<item>
+  <title>Mac创建data目录失败</title>
+  <link>https://liuzhihang.com/posts/mac-create-data-directory-failed/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/mac-create-data-directory-failed/</guid>
+  <pubDate>Sun, 05 Jan 2020 10:30:30 GMT</pubDate>
+  <description>mkdir: cannot create directory ‘data’: Read-only file system</description>
+</item>
+<item>
+  <title>Hexo中插入Bilibili视频</title>
+  <link>https://liuzhihang.com/posts/hexo-inserts-bilibili-video/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/hexo-inserts-bilibili-video/</guid>
+  <pubDate>Sat, 14 Sep 2019 07:06:54 GMT</pubDate>
+  <description>1. 修改matery主题首页显示视频为Bilibili视频. &lt;br&gt; 2. 在Hexo中插入Bilibili视频, 并设置大小.</description>
+</item>
+<item>
+  <title>Redis分布式锁的生产问题解决方案</title>
+  <link>https://liuzhihang.com/posts/redis-distributed-lock-production-problem-solution/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/redis-distributed-lock-production-problem-solution/</guid>
+  <pubDate>Sun, 18 Aug 2019 08:36:20 GMT</pubDate>
+  <description>作业: 自己梳理出来Redis分布式锁的生产问题解决方案</description>
+</item>
+<item>
+  <title>如何落地最终一致性事务</title>
+  <link>https://liuzhihang.com/posts/how-to-land-the-final-consistency-transaction/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/how-to-land-the-final-consistency-transaction/</guid>
+  <pubDate>Sat, 17 Aug 2019 07:55:55 GMT</pubDate>
+  <description>作业: 如果对自己的系统落地最终一致性事务，如何落地实现？</description>
+</item>
+<item>
+  <title>交易系统架构图</title>
+  <link>https://liuzhihang.com/posts/trading-system-architecture/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/trading-system-architecture/</guid>
+  <pubDate>Sat, 10 Aug 2019 03:19:54 GMT</pubDate>
+  <description>8.6 作业：独立画出自己系统的生产部署架构图，梳理系统和服务的QPS以及扩容方案</description>
+</item>
+<item>
+  <title>SpringCloud架构原理图</title>
+  <link>https://liuzhihang.com/posts/springcloud-architecture-schematic/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/springcloud-architecture-schematic/</guid>
+  <pubDate>Sun, 04 Aug 2019 09:01:06 GMT</pubDate>
+  <description>7.31作业：画出Spring Cloud的架构原理图，RPC框架架构设计图！</description>
+</item>
+<item>
+  <title>Dubbo底层原理架构图</title>
+  <link>https://liuzhihang.com/posts/dubbo-bottom-structure-diagram/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/dubbo-bottom-structure-diagram/</guid>
+  <pubDate>Sat, 03 Aug 2019 06:33:00 GMT</pubDate>
+  <description>7.30 作业：自己独立画出Dubbo的底层架构原理图.</description>
+</item>
+<item>
+  <title>SpringBoot项目中使用SpringSecurity和JWT做权限认证</title>
+  <link>https://liuzhihang.com/posts/springsecurity-jwt-springboot-project/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/springsecurity-jwt-springboot-project/</guid>
+  <pubDate>Mon, 22 Jul 2019 05:36:22 GMT</pubDate>
+  <description>背景 前段时间做了一个项目, 因为涉及到权限认证, 所以分别调研了 SpringSecurity 和 Apache Shiro. 最后选择使用了 SpringSecurity + JWT做权限认证, 现在项目已经结束, 总相关笔记. 项目下载地址 jwt-demo(https://github.com/liuzhihang/jwt-demo) 1. 使用JWT生成token 2. token存储在数据库中 3. 使用 applicati</description>
+</item>
+<item>
+  <title>Gitalk使用MD5生成Id</title>
+  <link>https://liuzhihang.com/posts/gitalk-uses-md5-to-generate-an-id/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/gitalk-uses-md5-to-generate-an-id/</guid>
+  <pubDate>Sat, 20 Jul 2019 07:43:07 GMT</pubDate>
+  <description>使用Gitalk作为评论系统, 需要指定文章的id为唯一id, 从而防止多个文章使用同一个issues, 导致互相串的情况.</description>
+</item>
+<item>
+  <title>Toolkit</title>
+  <link>https://liuzhihang.com/posts/idea-plugin-toolkit/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/idea-plugin-toolkit/</guid>
+  <pubDate>Sat, 11 May 2019 06:50:48 GMT</pubDate>
+  <description>一个小工具包, 支持通过侧栏箭头在MyBatis XML文件和Mapper文件之间相互跳转, Json字符串格式化等功能.</description>
+</item>
+<item>
+  <title>elasticsearch cat API</title>
+  <link>https://liuzhihang.com/posts/elasticsearch-cat-api/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/elasticsearch-cat-api/</guid>
+  <pubDate>Thu, 14 Mar 2019 14:01:00 GMT</pubDate>
+  <description>Elasticsearch常用cat命令</description>
+</item>
+<item>
+  <title>为什么es集群至少需要三个节点</title>
+  <link>https://liuzhihang.com/posts/why-does-the-es-cluster-require-at-least-three-nodes/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/why-does-the-es-cluster-require-at-least-three-nodes/</guid>
+  <pubDate>Wed, 13 Mar 2019 13:01:04 GMT</pubDate>
+  <description>什么是脑裂? 脑裂后会发生什么? 如何防止脑裂?</description>
+</item>
+<item>
+  <title>Elasticsearch 数据写入流程</title>
+  <link>https://liuzhihang.com/posts/elasticsearch-data-writing-process/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/elasticsearch-data-writing-process/</guid>
+  <pubDate>Tue, 12 Mar 2019 06:25:59 GMT</pubDate>
+  <description>Elasticsearch写入流程笔记, 删除和更新时的具体操作.</description>
+</item>
+<item>
+  <title>logstash input多个kafka异常</title>
+  <link>https://liuzhihang.com/posts/logstash-input-multiple-kafka-exceptions/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/logstash-input-multiple-kafka-exceptions/</guid>
+  <pubDate>Mon, 04 Mar 2019 11:09:06 GMT</pubDate>
+  <description>多个kafka输出到logstash时遇到的问题.</description>
+</item>
+<item>
+  <title>程序无异常中断</title>
+  <link>https://liuzhihang.com/posts/no-abnormal-interruption-of-the-program/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/no-abnormal-interruption-of-the-program/</guid>
+  <pubDate>Fri, 15 Feb 2019 02:46:48 GMT</pubDate>
+  <description>1. 程序执行到某一处之后停顿, 不能继续执行, 不抛出异常, 无返回值 &lt;br&gt; 2. 本地测试正常 ...</description>
+</item>
+<item>
+  <title>skywalking5集群部署</title>
+  <link>https://liuzhihang.com/posts/skywalking5-cluster-deployment/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/skywalking5-cluster-deployment/</guid>
+  <pubDate>Thu, 27 Dec 2018 03:27:37 GMT</pubDate>
+  <description>skywalking5集群部署笔记</description>
+</item>
+<item>
+  <title>logstash时间戳差8个小时</title>
+  <link>https://liuzhihang.com/posts/logstash-timestamp-difference-8-hours/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/logstash-timestamp-difference-8-hours/</guid>
+  <pubDate>Thu, 20 Dec 2018 07:11:16 GMT</pubDate>
+  <description>在使用logstash输出内容要es中时, 指定index为系统名称+时间(年月日), 时间会自动匹配&apos;@timestamp&apos;字段并格式化, 但是在实际使用过程中, 发现在上午八点之前的消息会被创建到昨天的索引里面...</description>
+</item>
+<item>
+  <title>获取IP和byte转long遇到的小问题</title>
+  <link>https://liuzhihang.com/posts/get-the-small-problem-encountered-by-ip-and-byte-to-long/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/get-the-small-problem-encountered-by-ip-and-byte-to-long/</guid>
+  <pubDate>Mon, 10 Dec 2018 11:46:01 GMT</pubDate>
+  <description>因为业务需求新项目的流水号系统从 &apos;数据库自增步长+分段式锁&apos; 换成使用&apos;雪花流水号&apos;修改机器标识和数据中心字段为自动获取ip后三位, 人工保证ip后三位不相同</description>
+</item>
+<item>
+  <title>基于LinkHashMap的LRU缓存淘汰</title>
+  <link>https://liuzhihang.com/posts/elimination-of-lru-cache-based-on-linkhashmap/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/elimination-of-lru-cache-based-on-linkhashmap/</guid>
+  <pubDate>Mon, 19 Nov 2018 13:24:52 GMT</pubDate>
+  <description>LRU缓存淘汰是redis中的一种淘汰策略, 当内存大小不足以存放数据时, 此时存入新数据, 将删除较早存入的数据.</description>
+</item>
+<item>
+  <title>ELK常用启动命令</title>
+  <link>https://liuzhihang.com/posts/elk-common-start-command/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/elk-common-start-command/</guid>
+  <pubDate>Mon, 29 Oct 2018 09:03:38 GMT</pubDate>
+  <description>ELK常用启动命令</description>
+</item>
+<item>
+  <title>search-guard-6 配置用户</title>
+  <link>https://liuzhihang.com/posts/searchguard6-configuration-user/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/searchguard6-configuration-user/</guid>
+  <pubDate>Wed, 24 Oct 2018 17:13:45 GMT</pubDate>
+  <description>使用 search-guard-6 配置用户, 为ELK增加安全密码, 并在不重启的情况下, 刷新用户密码.</description>
+</item>
+<item>
+  <title>search-guard-6 安装</title>
+  <link>https://liuzhihang.com/posts/searchguard6-installation/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/searchguard6-installation/</guid>
+  <pubDate>Tue, 23 Oct 2018 19:19:45 GMT</pubDate>
+  <description>ELK安装search-guard-6, 并生成证书, 配置权限.</description>
+</item>
+<item>
+  <title>hexo搭建博客</title>
+  <link>https://liuzhihang.com/posts/hexo-build-blog/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/hexo-build-blog/</guid>
+  <pubDate>Mon, 08 Oct 2018 20:17:11 GMT</pubDate>
+  <description>hexo博客搭建, 并重新更新时的具体操作过程笔记.</description>
+</item>
+<item>
+  <title>服务器cpu占用率高</title>
+  <link>https://liuzhihang.com/posts/server-cpu-occupancy-rate-is-high/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/server-cpu-occupancy-rate-is-high/</guid>
+  <pubDate>Tue, 25 Sep 2018 18:38:31 GMT</pubDate>
+  <description>服务器cpu占用率高, 排查流程.</description>
+</item>
+<item>
+  <title>final finally finalize区别</title>
+  <link>https://liuzhihang.com/posts/final-finally-finalize-difference/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/final-finally-finalize-difference/</guid>
+  <pubDate>Thu, 06 Sep 2018 17:58:38 GMT</pubDate>
+  <description>final为java关键字, 可以作用于成员变量、方法、类上...</description>
+</item>
+<item>
+  <title>线程池原理及源码解析</title>
+  <link>https://liuzhihang.com/posts/thread-pool-principle-and-source-code-analysis/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/thread-pool-principle-and-source-code-analysis/</guid>
+  <pubDate>Wed, 05 Sep 2018 16:40:35 GMT</pubDate>
+  <description>线程池的处理流程, 常用使用方式, 以及字段含义, 源码学习...</description>
+</item>
+<item>
+  <title>多线程相关</title>
+  <link>https://liuzhihang.com/posts/multithreaded-correlation/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/multithreaded-correlation/</guid>
+  <pubDate>Tue, 04 Sep 2018 19:08:03 GMT</pubDate>
+  <description>多个线程同时或交替运行, 单核CPU为顺序执行(交替执行), 多核情况下, 每个CPU有自己的运算器, 所以在多个CPU中可以同时运行.</description>
+</item>
+<item>
+  <title>反射和序列化破解单例</title>
+  <link>https://liuzhihang.com/posts/reflection-and-serialization-cracking-singleton/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/reflection-and-serialization-cracking-singleton/</guid>
+  <pubDate>Mon, 27 Aug 2018 17:31:23 GMT</pubDate>
+  <description>通过反射的方式获取单例对象, 验证单例模式的安全性.</description>
+</item>
+<item>
+  <title>反射</title>
+  <link>https://liuzhihang.com/posts/reflection/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/reflection/</guid>
+  <pubDate>Fri, 24 Aug 2018 19:24:38 GMT</pubDate>
+  <description>java反射可以在运行时获取对象的成员和属性, 并且可以动态的创建对象并调用对象的属性; 反射一般编程中很少使用,但是在很多框架中都使用了反射, 比如配置Spring的Xml配置文件中, 就使用全类名配置方式, 其实就是反射的一种使用方式.</description>
+</item>
+<item>
+  <title>LinkList相关学习</title>
+  <link>https://liuzhihang.com/posts/linklist-related-learning/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/linklist-related-learning/</guid>
+  <pubDate>Thu, 23 Aug 2018 17:56:29 GMT</pubDate>
+  <description>LinkList也是工作中常见的集合, 底层使用双向链表结构; 比较适合新增和删除, 查询和修改需要遍历相对ArrayList比较消耗性能.</description>
+</item>
+<item>
+  <title>ArrayList相关学习</title>
+  <link>https://liuzhihang.com/posts/arraylist-related-learning/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/arraylist-related-learning/</guid>
+  <pubDate>Thu, 23 Aug 2018 15:17:40 GMT</pubDate>
+  <description>ArrayList是工作中常用的集合, 基于数组实现, 可以插入空数据, 也支持随机访问. ArrayList比较适合 get/set操作, 因为 add/remove需要移动数据, 相对来说比较消耗性能.</description>
+</item>
+<item>
+  <title>@Value注入属性的小bug</title>
+  <link>https://liuzhihang.com/posts/value-injects-a-small-bug-in-the-property/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/value-injects-a-small-bug-in-the-property/</guid>
+  <pubDate>Tue, 21 Aug 2018 14:47:41 GMT</pubDate>
+  <description>工作中一些公共属性, 一般通过@Value注入的对象的属性中, 遇到的小问题.</description>
+</item>
+<item>
+  <title>使用枚举实现单例</title>
+  <link>https://liuzhihang.com/posts/use-enumeration-to-implement-a-singleton/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/use-enumeration-to-implement-a-singleton/</guid>
+  <pubDate>Fri, 17 Aug 2018 20:05:10 GMT</pubDate>
+  <description>使用枚举的方式创建单例</description>
+</item>
+<item>
+  <title>Elasticsearch基本语句</title>
+  <link>https://liuzhihang.com/posts/elasticsearch-basic-statement/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/elasticsearch-basic-statement/</guid>
+  <pubDate>Tue, 26 Jun 2018 21:30:29 GMT</pubDate>
+  <description>Elasticsearch常用查询语句</description>
+</item>
+<item>
+  <title>logstash配置</title>
+  <link>https://liuzhihang.com/posts/logstash-configuration/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/logstash-configuration/</guid>
+  <pubDate>Wed, 20 Jun 2018 22:28:02 GMT</pubDate>
+  <description>logstash配置输入和输出, 同时测试使用filter过滤</description>
+</item>
+<item>
+  <title>filebeat配置</title>
+  <link>https://liuzhihang.com/posts/filebeat-configuration/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/filebeat-configuration/</guid>
+  <pubDate>Wed, 20 Jun 2018 21:30:29 GMT</pubDate>
+  <description>filebeat配置及启动相关脚本</description>
+</item>
+<item>
+  <title>监控系统架构</title>
+  <link>https://liuzhihang.com/posts/monitoring-system-architecture/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/monitoring-system-architecture/</guid>
+  <pubDate>Wed, 20 Jun 2018 20:25:29 GMT</pubDate>
+  <description>公司监控系统的架构</description>
+</item>
+<item>
+  <title>线程的生命周期</title>
+  <link>https://liuzhihang.com/posts/thread-life-cycle/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/thread-life-cycle/</guid>
+  <pubDate>Fri, 15 Jun 2018 19:31:00 GMT</pubDate>
+  <description>线程的生命周期: 准备, 就绪, 运行 死亡</description>
+</item>
+<item>
+  <title>synchronized锁的介绍</title>
+  <link>https://liuzhihang.com/posts/introduction-of-synchronized-lock/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/introduction-of-synchronized-lock/</guid>
+  <pubDate>Wed, 13 Jun 2018 20:25:00 GMT</pubDate>
+  <description>synchronized可以使用在方法和代码块中, 使用的方式不同锁代表的含义不同...</description>
+</item>
+<item>
+  <title>synchronized同步锁原理</title>
+  <link>https://liuzhihang.com/posts/synchronized-synchronous-lock-principle/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/synchronized-synchronous-lock-principle/</guid>
+  <pubDate>Mon, 11 Jun 2018 20:25:29 GMT</pubDate>
+  <description>synchronized同步锁是java关键字, 是内置的语言实现.</description>
+</item>
+<item>
+  <title>volatile关键字</title>
+  <link>https://liuzhihang.com/posts/volatile-keyword/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/volatile-keyword/</guid>
+  <pubDate>Sat, 09 Jun 2018 22:31:29 GMT</pubDate>
+  <description>在多线程操作共享变量时, 会使用volatile修饰共享变量, 比如单例模式的双重锁检查中, 并且在concurrent包下也大量使用了volatile关键字...</description>
+</item>
+<item>
+  <title>SpringAop代理的选择</title>
+  <link>https://liuzhihang.com/posts/springaop-agent-selection/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/springaop-agent-selection/</guid>
+  <pubDate>Mon, 21 May 2018 14:50:13 GMT</pubDate>
+  <description>Spring动态创建bean过程, 是如何进行选择使用 jdk还是cglib进行代理的, 可以通过源码进行解析</description>
+</item>
+<item>
+  <title>cglib动态代理</title>
+  <link>https://liuzhihang.com/posts/cglib-dynamic-proxy/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/cglib-dynamic-proxy/</guid>
+  <pubDate>Fri, 18 May 2018 19:55:01 GMT</pubDate>
+  <description>Spring动态代理可以选择使用jdk动态代理, 或者cglib动态代理,  cglib动态代理位于 net.sf.cglib.proxy 包下.</description>
+</item>
+<item>
+  <title>jdk动态代理及源码解析</title>
+  <link>https://liuzhihang.com/posts/jdk-dynamic-proxy-and-source-code-analysis/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/jdk-dynamic-proxy-and-source-code-analysis/</guid>
+  <pubDate>Thu, 17 May 2018 19:55:01 GMT</pubDate>
+  <description>Spring动态代理可以选择使用jdk动态代理, 或者cglib动态代理,  jdk动态代理位于 java.lang.reflect 包下.</description>
+</item>
+<item>
+  <title>懒汉单例模式线程安全</title>
+  <link>https://liuzhihang.com/posts/lazy-singleton-mode-thread-safe/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/lazy-singleton-mode-thread-safe/</guid>
+  <pubDate>Wed, 21 Feb 2018 17:15:29 GMT</pubDate>
+  <description>一个类中只有一个实例, 且能够自行实例化提供这个实例, 同时提供全局访问的方法.</description>
+</item>
+<item>
+  <title>poi读写Excel简单介绍</title>
+  <link>https://liuzhihang.com/posts/poi-read-and-write-excel-brief-introduction/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/poi-read-and-write-excel-brief-introduction/</guid>
+  <pubDate>Thu, 15 Feb 2018 18:12:20 GMT</pubDate>
+  <description>Apache POI 可以对Microsoft Office 进行操作, 下面是工作中使用的对Excel进行读写操作的常用方式.</description>
+</item>
+<item>
+  <title>protostuff序列化工具</title>
+  <link>https://liuzhihang.com/posts/protostuff-serialization-tool/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/protostuff-serialization-tool/</guid>
+  <pubDate>Mon, 05 Feb 2018 20:12:20 GMT</pubDate>
+  <description>在很多地方都需要用到序列化, 比如在使用redis缓存对象时, 一般情况是实现java Serializable接口. 简单介绍下在慕课网学习到的一个新的序列化工具 ---- protostuff.</description>
+</item>
+<item>
+  <title>Transactional声明式事务</title>
+  <link>https://liuzhihang.com/posts/transactional-declarative-transaction/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/transactional-declarative-transaction/</guid>
+  <pubDate>Sat, 27 Jan 2018 11:50:13 GMT</pubDate>
+  <description>声明式事务管理建立在AOP之上的. 其本质是对方法前后进行拦截, 然后在目标方法开始之前创建或者加入一个事务, 在执行完目标方法之后根据执行情况提交或者回滚事务.</description>
+</item>
+<item>
+  <title>整数包装类型的缓存</title>
+  <link>https://liuzhihang.com/posts/integer-wrapper-type-cache/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/integer-wrapper-type-cache/</guid>
+  <pubDate>Mon, 15 Jan 2018 20:12:20 GMT</pubDate>
+  <description>部分包装类型存在缓存机制, 会在JVM启动时, 缓存一定数量的对象, 有助于节省内存, 提高性能.</description>
+</item>
+<item>
+  <title>Interceptor拦截器</title>
+  <link>https://liuzhihang.com/posts/interceptor/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/interceptor/</guid>
+  <pubDate>Wed, 10 Jan 2018 14:50:13 GMT</pubDate>
+  <description>Interceptor: 拦截器，作用类似 Filter, 主要作用是拦截用户请求, 在 Action 执行的前后各执行一段代码, 进行相应的业务处理.</description>
+</item>
+<item>
+  <title>utils工具--ValidationUtil 参数校验</title>
+  <link>https://liuzhihang.com/posts/utils-tool-validationutil-parameter-check/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/utils-tool-validationutil-parameter-check/</guid>
+  <pubDate>Sat, 30 Dec 2017 21:20:20 GMT</pubDate>
+  <description>在工作中不可避免的要面对很多参数校验, 比如写新接口时需要对传入VO的必要字段进行校验, String 是否为空, Integer 最小值, 对象是否为null, 等等...</description>
+</item>
+<item>
+  <title>xml解析--dom4j</title>
+  <link>https://liuzhihang.com/posts/xml-parsing-dom4j/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/xml-parsing-dom4j/</guid>
+  <pubDate>Sat, 30 Dec 2017 20:12:20 GMT</pubDate>
+  <description>在工作中有时候会用到dom4j对xml文件或者字符串进行解析, 以下内容为随手笔记, 防止以后遗忘.</description>
+</item>
+<item>
+  <title>xml解析--JaxbUtil</title>
+  <link>https://liuzhihang.com/posts/xml-parsing-jaxbutil/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/xml-parsing-jaxbutil/</guid>
+  <pubDate>Sun, 17 Dec 2017 20:12:20 GMT</pubDate>
+  <description>主要介绍使用jaxb对xml进行解析, 互转. 相关使用笔记流程.</description>
+</item>
+</channel>
+</rss>

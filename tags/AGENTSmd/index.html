@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-z4jru4n3><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#ffffff"><script>
+  (() => {
+    const key = 'site-theme';
+    const modes = ['light', 'dark', 'system'];
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    let preference = 'light';
+    try {
+      const saved = localStorage.getItem(key);
+      if (modes.includes(saved)) preference = saved;
+    } catch {}
+    function apply() {
+      const theme = preference === 'system' ? (media.matches ? 'dark' : 'light') : preference;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.themePreference = preference;
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#15181e' : '#ffffff');
+      document.dispatchEvent(new CustomEvent('site-theme-change', { detail: { theme, preference } }));
+    }
+    document.addEventListener('site-theme-preference', (event) => {
+      if (!modes.includes(event.detail)) return;
+      preference = event.detail;
+      try { localStorage.setItem(key, preference); } catch {}
+      apply();
+    });
+    window.addEventListener('storage', (event) => {
+      if (event.key !== key && event.key !== null) return;
+      preference = modes.includes(event.newValue) ? event.newValue : 'light';
+      apply();
+    });
+    media.addEventListener('change', () => { if (preference === 'system') apply(); });
+    apply();
+  })();
+</script><meta name="generator" content="Astro v7.1.2"><link rel="icon" href="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg"><link rel="alternate" type="application/rss+xml" title="程序员小航" href="/rss.xml"><link rel="sitemap" href="/sitemap.xml"><title>#AGENTSmd · 程序员小航</title><meta name="description" content="浏览程序员小航关于 AGENTSmd 的图文与贴图。"><link rel="canonical" href="https://liuzhihang.com/tags/AGENTSmd/"><meta name="robots" content="index, follow"><meta property="og:site_name" content="程序员小航"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="website"><meta property="og:title" content="#AGENTSmd · 程序员小航"><meta property="og:description" content="浏览程序员小航关于 AGENTSmd 的图文与贴图。"><meta property="og:url" content="https://liuzhihang.com/tags/AGENTSmd/"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="#AGENTSmd · 程序员小航"><meta name="twitter:description" content="浏览程序员小航关于 AGENTSmd 的图文与贴图。"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"程序员小航","description":"浏览程序员小航关于 AGENTSmd 的图文与贴图。","url":"https://liuzhihang.com/tags/AGENTSmd/","inLanguage":"zh-CN","author":{"@type":"Person","name":"程序员小航"}}</script><style>.tag-page[data-astro-cid-aezt6mnq]{min-height:72dvh;padding-block:clamp(3.5rem,8vw,7rem)}.tag-page__inner[data-astro-cid-aezt6mnq]{max-width:980px;margin-inline:auto}.tag-page__header[data-astro-cid-aezt6mnq]{max-width:620px;margin-bottom:clamp(2.5rem,6vw,4.5rem)}.tag-page__header[data-astro-cid-aezt6mnq]>a[data-astro-cid-aezt6mnq]{min-height:44px;color:var(--color-link);text-underline-offset:.24em;align-items:center;font-size:.875rem;font-weight:620;display:inline-flex}.tag-page__header[data-astro-cid-aezt6mnq] h1[data-astro-cid-aezt6mnq]{letter-spacing:-.04em;overflow-wrap:anywhere;margin:.75rem 0 0;font-size:clamp(2rem,6vw,3.5rem);line-height:1.08}.tag-page__header[data-astro-cid-aezt6mnq] p[data-astro-cid-aezt6mnq]{color:var(--color-text-secondary);margin:.8rem 0 0}.tag-section[data-astro-cid-aezt6mnq]+.tag-section[data-astro-cid-aezt6mnq]{margin-top:clamp(3.5rem,8vw,6rem)}.tag-section[data-astro-cid-aezt6mnq]>h2[data-astro-cid-aezt6mnq]{border-bottom:1px solid var(--color-line);letter-spacing:-.02em;margin:0 0 1.25rem;padding-bottom:.85rem;font-size:clamp(1.25rem,2vw,1.5rem);line-height:1.3}.gallery-grid[data-astro-cid-aezt6mnq]{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:clamp(1.4rem,4vw,2.5rem) clamp(.75rem,2vw,1.25rem);display:grid}.article-list[data-astro-cid-aezt6mnq]{gap:16px;display:grid}@media (width>=720px){.gallery-grid[data-astro-cid-aezt6mnq]{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (width<=639px){.tag-page[data-astro-cid-aezt6mnq]{padding-block:2rem 4.5rem}.tag-page__header[data-astro-cid-aezt6mnq]{margin-bottom:2rem}}@media (prefers-contrast:more){.tag-section[data-astro-cid-aezt6mnq]>h2[data-astro-cid-aezt6mnq],.article-list[data-astro-cid-aezt6mnq]{border-color:var(--color-line-strong)}}
+</style><link rel="stylesheet" href="/_astro/ContentCard.DEoUdZ1q.css"><link rel="stylesheet" href="/_astro/BaseLayout.BywAIVHr.css"></head><body data-astro-cid-z4jru4n3><a class="skip-link" href="#main-content" data-astro-cid-z4jru4n3>跳到正文</a><header class="site-header" data-astro-cid-fzpbxy5g><div class="site-header__shell shell" data-astro-cid-fzpbxy5g><div class="site-header__inner" data-astro-cid-fzpbxy5g><div class="header-capsule site-header__brand" data-header-segment="brand" data-astro-cid-fzpbxy5g><a class="site-brand" href="/" aria-label="程序员小航首页" title="返回首页" data-astro-cid-fzpbxy5g><span class="site-brand__mark" data-astro-cid-fzpbxy5g><img class="site-brand__avatar" src="https://oss.liuzhihang.com/article/UEdU8o-znAUCh.jpg" alt="" width="30" height="30" decoding="async" data-astro-cid-fzpbxy5g><svg class="site-brand__home" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-fzpbxy5g><path d="m3 10 9-7 9 7M5 9v11h5v-6h4v6h5V9" data-astro-cid-fzpbxy5g></path></svg></span></a></div><div class="header-capsule site-header__center" data-header-segment="center" data-astro-cid-fzpbxy5g><nav class="site-navigation" aria-label="主导航" data-astro-cid-fzpbxy5g><a href="/articles/" data-astro-cid-fzpbxy5g>图文</a><a href="/galleries/" data-astro-cid-fzpbxy5g>贴图</a><a href="/collections/" data-astro-cid-fzpbxy5g>专题</a><a href="/tags/" aria-current="page" data-astro-cid-fzpbxy5g>标签</a><a href="/archives/" data-astro-cid-fzpbxy5g>归档</a></nav><details class="mobile-menu" data-mobile-menu data-astro-cid-fzpbxy5g><summary aria-label="打开导航" data-mobile-menu-summary data-astro-cid-fzpbxy5g><span class="mobile-menu__label" data-astro-cid-fzpbxy5g>导航</span><span class="mobile-menu__icon" aria-hidden="true" data-astro-cid-fzpbxy5g></span></summary><nav aria-label="展开的主导航" data-astro-cid-fzpbxy5g><a href="/articles/" data-astro-cid-fzpbxy5g>图文</a><a href="/galleries/" data-astro-cid-fzpbxy5g>贴图</a><a href="/collections/" data-astro-cid-fzpbxy5g>专题</a><a href="/tags/" aria-current="page" data-astro-cid-fzpbxy5g>标签</a><a href="/archives/" data-astro-cid-fzpbxy5g>归档</a></nav></details></div><div class="header-capsule site-header__actions" data-header-segment="tools" data-astro-cid-fzpbxy5g><div class="search" data-search-root data-astro-cid-e66w4awt><button class="search-trigger" type="button" data-search-open aria-haspopup="dialog" aria-controls="site-search-dialog" data-astro-cid-e66w4awt><img src="/_astro/search.B4AXW4Jg.svg" alt="" aria-hidden="true" data-astro-cid-e66w4awt><span class="visually-hidden" data-astro-cid-e66w4awt>搜索</span></button><dialog class="search-dialog" id="site-search-dialog" data-search-dialog data-index-url="/search-index.json" data-search-url="/search/" aria-labelledby="site-search-title" data-astro-cid-e66w4awt><div class="search-dialog__surface" data-astro-cid-e66w4awt><header class="search-dialog__header" data-astro-cid-e66w4awt><div data-astro-cid-e66w4awt><p data-astro-cid-e66w4awt>站内检索</p><h2 id="site-search-title" data-astro-cid-e66w4awt>搜索内容</h2></div><form method="dialog" data-astro-cid-e66w4awt><button class="search-close" type="submit" aria-label="关闭搜索" data-astro-cid-e66w4awt>×</button></form></header><div class="search-field" data-astro-cid-e66w4awt><img src="/_astro/search.B4AXW4Jg.svg" alt="" aria-hidden="true" data-astro-cid-e66w4awt><label class="visually-hidden" for="site-search-input" data-astro-cid-e66w4awt>搜索关键词</label><input id="site-search-input" type="search" inputmode="search" autocomplete="off" maxlength="200" placeholder="搜索图文、贴图或标签" role="combobox" aria-autocomplete="list" aria-controls="site-search-results" aria-describedby="site-search-status" aria-expanded="false" data-search-input data-astro-cid-e66w4awt><button class="search-clear" type="button" data-search-clear hidden data-astro-cid-e66w4awt>清除</button></div><p class="search-status" id="site-search-status" data-search-status aria-live="polite" data-astro-cid-e66w4awt>搜索「程序员小航」的内容</p><ol class="search-results" id="site-search-results" data-search-results role="listbox" aria-label="搜索结果" data-astro-cid-e66w4awt></ol><a class="search-all" data-search-all href="/search/" data-astro-cid-e66w4awt>进入完整搜索 →</a><section class="search-empty" data-search-empty data-slot="empty" hidden data-astro-cid-e66w4awt><div data-slot="empty-header" data-astro-cid-e66w4awt><h3 data-search-empty-title data-astro-cid-e66w4awt>没有找到匹配内容</h3><p data-search-empty-description data-astro-cid-e66w4awt>换个关键词，或清空后查看推荐内容。</p></div><button type="button" data-search-empty-action data-astro-cid-e66w4awt>清空关键词</button></section></div></dialog></div><script type="module" src="/_astro/SearchDialog.astro_astro_type_script_index_0_lang.CamNAmmG.js"></script><button class="theme-control" type="button" data-theme-control hidden aria-label="外观：浅色；切换为深色" title="浅色；切换为深色" data-astro-cid-m4rhk2r6><span data-theme-icon="light" aria-hidden="true" data-astro-cid-m4rhk2r6><svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="4" />
+  <path d="M12 2v2" />
+  <path d="M12 20v2" />
+  <path d="m4.93 4.93 1.41 1.41" />
+  <path d="m17.66 17.66 1.41 1.41" />
+  <path d="M2 12h2" />
+  <path d="M20 12h2" />
+  <path d="m6.34 17.66-1.41 1.41" />
+  <path d="m19.07 4.93-1.41 1.41" />
+</svg>
+</span><span data-theme-icon="dark" aria-hidden="true" hidden data-astro-cid-m4rhk2r6><svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+</svg>
+</span><span data-theme-icon="system" aria-hidden="true" hidden data-astro-cid-m4rhk2r6><svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</svg>
+</span></button><script type="module">var e=[`light`,`dark`,`system`],t=[`浅色`,`深色`,`跟随系统`];document.querySelectorAll(`[data-theme-control]`).forEach(n=>{if(n.dataset.ready)return;n.dataset.ready=`true`;let r=()=>{let r=document.documentElement.dataset.themePreference??`light`,i=Math.max(0,e.indexOf(r)),a=`${t[i]}；切换为${t[(i+1)%e.length]}`;n.dataset.preference=r,n.title=a,n.setAttribute(`aria-label`,`外观：${a}`),n.querySelectorAll(`[data-theme-icon]`).forEach(e=>{e.hidden=e.dataset.themeIcon!==r})};n.addEventListener(`click`,()=>{let t=Math.max(0,e.indexOf(document.documentElement.dataset.themePreference??`light`));document.dispatchEvent(new CustomEvent(`site-theme-preference`,{detail:e[(t+1)%e.length]}))}),document.addEventListener(`site-theme-change`,r),r(),n.hidden=!1});</script></div></div></div></header><script type="module">var e=document.querySelector(`.site-header`);if(e){let t=0,n=()=>{t=0,e.toggleAttribute(`data-scrolled`,window.scrollY>16)};window.addEventListener(`scroll`,()=>{t||=window.requestAnimationFrame(n)},{passive:!0}),window.addEventListener(`pageshow`,n),n()}document.querySelectorAll(`[data-mobile-menu]`).forEach(e=>{if(e.dataset.ready)return;e.dataset.ready=`true`;let t=e.querySelector(`[data-mobile-menu-summary]`);if(!t)return;let n=()=>{let n=t.dataset.readingTitle;t.setAttribute(`aria-expanded`,String(e.open)),t.setAttribute(`aria-label`,`${e.open?`关闭导航`:`打开导航`}${n?`，当前文章：${n}`:``}`)};e.addEventListener(`toggle`,n),e.addEventListener(`keydown`,n=>{n.key!==`Escape`||!e.open||(n.preventDefault(),e.open=!1,t.focus({preventScroll:!0}))}),document.addEventListener(`click`,t=>{!e.open||!(t.target instanceof Node)||e.contains(t.target)||(e.open=!1)}),n()});</script><main id="main-content" data-astro-cid-z4jru4n3><section class="tag-page shell" aria-labelledby="tag-title" data-astro-cid-aezt6mnq><div class="tag-page__inner" data-astro-cid-aezt6mnq><header class="tag-page__header" data-astro-cid-aezt6mnq><a href="/tags/" data-astro-cid-aezt6mnq>所有标签</a><h1 id="tag-title" data-astro-cid-aezt6mnq>#AGENTSmd</h1><p data-astro-cid-aezt6mnq>1 篇相关内容</p></header><section class="tag-section" aria-labelledby="tag-galleries-title" data-astro-cid-aezt6mnq><h2 id="tag-galleries-title" data-astro-cid-aezt6mnq>贴图</h2><div class="gallery-grid" data-astro-cid-aezt6mnq><article class="card card--gallery card--portrait" data-content-card data-section="galleries" style="--card-media-ratio: 0.75" data-astro-cid-gizzzcig><a class="card__link" href="/posts/shopify-claude-code-split-brain/" aria-label="阅读贴图：Shopify CEO正考虑内部禁用Claude Code" data-astro-cid-gizzzcig><div class="card__media" data-astro-cid-gizzzcig><img src="/_astro/01-cover.BrUmT1cN_1siokt.webp" srcset="/_astro/01-cover.BrUmT1cN_6Fm47.webp 320w, /_astro/01-cover.BrUmT1cN_frkjD.webp 480w, /_astro/01-cover.BrUmT1cN_1k4by0.webp 640w, /_astro/01-cover.BrUmT1cN_2cQLbS.webp 960w" alt="Shopify CEO 关于 Claude Code 配置兼容性的表态" sizes="(max-width: 639px) 72vw, (max-width: 959px) 33vw, 360px" loading="eager" fetchpriority="high" decoding="async" data-astro-cid-gizzzcig="true" width="1080" height="1440"></div><div class="card__body" data-astro-cid-gizzzcig><span class="card__format" data-astro-cid-gizzzcig>贴图</span><h3 class="card__title" data-astro-cid-gizzzcig="true">Shopify CEO正考虑内部禁用Claude Code</h3><p class="card__description" data-astro-cid-gizzzcig>从 Shopify CEO 与 Anthropic 的公开讨论，看多种 AI 编程工具共用项目规则时的配置分歧。</p><div class="card__footer" data-astro-cid-gizzzcig><time datetime="2026-08-26T12:00:00+08:00" data-astro-cid-gizzzcig>2026年8月26日</time><ul class="card__tags" aria-label="标签" data-astro-cid-gizzzcig><li data-astro-cid-gizzzcig>ClaudeCode</li><li data-astro-cid-gizzzcig>AICoding</li><li data-astro-cid-gizzzcig>AGENTSmd</li></ul></div></div></a></article></div></section></div></section></main><footer class="site-footer shell" data-astro-cid-z4jru4n3><div class="site-footer__inner" data-astro-cid-z4jru4n3><p data-astro-cid-z4jru4n3>© 2026 <a href="/" data-astro-cid-z4jru4n3>程序员小航</a>。内容与实践持续更新。</p><nav aria-label="页脚导航" data-astro-cid-z4jru4n3><a href="/collections/" data-astro-cid-z4jru4n3>专题</a><a href="/about/" data-astro-cid-z4jru4n3>关于</a><a href="/tags/" data-astro-cid-z4jru4n3>标签</a><a href="/archives/" data-astro-cid-z4jru4n3>归档</a><a href="/rss.xml" data-astro-cid-z4jru4n3>RSS</a><a href="/subscribe/" data-astro-cid-z4jru4n3>订阅更新</a></nav></div></footer></body></html>
