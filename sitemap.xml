@@ -100,6 +100,15 @@
   <loc>https://liuzhihang.com/tags/Agent/</loc>
 </url>
 <url>
+  <loc>https://liuzhihang.com/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/%E9%A1%B9%E7%9B%AE%E5%91%BD%E5%90%8D/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/%E7%A8%8B%E5%BA%8F%E5%91%98%E6%97%A5%E5%B8%B8/</loc>
+</url>
+<url>
   <loc>https://liuzhihang.com/tags/Prompt/</loc>
 </url>
 <url>
@@ -370,6 +379,10 @@
 <url>
   <loc>https://liuzhihang.com/posts/loop-engineering/</loc>
   <lastmod>2026-06-22T23:28:00+08:00</lastmod>
+</url>
+<url>
+  <loc>https://liuzhihang.com/posts/programmer-project-naming/</loc>
+  <lastmod>2026-10-11T19:26:22.559+08:00</lastmod>
 </url>
 <url>
   <loc>https://liuzhihang.com/posts/karpathy-agent-understanding/</loc>
