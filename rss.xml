@@ -21,6 +21,13 @@
   <description>从 Prompt、Context、Harness 到 Loop，解释 AI 如何在可控、可验证、可追踪、可接管的工程系统中持续推进真实研发任务。</description>
 </item>
 <item>
+  <title>Your Harness. You Define It.</title>
+  <link>https://liuzhihang.com/posts/deepseek-creator-two-plugins/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/deepseek-creator-two-plugins/</guid>
+  <pubDate>Tue, 03 Nov 2026 07:18:58 GMT</pubDate>
+  <description>我参考 Creator Mode 视频和 Super-agent 设计文章做了两个插件：Super-agent 展示统一入口、任务派发与执行动态，会话看板汇总真实会话用量和估算成本。</description>
+</item>
+<item>
   <title>程序员项目起名的几大流派</title>
   <link>https://liuzhihang.com/posts/programmer-project-naming/</link>
   <guid isPermaLink="true">https://liuzhihang.com/posts/programmer-project-naming/</guid>

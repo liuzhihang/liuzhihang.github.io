@@ -100,6 +100,12 @@
   <loc>https://liuzhihang.com/tags/Agent/</loc>
 </url>
 <url>
+  <loc>https://liuzhihang.com/tags/DeepSeek/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/%E6%8F%92%E4%BB%B6/</loc>
+</url>
+<url>
   <loc>https://liuzhihang.com/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/</loc>
 </url>
 <url>
@@ -379,6 +385,10 @@
 <url>
   <loc>https://liuzhihang.com/posts/loop-engineering/</loc>
   <lastmod>2026-06-22T23:28:00+08:00</lastmod>
+</url>
+<url>
+  <loc>https://liuzhihang.com/posts/deepseek-creator-two-plugins/</loc>
+  <lastmod>2026-11-03T15:18:58+08:00</lastmod>
 </url>
 <url>
   <loc>https://liuzhihang.com/posts/programmer-project-naming/</loc>
