@@ -100,6 +100,24 @@
   <loc>https://liuzhihang.com/tags/Agent/</loc>
 </url>
 <url>
+  <loc>https://liuzhihang.com/tags/GPT-6.2/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/Codex/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/AGENTS.md/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/OpenAI/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/API/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/%E6%8F%90%E7%A4%BA%E8%AF%8D/</loc>
+</url>
+<url>
   <loc>https://liuzhihang.com/tags/DeepSeek/</loc>
 </url>
 <url>
@@ -121,13 +139,7 @@
   <loc>https://liuzhihang.com/tags/GPT-6/</loc>
 </url>
 <url>
-  <loc>https://liuzhihang.com/tags/Codex/</loc>
-</url>
-<url>
   <loc>https://liuzhihang.com/tags/Skill/</loc>
-</url>
-<url>
-  <loc>https://liuzhihang.com/tags/AGENTS.md/</loc>
 </url>
 <url>
   <loc>https://liuzhihang.com/tags/SDD/</loc>
@@ -385,6 +397,18 @@
 <url>
   <loc>https://liuzhihang.com/posts/loop-engineering/</loc>
   <lastmod>2026-06-22T23:28:00+08:00</lastmod>
+</url>
+<url>
+  <loc>https://liuzhihang.com/posts/gpt-6-2-agents-md/</loc>
+  <lastmod>2026-11-19T23:58:45+08:00</lastmod>
+</url>
+<url>
+  <loc>https://liuzhihang.com/posts/gpt-6-2-api-migration/</loc>
+  <lastmod>2026-11-19T23:58:45+08:00</lastmod>
+</url>
+<url>
+  <loc>https://liuzhihang.com/posts/gpt-6-2-codex-definition-of-done/</loc>
+  <lastmod>2026-11-19T23:58:45+08:00</lastmod>
 </url>
 <url>
   <loc>https://liuzhihang.com/posts/deepseek-creator-two-plugins/</loc>

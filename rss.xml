@@ -21,6 +21,27 @@
   <description>从 Prompt、Context、Harness 到 Loop，解释 AI 如何在可控、可验证、可追踪、可接管的工程系统中持续推进真实研发任务。</description>
 </item>
 <item>
+  <title>GPT-6.2 发布：AGENTS.md 该留什么？</title>
+  <link>https://liuzhihang.com/posts/gpt-6-2-agents-md/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/gpt-6-2-agents-md/</guid>
+  <pubDate>Thu, 19 Nov 2026 15:58:45 GMT</pubDate>
+  <description>分清仓库长期规则、当次任务要求，以及适合放进参考文档或 Skill 的内容。</description>
+</item>
+<item>
+  <title>GPT-6.2 API 迁移：别只换模型名</title>
+  <link>https://liuzhihang.com/posts/gpt-6-2-api-migration/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/gpt-6-2-api-migration/</guid>
+  <pubDate>Thu, 19 Nov 2026 15:58:45 GMT</pubDate>
+  <description>从模型参数、工具调用和多轮指令入手，检查 GPT-6.2 API 迁移，并用同一组输入对照迁移结果。</description>
+</item>
+<item>
+  <title>GPT-6.2 使用速查</title>
+  <link>https://liuzhihang.com/posts/gpt-6-2-codex-definition-of-done/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/gpt-6-2-codex-definition-of-done/</guid>
+  <pubDate>Thu, 19 Nov 2026 15:58:45 GMT</pubDate>
+  <description>在 Codex 中怎样选 Sol 或 Astra、设定推理强度，并给任务写出可检查的完成标准。</description>
+</item>
+<item>
   <title>Your Harness. You Define It.</title>
   <link>https://liuzhihang.com/posts/deepseek-creator-two-plugins/</link>
   <guid isPermaLink="true">https://liuzhihang.com/posts/deepseek-creator-two-plugins/</guid>
