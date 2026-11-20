@@ -21,6 +21,20 @@
   <description>从 Prompt、Context、Harness 到 Loop，解释 AI 如何在可控、可验证、可追踪、可接管的工程系统中持续推进真实研发任务。</description>
 </item>
 <item>
+  <title>出了事故，就该禁止 AI 写代码吗？</title>
+  <link>https://liuzhihang.com/posts/ai-coding-incident-checks/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/ai-coding-incident-checks/</guid>
+  <pubDate>Fri, 20 Nov 2026 16:00:00 GMT</pubDate>
+  <description>从一则 V2EX 自述讨论研发流程：用开发自测和独立测试验收，让高后果变更有清楚的检查依据。</description>
+</item>
+<item>
+  <title>SDD 研发框架：我更推荐 OpenSpec</title>
+  <link>https://liuzhihang.com/posts/sdd-framework-why-openspec/</link>
+  <guid isPermaLink="true">https://liuzhihang.com/posts/sdd-framework-why-openspec/</guid>
+  <pubDate>Fri, 20 Nov 2026 16:00:00 GMT</pubDate>
+  <description>用仓库目录、一次变更及下一轮探索，说明怎样用 OpenSpec 管理现行规范、评审、验收与归档。</description>
+</item>
+<item>
   <title>GPT-6.2 发布：AGENTS.md 该留什么？</title>
   <link>https://liuzhihang.com/posts/gpt-6-2-agents-md/</link>
   <guid isPermaLink="true">https://liuzhihang.com/posts/gpt-6-2-agents-md/</guid>

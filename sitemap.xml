@@ -100,6 +100,21 @@
   <loc>https://liuzhihang.com/tags/Agent/</loc>
 </url>
 <url>
+  <loc>https://liuzhihang.com/tags/AI%20%E7%BC%96%E7%A8%8B/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/%E8%BD%AF%E4%BB%B6%E4%BA%A4%E4%BB%98/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/SDD/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/OpenSpec/</loc>
+</url>
+<url>
+  <loc>https://liuzhihang.com/tags/%E7%A0%94%E5%8F%91%E5%8D%8F%E4%BD%9C/</loc>
+</url>
+<url>
   <loc>https://liuzhihang.com/tags/GPT-6.2/</loc>
 </url>
 <url>
@@ -140,15 +155,6 @@
 </url>
 <url>
   <loc>https://liuzhihang.com/tags/Skill/</loc>
-</url>
-<url>
-  <loc>https://liuzhihang.com/tags/SDD/</loc>
-</url>
-<url>
-  <loc>https://liuzhihang.com/tags/OpenSpec/</loc>
-</url>
-<url>
-  <loc>https://liuzhihang.com/tags/%E7%A0%94%E5%8F%91%E5%8D%8F%E4%BD%9C/</loc>
 </url>
 <url>
   <loc>https://liuzhihang.com/tags/Astra/</loc>
@@ -397,6 +403,14 @@
 <url>
   <loc>https://liuzhihang.com/posts/loop-engineering/</loc>
   <lastmod>2026-06-22T23:28:00+08:00</lastmod>
+</url>
+<url>
+  <loc>https://liuzhihang.com/posts/ai-coding-incident-checks/</loc>
+  <lastmod>2026-11-21T00:00:00+08:00</lastmod>
+</url>
+<url>
+  <loc>https://liuzhihang.com/posts/sdd-framework-why-openspec/</loc>
+  <lastmod>2026-11-21T00:00:00+08:00</lastmod>
 </url>
 <url>
   <loc>https://liuzhihang.com/posts/gpt-6-2-agents-md/</loc>
